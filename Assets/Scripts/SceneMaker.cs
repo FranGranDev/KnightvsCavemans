@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SceneMaker : MonoBehaviour
 {
+    //--------Aboba---------
     public enum SceneType {Ground, Swamp, Ice, Cave, Arena}
     [Header("Params")]
     public int SizeX;
