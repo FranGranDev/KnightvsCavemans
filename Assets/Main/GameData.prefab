@@ -1,0 +1,835 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3323415346997597901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4983245840252476260}
+  - component: {fileID: 3448696013334226952}
+  m_Layer: 0
+  m_Name: GameData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4983245840252476260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3323415346997597901}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3448696013334226952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3323415346997597901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8c9ba79b88fcf44c93c1a8de1a796a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MansKilled: 000000000000000000000000000000000000000000000000000000000000000000000000
+  GameHard: 1
+  GameType:
+  - Name: Levels
+    type: 0
+    Index: 0
+  - Name: Bets
+    type: 1
+    Index: 1
+  - Name: Waves
+    type: 2
+    Index: 2
+  playerInfo:
+    Name: Knight
+    MaxHp: 25
+    HpNum: 0
+    Speed: 10
+    SpeedNum: 0
+    JumpForce: 16
+    JumpNum: 0
+    Power: 1
+    PowerNum: 0
+    Size: 1
+    SizeNum: 0
+    MaxHpBuff: 0
+    SpeedBuff: 0
+    JumpForceBuff: 0
+    PowerBuff: 0
+    SizeBuff: 0
+  armorInfo:
+    Name: 
+    Index: 0
+    Head: {fileID: 0}
+    HeadLayer: 0
+    Body: {fileID: 0}
+    BodyLayer: 0
+    LeftLeg0: {fileID: 0}
+    LeftLeg0Layer: 0
+    LeftLeg1: {fileID: 0}
+    LeftLeg1Layer: 0
+    RightLeg0: {fileID: 0}
+    RightLeg0Layer: 0
+    RightLeg1: {fileID: 0}
+    RightLeg1Layer: 0
+    Effect: 0
+    Rare: 0
+    RequiredLevel: 0
+    Cost: 0
+    Opened: 0
+    Hp: 0
+    Power: 0
+    Size: 0
+    Speed: 0
+    Jump: 0
+  tempArmorInfo:
+    Name: 
+    Index: 0
+    Head: {fileID: 0}
+    HeadLayer: 0
+    Body: {fileID: 0}
+    BodyLayer: 0
+    LeftLeg0: {fileID: 0}
+    LeftLeg0Layer: 0
+    LeftLeg1: {fileID: 0}
+    LeftLeg1Layer: 0
+    RightLeg0: {fileID: 0}
+    RightLeg0Layer: 0
+    RightLeg1: {fileID: 0}
+    RightLeg1Layer: 0
+    Effect: 0
+    Rare: 0
+    RequiredLevel: 0
+    Cost: 0
+    Opened: 0
+    Hp: 0
+    Power: 0
+    Size: 0
+    Speed: 0
+    Jump: 0
+  upInfo:
+    MaxHp: 50
+    HpAdd: 2
+    StandartHp: 20
+    MaxSize: 2
+    SizeAdd: 0.1
+    StandartSize: 1
+    MaxPower: 2
+    PowerAdd: 0.066
+    StandartPower: 1
+    MaxSpeed: 16
+    SpeedAdd: 0.33
+    StandartSpeed: 10
+    MaxJump: 20
+    JumpAdd: 0.25
+    StandartJump: 16
+  Enemy:
+  - Name: Cave Man
+    Index: 0
+    Enemy: {fileID: 3155683858244836220, guid: 956974ab4ad58334091f39551689ecb6, type: 3}
+  - Name: Boss Man
+    Index: 1
+    Enemy: {fileID: 2138488382704469684, guid: c8c5ce58b6e153547b29e48621a18e03, type: 3}
+  AttackPhase:
+  - "\u041D\u0430"
+  - "\u041F\u043E\u043B\u0443\u0447\u0438"
+  - "\u0412\u044B\u043A\u0443\u0441\u0438"
+  - "\u0425\u0430 GAAAAAY"
+  - "\u041D\u0430 \u043F\u043E \u0449\u0430\u043C"
+  - "\u0421 \u0432\u0435\u0440\u0442\u0443\u0448\u043A\u0438 \u0432 \u0449\u0438"
+  - "\u041F\u043E\u043B\u0443\u0447\u0438 \u0434\u043E\u0432\u0435\u0447\u043A\u0443"
+  DamagePhase:
+  - "\u0410\u0439"
+  - "\u041E\u0439"
+  - "\u0411\u043B\u0438\u043D\u0431"
+  - "\u0421\u0443\u043A\u0431"
+  - "\u0414\u0430 \u0437\u0430 \u0448\u043E"
+  armor:
+  - Name: Solider
+    Index: 0
+    Head: {fileID: -4366935654755311968, guid: 016447ee022b0d947affd4d943ebf239, type: 3}
+    HeadLayer: 12
+    Body: {fileID: -3276238652909600374, guid: 016447ee022b0d947affd4d943ebf239, type: 3}
+    BodyLayer: 11
+    LeftLeg0: {fileID: 3621931298121890567, guid: 016447ee022b0d947affd4d943ebf239,
+      type: 3}
+    LeftLeg0Layer: 9
+    LeftLeg1: {fileID: 7186184504173387135, guid: 016447ee022b0d947affd4d943ebf239,
+      type: 3}
+    LeftLeg1Layer: 10
+    RightLeg0: {fileID: -6256038642982953289, guid: 016447ee022b0d947affd4d943ebf239,
+      type: 3}
+    RightLeg0Layer: 9
+    RightLeg1: {fileID: 8155040824058156768, guid: 016447ee022b0d947affd4d943ebf239,
+      type: 3}
+    RightLeg1Layer: 10
+    Effect: 0
+    Rare: 0
+    RequiredLevel: 0
+    Cost: 0
+    Opened: 1
+    Hp: 0
+    Power: 0
+    Size: 0
+    Speed: 0
+    Jump: 0
+  - Name: Knight
+    Index: 1
+    Head: {fileID: -7883857259290291838, guid: 4dfdd0a201d64d94bb887866dce74385, type: 3}
+    HeadLayer: 11
+    Body: {fileID: 8921269817984642144, guid: 4dfdd0a201d64d94bb887866dce74385, type: 3}
+    BodyLayer: 10
+    LeftLeg0: {fileID: 3621931298121890567, guid: 4dfdd0a201d64d94bb887866dce74385,
+      type: 3}
+    LeftLeg0Layer: 11
+    LeftLeg1: {fileID: 7186184504173387135, guid: 4dfdd0a201d64d94bb887866dce74385,
+      type: 3}
+    LeftLeg1Layer: 12
+    RightLeg0: {fileID: -6256038642982953289, guid: 4dfdd0a201d64d94bb887866dce74385,
+      type: 3}
+    RightLeg0Layer: 11
+    RightLeg1: {fileID: 8155040824058156768, guid: 4dfdd0a201d64d94bb887866dce74385,
+      type: 3}
+    RightLeg1Layer: 12
+    Effect: 0
+    Rare: 0
+    RequiredLevel: 3
+    Cost: 500
+    Opened: 0
+    Hp: 0.25
+    Power: 0.1
+    Size: 0.05
+    Speed: -0.1
+    Jump: -0.1
+  - Name: Assasin
+    Index: 2
+    Head: {fileID: 474063587113420191, guid: fd09d9d04f751b2478d35455eac6f6d2, type: 3}
+    HeadLayer: 12
+    Body: {fileID: 787891997118475647, guid: fd09d9d04f751b2478d35455eac6f6d2, type: 3}
+    BodyLayer: 11
+    LeftLeg0: {fileID: -5810701723532304795, guid: fd09d9d04f751b2478d35455eac6f6d2,
+      type: 3}
+    LeftLeg0Layer: 10
+    LeftLeg1: {fileID: -5796861906046312123, guid: fd09d9d04f751b2478d35455eac6f6d2,
+      type: 3}
+    LeftLeg1Layer: 9
+    RightLeg0: {fileID: 6069690147470084794, guid: fd09d9d04f751b2478d35455eac6f6d2,
+      type: 3}
+    RightLeg0Layer: 10
+    RightLeg1: {fileID: 8864260993657021565, guid: fd09d9d04f751b2478d35455eac6f6d2,
+      type: 3}
+    RightLeg1Layer: 9
+    Effect: 0
+    Rare: 1
+    RequiredLevel: 5
+    Cost: 750
+    Opened: 0
+    Hp: -0.1
+    Power: 0.1
+    Size: -0.1
+    Speed: 0.4
+    Jump: 0.4
+  - Name: Honor Knight
+    Index: 3
+    Head: {fileID: 474063587113420191, guid: 4e6ae3c86366df64ea1f1b86052096e4, type: 3}
+    HeadLayer: 11
+    Body: {fileID: 787891997118475647, guid: 4e6ae3c86366df64ea1f1b86052096e4, type: 3}
+    BodyLayer: 10
+    LeftLeg0: {fileID: 6069690147470084794, guid: 4e6ae3c86366df64ea1f1b86052096e4,
+      type: 3}
+    LeftLeg0Layer: 11
+    LeftLeg1: {fileID: 8864260993657021565, guid: 4e6ae3c86366df64ea1f1b86052096e4,
+      type: 3}
+    LeftLeg1Layer: 12
+    RightLeg0: {fileID: -5810701723532304795, guid: 4e6ae3c86366df64ea1f1b86052096e4,
+      type: 3}
+    RightLeg0Layer: 11
+    RightLeg1: {fileID: -5796861906046312123, guid: 4e6ae3c86366df64ea1f1b86052096e4,
+      type: 3}
+    RightLeg1Layer: 12
+    Effect: 0
+    Rare: 1
+    RequiredLevel: 7
+    Cost: 1000
+    Opened: 0
+    Hp: 0.3
+    Power: 0.15
+    Size: 0.05
+    Speed: -0.1
+    Jump: -0.1
+  - Name: Dark Knight
+    Index: 4
+    Head: {fileID: -5710435863853047042, guid: 522c425ec651d7f4ea076dc9c56e3ab4, type: 3}
+    HeadLayer: 11
+    Body: {fileID: -2478031544040489943, guid: 522c425ec651d7f4ea076dc9c56e3ab4, type: 3}
+    BodyLayer: 10
+    LeftLeg0: {fileID: 1237454476805801513, guid: 522c425ec651d7f4ea076dc9c56e3ab4,
+      type: 3}
+    LeftLeg0Layer: 11
+    LeftLeg1: {fileID: -3945290335869207221, guid: 522c425ec651d7f4ea076dc9c56e3ab4,
+      type: 3}
+    LeftLeg1Layer: 12
+    RightLeg0: {fileID: -139074619026215824, guid: 522c425ec651d7f4ea076dc9c56e3ab4,
+      type: 3}
+    RightLeg0Layer: 11
+    RightLeg1: {fileID: -3945290335869207221, guid: 522c425ec651d7f4ea076dc9c56e3ab4,
+      type: 3}
+    RightLeg1Layer: 12
+    Effect: 0
+    Rare: 2
+    RequiredLevel: 9
+    Cost: 1250
+    Opened: 0
+    Hp: 0.4
+    Power: 0.35
+    Size: 0.1
+    Speed: -0.15
+    Jump: -0.2
+  - Name: Viking
+    Index: 5
+    Head: {fileID: 474063587113420191, guid: 1fcbd1ceed121b747935ccc5c4bda162, type: 3}
+    HeadLayer: 12
+    Body: {fileID: 787891997118475647, guid: 1fcbd1ceed121b747935ccc5c4bda162, type: 3}
+    BodyLayer: 11
+    LeftLeg0: {fileID: -5810701723532304795, guid: 1fcbd1ceed121b747935ccc5c4bda162,
+      type: 3}
+    LeftLeg0Layer: 9
+    LeftLeg1: {fileID: -5796861906046312123, guid: 1fcbd1ceed121b747935ccc5c4bda162,
+      type: 3}
+    LeftLeg1Layer: 10
+    RightLeg0: {fileID: -5810701723532304795, guid: 1fcbd1ceed121b747935ccc5c4bda162,
+      type: 3}
+    RightLeg0Layer: 9
+    RightLeg1: {fileID: 8864260993657021565, guid: 1fcbd1ceed121b747935ccc5c4bda162,
+      type: 3}
+    RightLeg1Layer: 10
+    Effect: 0
+    Rare: 2
+    RequiredLevel: 11
+    Cost: 1500
+    Opened: 0
+    Hp: 0.1
+    Power: 0.25
+    Size: 0.15
+    Speed: 0.15
+    Jump: 0.1
+  - Name: Golden Knight
+    Index: 6
+    Head: {fileID: 279974906088524294, guid: f22bde9c3c1c4c344a8227f8a7aa0e82, type: 3}
+    HeadLayer: 11
+    Body: {fileID: 9127221150944659985, guid: f22bde9c3c1c4c344a8227f8a7aa0e82, type: 3}
+    BodyLayer: 10
+    LeftLeg0: {fileID: 8566250674807676899, guid: f22bde9c3c1c4c344a8227f8a7aa0e82,
+      type: 3}
+    LeftLeg0Layer: 11
+    LeftLeg1: {fileID: -449460779555971588, guid: f22bde9c3c1c4c344a8227f8a7aa0e82,
+      type: 3}
+    LeftLeg1Layer: 12
+    RightLeg0: {fileID: -8946426742854626962, guid: f22bde9c3c1c4c344a8227f8a7aa0e82,
+      type: 3}
+    RightLeg0Layer: 11
+    RightLeg1: {fileID: 4057076567099484561, guid: f22bde9c3c1c4c344a8227f8a7aa0e82,
+      type: 3}
+    RightLeg1Layer: 12
+    Effect: 0
+    Rare: 3
+    RequiredLevel: 13
+    Cost: 2500
+    Opened: 0
+    Hp: 0.35
+    Power: 0.35
+    Size: 0.1
+    Speed: 0.1
+    Jump: 0.1
+  - Name: Hell Knight
+    Index: 7
+    Head: {fileID: 279974906088524294, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a, type: 3}
+    HeadLayer: 11
+    Body: {fileID: 9127221150944659985, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a, type: 3}
+    BodyLayer: 10
+    LeftLeg0: {fileID: -8946426742854626962, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a,
+      type: 3}
+    LeftLeg0Layer: 11
+    LeftLeg1: {fileID: -449460779555971588, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a,
+      type: 3}
+    LeftLeg1Layer: 12
+    RightLeg0: {fileID: -8946426742854626962, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a,
+      type: 3}
+    RightLeg0Layer: 11
+    RightLeg1: {fileID: 4057076567099484561, guid: ccee452dd9fcaa345b8b8ff22c2d0f2a,
+      type: 3}
+    RightLeg1Layer: 12
+    Effect: 1
+    Rare: 3
+    RequiredLevel: 14
+    Cost: 0
+    Opened: 0
+    Hp: 0.5
+    Power: 0.4
+    Size: 0.25
+    Speed: 0
+    Jump: 0
+  IconPrefab: {fileID: 3807928924805129908, guid: 762e636c2e6b5ca43a0858981aa1a311,
+    type: 3}
+  weapon:
+  - Name: Sword
+    Index: 0
+    Cost: 0
+    RequiredLevel: 0
+    Opened: 1
+    weapon: {fileID: -4475211284396730487, guid: c79b3e9f5c66c7b40a0ec847ba35d73f,
+      type: 3}
+    Icon: {fileID: -4353666827862592859, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Alebarda
+    Index: 1
+    Cost: 300
+    RequiredLevel: 10
+    Opened: 0
+    weapon: {fileID: -5489435138435424582, guid: fd59a20928a2b8049949397de66c43e2,
+      type: 3}
+    Icon: {fileID: -1201781469886174915, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Big Club
+    Index: 2
+    Cost: 250
+    RequiredLevel: 8
+    Opened: 0
+    weapon: {fileID: 4575685520726181005, guid: ae896048a5ed2964f84e9e1b72b2a2e9,
+      type: 3}
+    Icon: {fileID: 6343528850096420921, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Club
+    Index: 3
+    Cost: 150
+    RequiredLevel: 4
+    Opened: 0
+    weapon: {fileID: -5363904333159045422, guid: 78a3e64adba207949ba1a1bf88917ec2,
+      type: 3}
+    Icon: {fileID: 6763124819713348665, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Elite Great Sword
+    Index: 4
+    Cost: 750
+    RequiredLevel: 12
+    Opened: 0
+    weapon: {fileID: 7925853757073430869, guid: 4ad8ac4d83b1cf145adae1b5d4004520,
+      type: 3}
+    Icon: {fileID: 5397309336251975985, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  - Name: Elite Sword
+    Index: 5
+    Cost: 500
+    RequiredLevel: 10
+    Opened: 0
+    weapon: {fileID: -6244012180598552178, guid: 6c784273b7a3cce4294d1dbc6ceb11fa,
+      type: 3}
+    Icon: {fileID: -7905450923409390786, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Great Axe
+    Index: 6
+    Cost: 250
+    RequiredLevel: 6
+    Opened: 0
+    weapon: {fileID: 9128354321437096536, guid: 762e9e5a9d1234d4fa54fae848e9dcff,
+      type: 3}
+    Icon: {fileID: -1104998738882627415, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Greate Sword
+    Index: 7
+    Cost: 450
+    RequiredLevel: 8
+    Opened: 0
+    weapon: {fileID: 7355467803822948904, guid: 97f34321966568641b4c47a00364e5a1,
+      type: 3}
+    Icon: {fileID: 2076972755943637556, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Great Hammer
+    Index: 8
+    Cost: 500
+    RequiredLevel: 13
+    Opened: 0
+    weapon: {fileID: -7348993945448162406, guid: b52f447b169b39540976e7ed0914dcc6,
+      type: 3}
+    Icon: {fileID: 4943202673544277475, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  - Name: Great Lance
+    Index: 9
+    Cost: 300
+    RequiredLevel: 9
+    Opened: 0
+    weapon: {fileID: 8623710150773392088, guid: 9d54511a330e8004a86293b5fe900183,
+      type: 3}
+    Icon: {fileID: 7876722415442848751, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Hammer
+    Index: 10
+    Cost: 175
+    RequiredLevel: 5
+    Opened: 0
+    weapon: {fileID: 6691549251597124274, guid: 16d2d5b164e95764a87728ea6ee90ab8,
+      type: 3}
+    Icon: {fileID: 4357036160064118417, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Lance
+    Index: 11
+    Cost: 200
+    RequiredLevel: 6
+    Opened: 0
+    weapon: {fileID: 4645482641037742207, guid: 31f6936d5e4425749b64579207ec37b3,
+      type: 3}
+    Icon: {fileID: 3525681342201372738, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Large Club
+    Index: 12
+    Cost: 400
+    RequiredLevel: 11
+    Opened: 0
+    weapon: {fileID: -9013468668132671761, guid: f28d360b2fcd46549a3b263c3be88b94,
+      type: 3}
+    Icon: {fileID: -5428110156632507908, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: PoleAxe
+    Index: 13
+    Cost: 400
+    RequiredLevel: 7
+    Opened: 0
+    weapon: {fileID: 509812880334392657, guid: 45178343a0ecbd24d9296f6df8b1a0b7, type: 3}
+    Icon: {fileID: 5078044370155116776, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Two Side Axe
+    Index: 14
+    Cost: 300
+    RequiredLevel: 7
+    Opened: 0
+    weapon: {fileID: 193811027679847317, guid: 0f0031af20021904d9aab217c74682b9, type: 3}
+    Icon: {fileID: -1791644410063087870, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Rake
+    Index: 15
+    Cost: 50
+    RequiredLevel: 1
+    Opened: 0
+    weapon: {fileID: 3826573081780287100, guid: 9e5312cdba1d51b40bdc3891665f814a,
+      type: 3}
+    Icon: {fileID: -6237918819829497205, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Pitchfork
+    Index: 16
+    Cost: 125
+    RequiredLevel: 3
+    Opened: 0
+    weapon: {fileID: 8735657926360071520, guid: b5987291cddee6e46886c0d5eb164138,
+      type: 3}
+    Icon: {fileID: 2092712480424358925, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Pick
+    Index: 17
+    Cost: 100
+    RequiredLevel: 2
+    Opened: 0
+    weapon: {fileID: 3232490601882562395, guid: 87142f408a03a584787c5231a2342b24,
+      type: 3}
+    Icon: {fileID: 1042245053286467786, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Scythe
+    Index: 18
+    Cost: 100
+    RequiredLevel: 5
+    Opened: 0
+    weapon: {fileID: 757191780823901296, guid: 3751a2b9929c9824bb0c2d0390f0ccf2, type: 3}
+    Icon: {fileID: 2749975284938357403, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Showel
+    Index: 19
+    Cost: 75
+    RequiredLevel: 1
+    Opened: 0
+    weapon: {fileID: 3906354599097324131, guid: aef28e3f9c88ae645ba070c61a015788,
+      type: 3}
+    Icon: {fileID: 6561894709883073546, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Pan
+    Index: 20
+    Cost: 150
+    RequiredLevel: 5
+    Opened: 0
+    weapon: {fileID: 1780687721771691568, guid: d782643df31bf144b82094b7003a8dca,
+      type: 3}
+    Icon: {fileID: 4298321002136687068, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Bardiche
+    Index: 21
+    Cost: 500
+    RequiredLevel: 12
+    Opened: 0
+    weapon: {fileID: 8516805417368363239, guid: 51daa147d0546914592f90d7c5080a84,
+      type: 3}
+    Icon: {fileID: 8628904704544423752, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Evening Star
+    Index: 22
+    Cost: 400
+    RequiredLevel: 11
+    Opened: 0
+    weapon: {fileID: 2916771687994967609, guid: 02bea9544828af645ad77ea93e969bf7,
+      type: 3}
+    Icon: {fileID: 51877033005449554, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Zweihander
+    Index: 23
+    Cost: 600
+    RequiredLevel: 12
+    Opened: 0
+    weapon: {fileID: 3310593643497627951, guid: 64700606bbf066d4c8c8b03de055bbad,
+      type: 3}
+    Icon: {fileID: -4633819844380998089, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Elite Zweihander
+    Index: 24
+    Cost: 1000
+    RequiredLevel: 13
+    Opened: 0
+    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+      type: 3}
+    Icon: {fileID: -3894565935971316592, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  Effects:
+  - Name: Sparks
+    Index: 0
+    Effect: {fileID: 1057373363469567426, guid: 48f8da56c3a329246854b0a407483e58,
+      type: 3}
+  - Name: Collide
+    Index: 1
+    Effect: {fileID: 5570669348214235690, guid: dfda6907eea6b504eb6030d09a9435c8,
+      type: 3}
+  - Name: FlipRun
+    Index: 2
+    Effect: {fileID: 7110647970306879131, guid: feef051de44d4f3458f8e2c035b774eb,
+      type: 3}
+  - Name: TakeBuff
+    Index: 3
+    Effect: {fileID: 1654766649021869627, guid: 93a9f940818f0054588f3bf0d84f9d37,
+      type: 3}
+  - Name: ExpTaken
+    Index: 4
+    Effect: {fileID: 2267129415868382252, guid: 258a5e714482df345b65c162fddf8d19,
+      type: 3}
+  - Name: CoinTaken
+    Index: 5
+    Effect: {fileID: 6766867655028470367, guid: f39e15c2abf2448428c9cb4f3f11700b,
+      type: 3}
+  - Name: Fire
+    Index: 6
+    Effect: {fileID: 764519199847639598, guid: 65588a893c637fb4bba6a3c4c12c42cb, type: 3}
+  Ground:
+  - Name: Ground
+    Index: 0
+    Ground: {fileID: -562605217060080129, guid: 6b4eadfadd8918d499f2852ce049f848,
+      type: 3}
+    color: {r: 0.2392157, g: 0.6784314, b: 0.08627451, a: 1}
+    UiBackColor: {r: 0.2509804, g: 0.63529414, b: 0.8196079, a: 1}
+    FarBackGround: []
+    BackGround:
+    - {fileID: 5602804684505705784, guid: b9e557f63fe86374fb48a3b3f9398423, type: 3}
+    - {fileID: 1471049202595022374, guid: 29b3b873837e2d1438123b14bed36102, type: 3}
+    - {fileID: 7999481534524055175, guid: 6cc0ffb7f80d25f4cb088a057bce32ec, type: 3}
+    - {fileID: 7502286596997707528, guid: feb60b99d6ef1ee4d8f6f6c060ed8890, type: 3}
+    - {fileID: 6214675753502252233, guid: ac1cfe3f6621f784f8129892cd50754e, type: 3}
+    - {fileID: 1178285311926768391, guid: 2f318d742d6899740b383334b41feeb0, type: 3}
+    - {fileID: 8015876681059207538, guid: e7baa7e8fbfbf90448cfec572112ac49, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    SceneObject:
+    - {fileID: 745554901166262255, guid: 8ff33950a68e8574086db1853e854467, type: 3}
+    - {fileID: 8618748288304458644, guid: 525724a227476e141a23576f42cb6841, type: 3}
+    - {fileID: 745554901166262255, guid: 8ff33950a68e8574086db1853e854467, type: 3}
+    - {fileID: 8618748288304458644, guid: 525724a227476e141a23576f42cb6841, type: 3}
+    - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+    Speed: 1
+    Acceleration: 1
+  - Name: Swamp
+    Index: 1
+    Ground: {fileID: 6682738439518977790, guid: 6b4eadfadd8918d499f2852ce049f848,
+      type: 3}
+    color: {r: 0.078431375, g: 0.6313726, b: 0.22352943, a: 1}
+    UiBackColor: {r: 0.25098035, g: 0.8143116, b: 0.81960785, a: 1}
+    FarBackGround: []
+    BackGround:
+    - {fileID: 2380480745585891120, guid: 9edd39a22ebf93841b01de2170350b09, type: 3}
+    - {fileID: 2784372144044056321, guid: c19f73ef9d5ede24e816e158797abf19, type: 3}
+    - {fileID: 6798242335422867984, guid: 38b122bfcc91d5b45bf2e5fb87a013ff, type: 3}
+    - {fileID: 1576126753436302985, guid: 93baa30875c5cdc40a80d0243b1d182a, type: 3}
+    - {fileID: 2892301477869094939, guid: 3cca5e298c59e2a40baa6f1d6e96c768, type: 3}
+    - {fileID: 8062074267553536418, guid: 5ad985ec3a0c974489af2546ad727428, type: 3}
+    - {fileID: 1506153904393265426, guid: 89877873abfb4904097008c4bea24a7e, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    SceneObject:
+    - {fileID: 1829672244940870889, guid: 8be8a867173206242b2d00dc3c83284f, type: 3}
+    - {fileID: 8797908997501852070, guid: 22010c301b01e4246b027f6e17cdaff8, type: 3}
+    - {fileID: 8797908997501852070, guid: 22010c301b01e4246b027f6e17cdaff8, type: 3}
+    - {fileID: 1829672244940870889, guid: 8be8a867173206242b2d00dc3c83284f, type: 3}
+    - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+    Speed: 0.75
+    Acceleration: 1
+  - Name: Ice
+    Index: 2
+    Ground: {fileID: -4970410492042351176, guid: 6b4eadfadd8918d499f2852ce049f848,
+      type: 3}
+    color: {r: 0.9450981, g: 1, b: 1, a: 1}
+    UiBackColor: {r: 0.5613208, g: 0.8578075, b: 1, a: 1}
+    FarBackGround: []
+    BackGround:
+    - {fileID: 6616539510846461915, guid: fb59893bfe1f1194a92c1ae7bd9104db, type: 3}
+    - {fileID: 6340262298277515526, guid: e9d8cbcab1a80c5448f60dfe80babb04, type: 3}
+    - {fileID: 8277206564573030426, guid: 4cea312d80ba2a148adf9726cc496733, type: 3}
+    - {fileID: 8404333933492134204, guid: 8e5461d8474c2ea41b6fe8867664f2d8, type: 3}
+    - {fileID: 7122739056197341796, guid: 486ffde7d0f05f84d9096b65bc1e4ca0, type: 3}
+    - {fileID: 8960373381083354870, guid: 4fff0f4461c7fca48bf34349ecd2b427, type: 3}
+    SceneObject:
+    - {fileID: 8012511438480313150, guid: bedd2ae62272132459f308928a396831, type: 3}
+    - {fileID: 6355323119966186560, guid: 9b38cfcf0b3a7844c8d946d22a16310a, type: 3}
+    - {fileID: 6355323119966186560, guid: 9b38cfcf0b3a7844c8d946d22a16310a, type: 3}
+    - {fileID: 8012511438480313150, guid: bedd2ae62272132459f308928a396831, type: 3}
+    - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+    Speed: 1
+    Acceleration: 0.5
+  - Name: Cave
+    Index: 3
+    Ground: {fileID: -5930158604282628446, guid: 6b4eadfadd8918d499f2852ce049f848,
+      type: 3}
+    color: {r: 0.72156864, g: 0.72156864, b: 0.72156864, a: 1}
+    UiBackColor: {r: 0.5350659, g: 0.6319028, b: 0.6792453, a: 1}
+    FarBackGround: []
+    BackGround:
+    - {fileID: 4676106743416917527, guid: 68ae369b99f55054fb24c195c5264ab4, type: 3}
+    - {fileID: 7426302694864160433, guid: 29fe340bcfab58540910099b5aa95547, type: 3}
+    - {fileID: 8979815545036871024, guid: 9d28593ceb91f6e4d9e4a22ba15ce346, type: 3}
+    - {fileID: 8924658355221582396, guid: 34ca48811138d1f478afa30f3b01d41a, type: 3}
+    - {fileID: 410022800248582854, guid: 4b723ecbbdb344841bd5cf9dbb1f0f74, type: 3}
+    - {fileID: 273539429065379357, guid: 2ba5e067ef56e1140abcc12aa29ef525, type: 3}
+    - {fileID: 2558908708218978910, guid: 4b884ffa045b68540a475fd639abdc96, type: 3}
+    - {fileID: 1654499442043287531, guid: 1934b8f85b202f6469d16e0332779220, type: 3}
+    - {fileID: 704379143265486424, guid: 6a605cbc1aa76c048a38d5eaef66ed9f, type: 3}
+    - {fileID: 3630758998920883730, guid: 4d31a4bc56c2df544965b79b38c6581b, type: 3}
+    - {fileID: 6443881188957779249, guid: e7894a4175fcd7b4b88517922e4f5fda, type: 3}
+    - {fileID: 3013164384650430575, guid: 0c548e62f68bce34bb7670b2879b38cf, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    SceneObject:
+    - {fileID: 745554901166262255, guid: 8ff33950a68e8574086db1853e854467, type: 3}
+    - {fileID: 8618748288304458644, guid: 525724a227476e141a23576f42cb6841, type: 3}
+    - {fileID: 8618748288304458644, guid: 525724a227476e141a23576f42cb6841, type: 3}
+    - {fileID: 745554901166262255, guid: 8ff33950a68e8574086db1853e854467, type: 3}
+    - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+    Speed: 1
+    Acceleration: 0.8
+  - Name: Arena
+    Index: 4
+    Ground: {fileID: -562605217060080129, guid: 6b4eadfadd8918d499f2852ce049f848,
+      type: 3}
+    color: {r: 0.2392157, g: 0.6784314, b: 0.08627451, a: 1}
+    UiBackColor: {r: 0.40970984, g: 0.7643513, b: 0.9339623, a: 1}
+    FarBackGround: []
+    BackGround:
+    - {fileID: 5088666419494550704, guid: c0d0e65f7ccd75b419d332256f95d229, type: 3}
+    - {fileID: 5088666419494550704, guid: c0d0e65f7ccd75b419d332256f95d229, type: 3}
+    - {fileID: 1895784726284821439, guid: 24ffdbfa502c00341900d3698071811f, type: 3}
+    - {fileID: 1895784726284821439, guid: 24ffdbfa502c00341900d3698071811f, type: 3}
+    - {fileID: 2771453693087060562, guid: d81e1366bfbd8e449b989ef21874aa13, type: 3}
+    - {fileID: 6343767536225815903, guid: 46fb4d7014c053446b7791992c31f531, type: 3}
+    - {fileID: 1545601501611919635, guid: 6ffbaaf8db47dc340b570485243ca192, type: 3}
+    - {fileID: 900189279377528466, guid: dbdf38d62e18a9e448e28ee3783d9b1e, type: 3}
+    - {fileID: 5602804684505705784, guid: b9e557f63fe86374fb48a3b3f9398423, type: 3}
+    - {fileID: 7999481534524055175, guid: 6cc0ffb7f80d25f4cb088a057bce32ec, type: 3}
+    - {fileID: 8015876681059207538, guid: e7baa7e8fbfbf90448cfec572112ac49, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    - {fileID: 5989582735162976278, guid: 731a777c3634c1d4eb280dd190c5db8d, type: 3}
+    SceneObject:
+    - {fileID: 1132432008532887685, guid: 0bb798683c3324e4ab6f9d4573a3bb95, type: 3}
+    - {fileID: 4350510826156669203, guid: 2dfae00e1e3458e41bdc00169de7b003, type: 3}
+    - {fileID: 1132432008532887685, guid: 0bb798683c3324e4ab6f9d4573a3bb95, type: 3}
+    - {fileID: 4350510826156669203, guid: 2dfae00e1e3458e41bdc00169de7b003, type: 3}
+    - {fileID: 7091708214584239025, guid: 67552730cee586c4691ac306bae48300, type: 3}
+    - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+    Speed: 1
+    Acceleration: 1
+  Buffs:
+  - Name: Attack
+    Index: 0
+    obj: {fileID: 6803818508216951207, guid: 088ad12ff2e81144e9b74b8af4089f17, type: 3}
+  - Name: Hp
+    Index: 1
+    obj: {fileID: 4657555171292303795, guid: 60547414a4b4d7c408caad6625088181, type: 3}
+  - Name: Size
+    Index: 2
+    obj: {fileID: 4343309258220763039, guid: 08d37769590e92c4292129ddec21f025, type: 3}
+  - Name: Speed
+    Index: 3
+    obj: {fileID: 5477787214648290606, guid: aeb248d3564855e42ab39a2c48def455, type: 3}
+  Exp: {fileID: 1479821346714826019, guid: 8ae84578d8eec7c4b9609980a120d27a, type: 3}
+  coin: {fileID: -923903718891750850, guid: b48e8f890fb14e7439e5e65bfec62552, type: 3}
+  WeaponTrail: {r: 1, g: 1, b: 1, a: 0.39215687}
+  WeaponRedTrail: {r: 1, g: 0.4146728, b: 0, a: 0.6431373}
+  FastRun: {r: 1, g: 0.67897964, b: 0, a: 1}
+  MansColor:
+  - {r: 0.80392164, g: 0.79215693, b: 0.45098042, a: 0}
+  - {r: 0.80392164, g: 0.70980394, b: 0.45098042, a: 0}
+  - {r: 0.80392164, g: 0.60784316, b: 0.45098042, a: 0}
+  - {r: 0.6509804, g: 0.62352943, b: 0.36862746, a: 0}
+  - {r: 0.62352943, g: 0.5568628, b: 0.35686275, a: 0}
+  - {r: 0.7843138, g: 0.64705884, b: 0.41960788, a: 0}
+  - {r: 0.62352943, g: 0.48743582, b: 0.2901961, a: 0}
+  - {r: 0.62352943, g: 0.43921572, b: 0.2901961, a: 0}
+  - {r: 0.33333334, g: 0.27058825, b: 0.21176472, a: 0}
+  - {r: 0.50980395, g: 0.43137258, b: 0.34901962, a: 0}
+  - {r: 0.6901961, g: 0.5803922, b: 0.46274513, a: 0}
+  - {r: 0.6698113, g: 0.5235722, b: 0.35702205, a: 0}
+  - {r: 0.5754717, g: 0.4342111, b: 0.26873443, a: 0}
+  - {r: 0.764151, g: 0.6508857, b: 0.37126204, a: 0}
+  - {r: 0.6431373, g: 0.60784316, b: 0.37647063, a: 0}
+  IconWeaponColor:
+  - {r: 0.21698111, g: 0.21698111, b: 0.21698111, a: 1}
+  - {r: 0, g: 0.9836068, b: 1, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.9275363, b: 0, a: 1}
