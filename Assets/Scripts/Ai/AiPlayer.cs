@@ -29,13 +29,16 @@ public class AiPlayer : Man
         base.SetParams();
 
         SkinColor = GameData.active.GetRandColorHVS();
-        for (int i = 0; i < Sprites.Length; i++)
+        if (Type != ManType.Player)
         {
-            Sprites[i].material.SetColor("_Color", SkinColor);
-        }
-        for(int i = 0; i < FakeSprites.Length; i++)
-        {
-            FakeSprites[i].material.SetColor("_Color", SkinColor);
+            for (int i = 0; i < Sprites.Length; i++)
+            {
+                Sprites[i].material.SetColor("_Color", SkinColor);
+            }
+            for (int i = 0; i < FakeSprites.Length; i++)
+            {
+                FakeSprites[i].material.SetColor("_Color", SkinColor);
+            }
         }
     }
 
@@ -94,7 +97,7 @@ public class AiPlayer : Man
 
     public override void OnAttack(Man Enemy, float Power, HitType Type)
     {
-        if (Enemy.GetComponent<Player>() != null && Power >= 0.5f)
+        if (Enemy != null && Enemy.GetComponent<Player>() != null && Power >= 0.5f)
         {
             CameraMove.active.PunchShow(this, Power, Type);
         }
@@ -103,13 +106,13 @@ public class AiPlayer : Man
 
     public override void Punch(Man Enemy)
     {
-        if (Rig.velocity.magnitude * Size > Enemy.Rig.velocity.magnitude * Enemy.Size * Random.Range(0.9f, 1.1f) && DistY(Enemy) < 0.25f && !Punched && !NoPunch && !Enemy.NoPunch)
+        if (Rig.velocity.magnitude * Size > Enemy.Rig.velocity.magnitude * Enemy.Size * Random.Range(0.9f, 1.1f) && DistY(Enemy) < 0.25f && !Punched && !NoPunch && !Enemy.NoPunch && !Enemy.OnTackle)
         {
             Vector2 Dir = (Enemy.transform.position - transform.position).normalized;
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))
             {
                 Enemy.GetImpulse(new Vector2(Mathf.CeilToInt(Dir.x), Dir.y * 0.25f).normalized * Hard() * Rig.velocity.magnitude);
-                Enemy.GetHit(Mathf.RoundToInt(Velocity), Enemy, HitType.Fall);
+                Enemy.GetHit(Mathf.RoundToInt(Velocity), Enemy, HitType.Fall, EffectType.Null);
                 Enemy.GetPunched(this, Velocity * Size > 0.25f);
                 Rig.velocity *= 1f;
                 OnAttack(Enemy, Velocity, HitType.Fall);
@@ -158,35 +161,18 @@ public class AiPlayer : Man
         yield break;
     }
 
-
-    public override void Pass(Man man)
-    {
-        Physics2D.IgnoreCollision(Col, man.Col, true);
-        StartCoroutine(PassCour(man));
-    }
-    private IEnumerator PassCour(Man man)
-    {
-        while(DistX(man) < 2)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        if (man != null)
-        {
-            Physics2D.IgnoreCollision(Col, man.Col, false);
-        }
-        yield break;
-    }
-
     public override void OnLandOof(Man Enemy, float velocity)
     {
-        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 3), Enemy, HitType.Fall);
+        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 3), Enemy, HitType.Fall, EffectType.Null);
         if (Punched && velocity > 1)
         {
             ThrowOutWeapon();
         }
     }
-    public override void GetHit(int Damage, Man Enemy, HitType type)
+    public override void GetHit(int Damage, Man Enemy, HitType type, EffectType effect)
     {
+        Control.GetEnemy(Enemy);
+
         if (Dead)
             return;
         Hp -= Damage;
@@ -196,14 +182,18 @@ public class AiPlayer : Man
             Die(Enemy, type);
         }
         StartCoroutine(TakeDelay());
-        DelayAttack(1 / Size);
-        if(type != HitType.Throw)
-            Control.GetEnemy(Enemy);
+        DelayAttack(1 / Size);  
+
+        GetEffect(Enemy, effect);
     }
 
     public override void GetEnemy(Man Enemy)
     {
         Control.GetEnemy(Enemy);
+    }
+    public override void TryGetEnemy(Man Enemy)
+    {
+        Control.TryGetEnemy(Enemy);
     }
 
     public override void Die(Man Enemy, HitType type)
@@ -211,8 +201,15 @@ public class AiPlayer : Man
         anim.SetBool("Dead", true);
         Dead = true;
         ThrowOutWeapon();
-        
-        Level.active.OnEnemyDie(this, Enemy, type);
+
+        if (Type != ManType.Player)
+        {
+            Level.active.OnEnemyDie(this, Enemy, type);
+        }
+        else
+        {
+            Level.active.OnFriendDie(this, Enemy, type);
+        }
     }
 
     private IEnumerator HitEffect()

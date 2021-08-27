@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c9ba79b88fcf44c93c1a8de1a796a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MansKilled: 000000000000000000000000000000000000000000000000000000000000000000000000
+  MansKilled: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   GameHard: 1
   GameType:
   - Name: Levels
@@ -145,6 +145,10 @@ MonoBehaviour:
   - Name: Boss Man
     Index: 1
     Enemy: {fileID: 2138488382704469684, guid: c8c5ce58b6e153547b29e48621a18e03, type: 3}
+  Friend:
+  - Name: Knight
+    Index: 0
+    Enemy: {fileID: 6696380408066276275, guid: 08806af49753b874ca86fdcdecf3e42f, type: 3}
   AttackPhase:
   - "\u041D\u0430"
   - "\u041F\u043E\u043B\u0443\u0447\u0438"
@@ -392,6 +396,7 @@ MonoBehaviour:
     Cost: 0
     RequiredLevel: 0
     Opened: 1
+    Premium: 0
     weapon: {fileID: -4475211284396730487, guid: c79b3e9f5c66c7b40a0ec847ba35d73f,
       type: 3}
     Icon: {fileID: -4353666827862592859, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -399,9 +404,10 @@ MonoBehaviour:
     Place: 0
   - Name: Alebarda
     Index: 1
-    Cost: 300
+    Cost: 500
     RequiredLevel: 10
     Opened: 0
+    Premium: 1
     weapon: {fileID: -5489435138435424582, guid: fd59a20928a2b8049949397de66c43e2,
       type: 3}
     Icon: {fileID: -1201781469886174915, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -412,6 +418,7 @@ MonoBehaviour:
     Cost: 250
     RequiredLevel: 8
     Opened: 0
+    Premium: 0
     weapon: {fileID: 4575685520726181005, guid: ae896048a5ed2964f84e9e1b72b2a2e9,
       type: 3}
     Icon: {fileID: 6343528850096420921, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -422,6 +429,7 @@ MonoBehaviour:
     Cost: 150
     RequiredLevel: 4
     Opened: 0
+    Premium: 0
     weapon: {fileID: -5363904333159045422, guid: 78a3e64adba207949ba1a1bf88917ec2,
       type: 3}
     Icon: {fileID: 6763124819713348665, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -432,6 +440,7 @@ MonoBehaviour:
     Cost: 750
     RequiredLevel: 12
     Opened: 0
+    Premium: 0
     weapon: {fileID: 7925853757073430869, guid: 4ad8ac4d83b1cf145adae1b5d4004520,
       type: 3}
     Icon: {fileID: 5397309336251975985, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -442,6 +451,7 @@ MonoBehaviour:
     Cost: 500
     RequiredLevel: 10
     Opened: 0
+    Premium: 0
     weapon: {fileID: -6244012180598552178, guid: 6c784273b7a3cce4294d1dbc6ceb11fa,
       type: 3}
     Icon: {fileID: -7905450923409390786, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -452,6 +462,7 @@ MonoBehaviour:
     Cost: 250
     RequiredLevel: 6
     Opened: 0
+    Premium: 0
     weapon: {fileID: 9128354321437096536, guid: 762e9e5a9d1234d4fa54fae848e9dcff,
       type: 3}
     Icon: {fileID: -1104998738882627415, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -462,6 +473,7 @@ MonoBehaviour:
     Cost: 450
     RequiredLevel: 8
     Opened: 0
+    Premium: 0
     weapon: {fileID: 7355467803822948904, guid: 97f34321966568641b4c47a00364e5a1,
       type: 3}
     Icon: {fileID: 2076972755943637556, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -472,6 +484,7 @@ MonoBehaviour:
     Cost: 500
     RequiredLevel: 13
     Opened: 0
+    Premium: 0
     weapon: {fileID: -7348993945448162406, guid: b52f447b169b39540976e7ed0914dcc6,
       type: 3}
     Icon: {fileID: 4943202673544277475, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -482,6 +495,7 @@ MonoBehaviour:
     Cost: 300
     RequiredLevel: 9
     Opened: 0
+    Premium: 0
     weapon: {fileID: 8623710150773392088, guid: 9d54511a330e8004a86293b5fe900183,
       type: 3}
     Icon: {fileID: 7876722415442848751, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -492,6 +506,7 @@ MonoBehaviour:
     Cost: 175
     RequiredLevel: 5
     Opened: 0
+    Premium: 0
     weapon: {fileID: 6691549251597124274, guid: 16d2d5b164e95764a87728ea6ee90ab8,
       type: 3}
     Icon: {fileID: 4357036160064118417, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -502,6 +517,7 @@ MonoBehaviour:
     Cost: 200
     RequiredLevel: 6
     Opened: 0
+    Premium: 0
     weapon: {fileID: 4645482641037742207, guid: 31f6936d5e4425749b64579207ec37b3,
       type: 3}
     Icon: {fileID: 3525681342201372738, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -512,6 +528,7 @@ MonoBehaviour:
     Cost: 400
     RequiredLevel: 11
     Opened: 0
+    Premium: 0
     weapon: {fileID: -9013468668132671761, guid: f28d360b2fcd46549a3b263c3be88b94,
       type: 3}
     Icon: {fileID: -5428110156632507908, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -522,6 +539,7 @@ MonoBehaviour:
     Cost: 400
     RequiredLevel: 7
     Opened: 0
+    Premium: 0
     weapon: {fileID: 509812880334392657, guid: 45178343a0ecbd24d9296f6df8b1a0b7, type: 3}
     Icon: {fileID: 5078044370155116776, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 1
@@ -531,6 +549,7 @@ MonoBehaviour:
     Cost: 300
     RequiredLevel: 7
     Opened: 0
+    Premium: 0
     weapon: {fileID: 193811027679847317, guid: 0f0031af20021904d9aab217c74682b9, type: 3}
     Icon: {fileID: -1791644410063087870, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 1
@@ -540,6 +559,7 @@ MonoBehaviour:
     Cost: 50
     RequiredLevel: 1
     Opened: 0
+    Premium: 0
     weapon: {fileID: 3826573081780287100, guid: 9e5312cdba1d51b40bdc3891665f814a,
       type: 3}
     Icon: {fileID: -6237918819829497205, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -550,6 +570,7 @@ MonoBehaviour:
     Cost: 125
     RequiredLevel: 3
     Opened: 0
+    Premium: 0
     weapon: {fileID: 8735657926360071520, guid: b5987291cddee6e46886c0d5eb164138,
       type: 3}
     Icon: {fileID: 2092712480424358925, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -560,6 +581,7 @@ MonoBehaviour:
     Cost: 100
     RequiredLevel: 2
     Opened: 0
+    Premium: 0
     weapon: {fileID: 3232490601882562395, guid: 87142f408a03a584787c5231a2342b24,
       type: 3}
     Icon: {fileID: 1042245053286467786, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -570,6 +592,7 @@ MonoBehaviour:
     Cost: 100
     RequiredLevel: 5
     Opened: 0
+    Premium: 0
     weapon: {fileID: 757191780823901296, guid: 3751a2b9929c9824bb0c2d0390f0ccf2, type: 3}
     Icon: {fileID: 2749975284938357403, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 0
@@ -579,6 +602,7 @@ MonoBehaviour:
     Cost: 75
     RequiredLevel: 1
     Opened: 0
+    Premium: 0
     weapon: {fileID: 3906354599097324131, guid: aef28e3f9c88ae645ba070c61a015788,
       type: 3}
     Icon: {fileID: 6561894709883073546, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -589,6 +613,7 @@ MonoBehaviour:
     Cost: 150
     RequiredLevel: 5
     Opened: 0
+    Premium: 0
     weapon: {fileID: 1780687721771691568, guid: d782643df31bf144b82094b7003a8dca,
       type: 3}
     Icon: {fileID: 4298321002136687068, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -599,16 +624,18 @@ MonoBehaviour:
     Cost: 500
     RequiredLevel: 12
     Opened: 0
+    Premium: 0
     weapon: {fileID: 8516805417368363239, guid: 51daa147d0546914592f90d7c5080a84,
       type: 3}
     Icon: {fileID: 8628904704544423752, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 3
     Place: 0
   - Name: Evening Star
     Index: 22
     Cost: 400
     RequiredLevel: 11
     Opened: 0
+    Premium: 1
     weapon: {fileID: 2916771687994967609, guid: 02bea9544828af645ad77ea93e969bf7,
       type: 3}
     Icon: {fileID: 51877033005449554, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -619,6 +646,7 @@ MonoBehaviour:
     Cost: 600
     RequiredLevel: 12
     Opened: 0
+    Premium: 0
     weapon: {fileID: 3310593643497627951, guid: 64700606bbf066d4c8c8b03de055bbad,
       type: 3}
     Icon: {fileID: -4633819844380998089, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
@@ -629,11 +657,99 @@ MonoBehaviour:
     Cost: 1000
     RequiredLevel: 13
     Opened: 0
+    Premium: 1
     weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
       type: 3}
     Icon: {fileID: -3894565935971316592, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 3
     Place: 0
+  - Name: Crossbow
+    Index: 25
+    Cost: 1500
+    RequiredLevel: 9
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 341459756886440285, guid: c342fda1b59d48b418aba28889a477bb, type: 3}
+    Icon: {fileID: 5579144479164033125, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Small Crossbow
+    Index: 26
+    Cost: 1000
+    RequiredLevel: 5
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+      type: 3}
+    Icon: {fileID: 9135076359821902065, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Bow
+    Index: 27
+    Cost: 350
+    RequiredLevel: 3
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+      type: 3}
+    Icon: {fileID: -7594048697255639695, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Elite Bow
+    Index: 28
+    Cost: 1750
+    RequiredLevel: 11
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+      type: 3}
+    Icon: {fileID: 7048928126449685737, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  - Name: Musket
+    Index: 29
+    Cost: 2500
+    RequiredLevel: 13
+    Opened: 0
+    Premium: 1
+    weapon: {fileID: 3871845960423684970, guid: 4ad35233686198c439efd3942de1d9eb,
+      type: 3}
+    Icon: {fileID: -5587630956021105233, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  WeaponRand:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.76057893
+      outSlope: 0.76057893
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.08250119
+    - serializedVersion: 3
+      time: 0.68407935
+      value: 0.35943392
+      inSlope: 1.0617224
+      outSlope: 1.0617224
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33392766
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 4.489436
+      outSlope: 4.489436
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.297319
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   Effects:
   - Name: Sparks
     Index: 0
@@ -662,6 +778,10 @@ MonoBehaviour:
   - Name: Fire
     Index: 6
     Effect: {fileID: 764519199847639598, guid: 65588a893c637fb4bba6a3c4c12c42cb, type: 3}
+  - Name: ManFired
+    Index: 7
+    Effect: {fileID: 7853244259724044833, guid: 75b86caa16c87db4b9c473412717dfc1,
+      type: 3}
   Ground:
   - Name: Ground
     Index: 0

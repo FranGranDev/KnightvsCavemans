@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 241152200519521752}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.12, y: 0.58, z: 0}
+  m_LocalPosition: {x: -0.099, y: 0.615, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5086417184212762217}
@@ -243,7 +243,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 15
+  m_SortingOrder: 17
   m_Sprite: {fileID: 6144477042268754305, guid: 3d41e6c760c1f474283619f164f6350c,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -268,7 +268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41578fde2f06f984cbe93ae61976a388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WeaponType: 0
+  WeaponType: 6
+  NowEffect: 0
   Damage: 1
   Weight: 1.5
   Impusle: 1
@@ -277,11 +278,15 @@ MonoBehaviour:
   Handle: {fileID: 0}
   Rig: {fileID: 5086417184212762213}
   Renderer: {fileID: 5086417184212762218}
-  AttackRange: 10
+  Miss: 0.25
+  MaxAmmo: 13
+  NowAmmo: 0
+  AttackRange: 15
   ReloadTime: 1
   anim: {fileID: 1965012778405150654}
   BulletPos: {fileID: 5694185256730792653}
   bullet: {fileID: 5023114808929924198, guid: ad395c4d6d3bd084489061b2cfac8862, type: 3}
+  StartFireEffect: {fileID: 0}
 --- !u!50 &5086417184212762213
 Rigidbody2D:
   serializedVersion: 4
@@ -316,7 +321,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0040245354, y: -0.006429553}
+  m_Offset: {x: -0.0040245354, y: 0.0023138523}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.39556885, y: 0.4999993}
@@ -327,7 +332,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.56894463, y: 1.5120599}
+  m_Size: {x: 0.44306022, y: 1.3896527}
   m_EdgeRadius: 0
 --- !u!95 &1965012778405150654
 Animator:

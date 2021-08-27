@@ -101,7 +101,7 @@ public class AiBoss : Man
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))
             {
                 Enemy.GetImpulse(new Vector2(Mathf.CeilToInt(Dir.x), Dir.y * 0.25f).normalized * Rig.velocity.magnitude);
-                Enemy.GetHit(Mathf.RoundToInt(Velocity), Enemy, HitType.Fall);
+                Enemy.GetHit(Mathf.RoundToInt(Velocity), Enemy, HitType.Fall, EffectType.Null);
                 Enemy.GetPunched(this, Velocity * Size > 0.25f);
                 Rig.velocity *= 1f;
                 OnAttack(Enemy, Velocity, HitType.Fall);
@@ -150,33 +150,16 @@ public class AiBoss : Man
         yield break;
     }
 
-    public override void Pass(Man man)
-    {
-        Physics2D.IgnoreCollision(Col, man.Col, true);
-        StartCoroutine(PassCour(man));
-    }
-    private IEnumerator PassCour(Man man)
-    {
-        while (DistX(man) < 2)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        if (man != null)
-        {
-            Physics2D.IgnoreCollision(Col, man.Col, false);
-        }
-        yield break;
-    }
 
     public override void OnLandOof(Man Enemy, float velocity)
     {
-        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 5), Enemy, HitType.Punch);
+        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 5), Enemy, HitType.Punch, EffectType.Null);
         if (Punched && velocity > 1f && Random.Range(0, 3) == 0)
         {
             ThrowOutWeapon();
         }
     }
-    public override void GetHit(int Damage, Man Enemy, HitType type)
+    public override void GetHit(int Damage, Man Enemy, HitType type, EffectType effect)
     {
         if (Dead)
             return;

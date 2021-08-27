@@ -7,7 +7,8 @@ public abstract class Man : MonoBehaviour
     public bool Static;
     public enum ManType { Player, Enemy, Boss, Duel, Menu, Bets }
     public ManType Type;
-    public enum HitType { Hit, Throw, Bullet, Punch, Magic, Fall, Tackle, Object, Lava };
+    public enum HitType { Hit, HitFire, Throw, Bullet, Punch, Magic, Fall, Tackle, Object, Lava };
+    public enum EffectType { Null, Fire }
     [Header("Params")]
     [Range(1, 3f)]
     public float Size;
@@ -18,6 +19,8 @@ public abstract class Man : MonoBehaviour
     public int Hp;
     public int Experience;
     public int Money;
+    [HideInInspector]
+    public bool NoThrowOut;
     public float GroundAcceleration()
     {
         return GameData.Acceleration / GameData.Speed;
@@ -26,10 +29,10 @@ public abstract class Man : MonoBehaviour
     {
         return GameData.Speed;
     }
-    private float StartSpeed;
-    private float StartSize;
-    private float StartJump;
-    private float StartPower;
+    protected float StartSpeed;
+    protected float StartSize;
+    protected float StartJump;
+    protected float StartPower;
     public float HpProcent()
     {
         return (float)Hp / (float)MaxHp;
@@ -66,7 +69,9 @@ public abstract class Man : MonoBehaviour
 
     public Coroutine PunchCoroutine { get; protected set; }
     public Coroutine DelayAttackCoroutine { get; protected set; }
+    public Coroutine FireEffectCoroutine { get; protected set; }
     public Dictionary<Buff.Type, Coroutine> BuffCoroutine { get; protected set; }
+    private List<Collider2D> PassedMan;
 
     [Header("Components")]
     public ParticleSystem Effect;
@@ -133,8 +138,14 @@ public abstract class Man : MonoBehaviour
     {
         SetParams();
     }
+    public virtual void OnStart()
+    {
+
+    }
     public virtual void SetParams()
     {
+        OnStart();
+
         Dead = false;
         anim.SetBool("Dead", false);
         Hp = MaxHp;
@@ -142,6 +153,7 @@ public abstract class Man : MonoBehaviour
         transform.localScale = Vector3.one * Size;
         Rig.mass *= Size * Size;
         BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
+        PassedMan = new List<Collider2D>();
 
         StartJump = JumpForce;
         StartPower = Power;
@@ -150,6 +162,8 @@ public abstract class Man : MonoBehaviour
     }
     public virtual void SetParams(PlayerInfo info, ArmorInfo armorInfo)
     {
+        OnStart();
+
         Dead = false;
         anim.SetBool("Dead", false);
         Hp = MaxHp;
@@ -170,6 +184,27 @@ public abstract class Man : MonoBehaviour
         RLeg0Sprite.sortingOrder = armorInfo.RightLeg0Layer;
         RLeg1Sprite.sprite = armorInfo.RightLeg1;
         RLeg1Sprite.sortingOrder = armorInfo.RightLeg1Layer;
+
+        if(FakeSprite != null)
+        {
+            FakeSprites[0].sprite = armorInfo.Head;
+            FakeSprites[0].sortingOrder = armorInfo.HeadLayer;
+
+            FakeSprites[1].sprite = armorInfo.Body;
+            FakeSprites[1].sortingOrder = armorInfo.BodyLayer;
+
+            FakeSprites[2].sprite = armorInfo.LeftLeg0;
+            FakeSprites[2].sortingOrder = armorInfo.LeftLeg0Layer;
+
+            FakeSprites[3].sprite = armorInfo.LeftLeg1;
+            FakeSprites[3].sortingOrder = armorInfo.LeftLeg1Layer;
+
+            FakeSprites[4].sprite = armorInfo.RightLeg0;
+            FakeSprites[4].sortingOrder = armorInfo.RightLeg0Layer;
+
+            FakeSprites[5].sprite = armorInfo.RightLeg1;
+            FakeSprites[5].sortingOrder = armorInfo.RightLeg1Layer;
+        }
 
         switch(armorInfo.Effect)
         {
@@ -194,13 +229,11 @@ public abstract class Man : MonoBehaviour
         StartSize = Size;
         StartSpeed = Speed;
     }
-
     public virtual void SetSize(float Size)
     {
         this.Size = Size;
         transform.localScale = Vector3.one * Size;
     }
-
     public virtual void SetController(AiController controller)
     {
 
@@ -269,7 +302,7 @@ public abstract class Man : MonoBehaviour
     }
     public virtual void OnLandOof(Man Enemy, float velocity)
     {
-        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Punch);
+        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Punch, EffectType.Null);
         if(Punched && velocity > 1)
         {
             ThrowOutWeapon();
@@ -280,7 +313,7 @@ public abstract class Man : MonoBehaviour
 
     public virtual void ThrowOutWeapon()
     {
-        if (weapon == null)
+        if (weapon == null || NoThrowOut)
             return;
         weapon.ThrowOut();
         weapon = null;
@@ -314,9 +347,25 @@ public abstract class Man : MonoBehaviour
         yield break;
     }
 
-    public virtual void Pass(Man man)
-    {
 
+    private void Pass(Man man, Collider2D col)
+    {
+        Physics2D.IgnoreCollision(Col, man.Col, true);
+        StartCoroutine(PassCour(man, col));
+    }
+    private IEnumerator PassCour(Man man, Collider2D col)
+    {
+        PassedMan.Add(col);
+        while (DistX(man) < 3)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        if (man != null)
+        {
+            Physics2D.IgnoreCollision(Col, man.Col, false);
+        }
+        PassedMan.Remove(col);
+        yield break;
     }
 
     public virtual void ForceFlip(bool right)
@@ -334,6 +383,10 @@ public abstract class Man : MonoBehaviour
     public abstract void OnAttack(Man Enemy, float Power, HitType Type);
 
     public virtual void GetEnemy(Man Enemy)
+    {
+
+    }
+    public virtual void TryGetEnemy(Man Enemy)
     {
 
     }
@@ -371,30 +424,31 @@ public abstract class Man : MonoBehaviour
         yield break;
     }
 
-    public abstract void GetHit(int Damage, Man Enemy, HitType type);
+    public abstract void GetHit(int Damage, Man Enemy, HitType type, EffectType effect);
 
     public abstract void Die(Man Enemy, HitType type);
 
-    public virtual void GetBuff(Buff.Type type)
+    public virtual void GetBuff(Buff.Type type, float time)
     {
         if(BuffCoroutine.ContainsKey(type))
         {
             if(BuffCoroutine[type] != null)
                 StopCoroutine(BuffCoroutine[type]);
-            BuffCoroutine[type] = StartCoroutine(BuffCour(type));
+            BuffCoroutine[type] = StartCoroutine(BuffCour(type, time));
         }
         else
         {
-            BuffCoroutine.Add(type, StartCoroutine(BuffCour(type)));
+            BuffCoroutine.Add(type, StartCoroutine(BuffCour(type, time)));
         }
 
     }
-    private IEnumerator BuffCour(Buff.Type type)
+    private IEnumerator BuffCour(Buff.Type type, float time)
     {
         switch(type)
         {
             case Buff.Type.Hp:
                 Hp += Buff.HpBuff;
+
                 break;
             case Buff.Type.Power:
                 Power = StartPower * Buff.PowerBuff;
@@ -402,18 +456,18 @@ public abstract class Man : MonoBehaviour
                 {
                     weapon.GetBuff();
                 }
-                yield return new WaitForSeconds(Buff.BuffTime);
+                yield return new WaitForSeconds(time);
                 Power = StartPower;
                 break;
             case Buff.Type.Size:
                 Size = StartSize * Buff.SizeBuff;
-                yield return new WaitForSeconds(Buff.BuffTime);
+                yield return new WaitForSeconds(time);
                 Size = StartSize;
                 break;
             case Buff.Type.Speed:
                 Speed = StartSpeed * Buff.SpeedBuff;
                 JumpForce = StartJump * Buff.JumpBuff;
-                yield return new WaitForSeconds(Buff.BuffTime);
+                yield return new WaitForSeconds(time);
                 Speed = StartSpeed;
                 JumpForce = StartJump;
                 break;
@@ -440,6 +494,38 @@ public abstract class Man : MonoBehaviour
             StopCoroutine(BuffCoroutine[Buff.Type.Speed]);
         }
         BuffCoroutine.Clear();
+    }
+
+    public void GetEffect(Man man, EffectType effect)
+    {
+        switch(effect)
+        {
+            case EffectType.Fire:
+                if(FireEffectCoroutine == null)
+                {
+                    FireEffectCoroutine = StartCoroutine(FireEffectCour(man));
+                }
+                break;
+        }
+    }
+    private IEnumerator FireEffectCour(Man man)
+    {
+        ParticleSystem fire = Instantiate(GameData.active.GetEffect("ManFired"), Body.position, Body.rotation, transform).GetComponent<ParticleSystem>();
+        var Shape = fire.shape;
+        Shape.scale = Vector3.one * Size;
+        var Emmision = fire.emission;
+        Emmision.rateOverTime = 100 * Size;
+
+        float time = 5;
+        for(int i = 0; i < time; i++)
+        {
+            GetHit(1, man, HitType.HitFire, EffectType.Null);
+            yield return new WaitForSeconds(1);
+        }
+
+        Destroy(fire.gameObject);
+        FireEffectCoroutine = null;
+        yield break;
     }
 
     public virtual void GetImpulse(Vector2 Impulse)
@@ -583,13 +669,9 @@ public abstract class Man : MonoBehaviour
         if(collision.tag == "Player")
         {
             Man man = collision.GetComponent<Man>();
-            if(SideOwn.isEnemy(man, this) || (DistY(man) < -0.25f))
+            if(SideOwn.isEnemy(man, this))
             {
                 Punch(man);
-            }
-            else
-            {
-                Pass(man);
             }
         }
         else if(collision.tag == "Object")
@@ -609,6 +691,14 @@ public abstract class Man : MonoBehaviour
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (collision.tag == "Player" && !PassedMan.Exists(item => item == collision))
+        {
+            Man man = collision.GetComponent<Man>();
+            if (!SideOwn.isEnemy(man, this))
+            {
+                Pass(man, collision);
+            }
+        }
         if (collision.tag == "Obstacle")
         {
             SetOnGround(true);
@@ -619,7 +709,7 @@ public abstract class Man : MonoBehaviour
         }
         if(collision.tag == "Death")
         {
-            GetHit(1, null, HitType.Lava);
+            GetHit(1, null, HitType.Lava, EffectType.Fire);
         }
     }
     private void OnTriggerExit2D(Collider2D collision)

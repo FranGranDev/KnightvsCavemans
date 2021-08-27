@@ -37,6 +37,7 @@ public class SaveSystem
 public class SaveData
 {
     public int PlayerLevel;
+    public int PrevPlayerLevel;
     public int PlayerExperience;
     public int Money;
     public float GameHard;
@@ -56,6 +57,9 @@ public class SaveData
 
     public bool[] WeaponOpened;
 
+    public bool Vibration;
+    public float MusicVol;
+    public float EffectVol;
 
     public SaveData(GameData data)
     {
@@ -72,8 +76,13 @@ public class SaveData
         PlayerData = data.playerInfo;
         MansKilled = data.MansKilled;
         PlayerLevel = GameData.PlayerLevel;
+        PrevPlayerLevel = GameData.PrevPlayerLevel;
         PlayerExperience = GameData.PlayerExperience;
         Money = GameData.Money;
+
+        Vibration = GameData.Vibration;
+        MusicVol = GameData.MusicVol;
+        EffectVol = GameData.EffectVol;
 
         WeaponOpened = new bool[data.weapon.Length];
         for(int i = 0; i < WeaponOpened.Length; i++)

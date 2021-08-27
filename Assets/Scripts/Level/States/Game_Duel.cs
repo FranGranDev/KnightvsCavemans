@@ -21,7 +21,7 @@ public class Game_Duel : GameState
         level.BoxSpawn();
         level.BuffSpawn();
 
-        Waves = 3 + Mathf.RoundToInt(GameData.NowLevel / 5);
+        Waves = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(0, 2);
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Дуэльки: Уровень " + GameData.NowLevel, 3f);
@@ -47,7 +47,7 @@ public class Game_Duel : GameState
         if(level.AliveEnemy.Count == 0)
         {
             Vector2 Pos = level.sceneMaker.GetLongEnemyPos()[Random.Range(0, 2)];
-            float Power = Random.Range(0.75f, 1.25f);
+            float Power = (0.75f + Mathf.Sqrt(GameData.NowLevel) * 0.1f) + Random.Range(0f, 0.25f);
             level.AliveEnemy.Add(level.CreateDuelEnemy(Pos, Power));
         }
         else

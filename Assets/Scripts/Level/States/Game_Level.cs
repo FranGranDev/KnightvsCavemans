@@ -34,7 +34,8 @@ public class Game_Level : GameState
 
     private void CreateEnemys()
     {
-        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Similar, GameData.NowLevel + Random.Range(1, 3), level.sceneMaker.GetEnemyPos(), 50);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) + Random.Range(1, 3));
+        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Similar, EnemyCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveEnemy = level.AllEnemy;
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();

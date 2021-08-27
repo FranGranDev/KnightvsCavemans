@@ -30,7 +30,7 @@ public class Game_Waves : GameState
 
     private void CreateEnemys()
     {
-        int count = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowWave + 1) * 3);
+        int count = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowWave + 1) * 2);
         level.AliveEnemy = level.CreateEnemy(Level.EnemyCreateType.Waves, count, level.sceneMaker.GetLongEnemyPos(), 5);
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();

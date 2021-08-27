@@ -46,7 +46,7 @@ public class Game_Boss : GameState
     }
     private void CreateBoss()
     {
-        level.BossEnemy = level.CreateManBossEnemy(level.sceneMaker.GetEnemyPos(), Random.Range(0.9f, 1.1f));
+        level.BossEnemy = level.CreateManBossEnemy(level.sceneMaker.GetEnemyPos(), Random.Range(0.9f, 1.25f));
 
         CameraMove.active.TurnBossFollow(level.BossEnemy, true);
     }

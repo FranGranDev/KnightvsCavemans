@@ -19,47 +19,47 @@ MonoBehaviour:
     Type: 0
     AnimPlay: 
     Delay: 4
-    StartText: Hello, welcom to bla bla bla bla
+    StartText: Welcome to Knight vs Cavemans, defeat enemies and do not be defeated
     DoneText: 
-  - Name: Now, try to Move!
+  - Name: Movement is life - Move
     Type: 1
     AnimPlay: Learn_Move
     Delay: 2
-    StartText: Now, try to Move!
-    DoneText: Nice moving bro
-  - Name: Now, try to Jump!
+    StartText: Movement is life - Move
+    DoneText: Nice moving!
+  - Name: Try to jump, that fun
     Type: 2
     AnimPlay: Learn_Jump
     Delay: 2
-    StartText: Now, try to Jump!
-    DoneText: Nice jump bro
-  - Name: Now, try to Tackle!
+    StartText: Try to jump, that fun
+    DoneText: Nice jump!
+  - Name: Try to tackle, that will confuse enemy
     Type: 5
     AnimPlay: Learn_Tackle
     Delay: 2
-    StartText: Now, try to Tackle!
-    DoneText: Nice bro
-  - Name: Now, try to Take Weapon!
+    StartText: Try to tackle, that will confuse enemy
+    DoneText: Nice tackle!
+  - Name: Without a weapon you have little chance of winning - take Weapon
     Type: 6
     AnimPlay: 
     Delay: 2
-    StartText: Now, try to Take Weapon!
-    DoneText: Nice bro
-  - Name: Now, try to Throw!
+    StartText: Without a weapon you have little chance of winning - take Weapon
+    DoneText: Nice!
+  - Name: Throw weapon - that cool!
     Type: 4
     AnimPlay: Learn_Throw
     Delay: 2
-    StartText: Now, try to Throw!
+    StartText: Throw weapon - that cool!
     DoneText: Nice throw bro
-  - Name: Defeat that man
+  - Name: Little practice, defeat the enemy
     Type: 7
     AnimPlay: 
     Delay: 2
-    StartText: Defeat that man
+    StartText: Little practice, defeat the enemy
     DoneText: Punch face go brrrrr
   - Name: Done
     Type: 8
     AnimPlay: 
     Delay: 2
-    StartText: Now Go Real Battle, fight cavemans
+    StartText: Well done, you are ready for crazy battles
     DoneText: 

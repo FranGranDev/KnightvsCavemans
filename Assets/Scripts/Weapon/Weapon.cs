@@ -4,8 +4,10 @@ using UnityEngine;
 
 public abstract class Weapon : MonoBehaviour
 {
-    public enum Type {Sword, Axe, Lance, Hammer, Club, Tool, Gun};
+    public enum Type { Sword, Axe, Lance, Hammer, Club, Tool, Gun };
     public Type WeaponType;
+    public Man.EffectType NowEffect;
+    private Man.EffectType PrevEffect;
     [Range(0, 5)]
     public int Damage;
     [Range(1, 3f)]
@@ -65,12 +67,13 @@ public abstract class Weapon : MonoBehaviour
     }
     public void Start()
     {
-        OnStart();
-    }
-    public void OnStart()
-    {
         PrevAttack = new List<Man>();
         Trail.minVertexDistance = 0.01f;
+        OnStart();
+    }
+    public virtual void OnStart()
+    {
+
     }
 
     public abstract void Attack(Man man);
@@ -96,6 +99,33 @@ public abstract class Weapon : MonoBehaviour
     }
     public abstract void GetBuff();
 
+    public void FireBuff()
+    {
+        if (FireEffectCoroutine != null)
+        {
+            Destroy(FireEffect);
+            StopCoroutine(FireEffectCoroutine);
+        }
+        FireEffectCoroutine = StartCoroutine(FireEffectCour());
+    }
+    protected IEnumerator FireEffectCour()
+    {
+        PrevEffect = NowEffect;
+        NowEffect = Man.EffectType.Fire;
+        FireEffect = Instantiate(GameData.active.GetEffect("Fire"));
+        FireEffect.transform.parent = Trail.transform;
+        FireEffect.transform.position = Trail.transform.position;
+        yield return new WaitForSeconds(1f);
+        while (Power > 1)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        Destroy(FireEffect);
+        NowEffect = PrevEffect;
+        FireEffectCoroutine = null;
+        yield break;
+    }
+
 
     protected void CreateSparks(Man man)
     {
@@ -110,29 +140,6 @@ public abstract class Weapon : MonoBehaviour
         Eff.transform.localScale = transform.localScale;
         var Main = Eff.GetComponent<ParticleSystem>().main;
         Main.startColor = new Color(man.SkinColor.r, man.SkinColor.g, man.SkinColor.b, 0.25f);
-    }
-    protected void CreateFireEffect()
-    {
-        if (FireEffectCoroutine != null)
-        {
-            Destroy(FireEffect);
-            StopCoroutine(FireEffectCoroutine);
-        }
-        FireEffectCoroutine = StartCoroutine(FireEffectCour());
-    }
-    protected IEnumerator FireEffectCour()
-    {
-        FireEffect = Instantiate(GameData.active.GetEffect("Fire"));
-        FireEffect.transform.parent = Trail.transform;
-        FireEffect.transform.position = Trail.transform.position;
-        yield return new WaitForSeconds(1f);
-        while (Power > 1)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        Destroy(FireEffect);
-        FireEffectCoroutine = null;
-        yield break;
     }
 
     protected void DelayAttack(Man man, float time)

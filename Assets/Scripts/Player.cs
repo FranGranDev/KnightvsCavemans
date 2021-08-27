@@ -7,10 +7,66 @@ public class Player : Man
     public static Man active;
     private bool Jumped;
     private Coroutine TackleCoroutine;
+    private Man PrevHit;
+    private int HitinRow;
 
+    public override void OnStart()
+    {
+        Level.active.OnPlayerUpdateHp();
+    }
+    public override void SetParams(PlayerInfo info, ArmorInfo armorInfo)
+    {
+        OnStart();
+
+        Dead = false;
+        anim.SetBool("Dead", false);
+        Hp = MaxHp;
+        Power = 1;
+        transform.localScale = Vector3.one * Size;
+        Rig.mass *= Size * Size;
+        BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
+
+        BodySprite.sprite = armorInfo.Body;
+        BodySprite.sortingOrder = armorInfo.BodyLayer + 3;
+        HeadSprite.sprite = armorInfo.Head;
+        HeadSprite.sortingOrder = armorInfo.HeadLayer + 3;
+        LLeg0Sprite.sprite = armorInfo.LeftLeg0;
+        LLeg0Sprite.sortingOrder = armorInfo.LeftLeg0Layer + 3;
+        LLeg1Sprite.sprite = armorInfo.LeftLeg1;
+        LLeg1Sprite.sortingOrder = armorInfo.LeftLeg1Layer + 3;
+        RLeg0Sprite.sprite = armorInfo.RightLeg0;
+        RLeg0Sprite.sortingOrder = armorInfo.RightLeg0Layer + 3;
+        RLeg1Sprite.sprite = armorInfo.RightLeg1;
+        RLeg1Sprite.sortingOrder = armorInfo.RightLeg1Layer + 3;
+
+        switch (armorInfo.Effect)
+        {
+            case ArmorInfo.EffectType.Null:
+                fireEffect.gameObject.SetActive(false);
+                break;
+            case ArmorInfo.EffectType.Fire:
+                fireEffect.gameObject.SetActive(true);
+                break;
+
+        }
+
+        MaxHp = Mathf.RoundToInt(info.MaxHp * (armorInfo.Hp + 1));
+        Hp = MaxHp;
+        Power = info.Power * (armorInfo.Power + 1);
+        Speed = info.Speed * (armorInfo.Speed + 1);
+        JumpForce = info.JumpForce * (armorInfo.Jump + 1);
+        Size = info.Size * (armorInfo.Size + 1);
+
+        StartJump = JumpForce;
+        StartPower = Power;
+        StartSize = Size;
+        StartSpeed = Speed;
+    }
 
     public override void Movement(Vector2 Dir)
     {
+        if (Dead)
+            return;
         if (!OnHouse)
         {
             if (Velocity > 0.75f && OnGround && Vector2.Dot(Rig.velocity.normalized, Dir) < -0.9f)
@@ -53,6 +109,8 @@ public class Player : Man
 
     public override void MoveArm(Vector2 Dir)
     {
+        if (Dead)
+            return;
         if (Dir != Vector2.zero)
         {
             PrevDir = Dir;
@@ -89,7 +147,7 @@ public class Player : Man
     {
         if (!OnHouse)
         {
-            if (TackleCoroutine == null && OnGround && Velocity > 0.25f && RotationSpeed < 2f)
+            if (TackleCoroutine == null && OnGround && Velocity > 0.3f && RotationSpeed < 2f)
             {
                 TackleCoroutine = StartCoroutine(TackleCour());
                 Level.active.OnPlayerTackle();
@@ -106,7 +164,7 @@ public class Player : Man
         anim.Play("Tackle");
         anim.SetBool("Tackle", true);
         Rig.velocity *= 1.5f;
-        while (PrevDir.y < -0.8f && Velocity > 0.3f && OnGround)
+        while (PrevDir.y < -0.8f && Velocity > 0.25f && OnGround)
         {
             transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.1f).normalized, 0.1f);
 
@@ -135,7 +193,12 @@ public class Player : Man
         {
             CameraMove.active.PunchShow(Enemy, Power, Type);
         }
+        if(Type == HitType.Bullet)
+        {
+            Level.active.OnPlayerUpdateAmmo();
+        }
 
+        Level.active.OnPlayerAttack(Enemy, Type);
     }
 
     public override void Punch(Man Enemy)
@@ -143,7 +206,7 @@ public class Player : Man
         if (OnTackle && Vector2.Dot(Rig.velocity, Direction(Enemy.transform)) > 0.5f)
         {
             Vector2 Up = Velocity > 0.25f ? Vector2.up : Vector2.zero;
-            Enemy.GetImpulse((Rig.velocity.normalized * 0.5f + Up).normalized * Rig.velocity.magnitude * Size);
+            Enemy.GetImpulse((Rig.velocity.normalized * 0.5f + Up).normalized * Rig.velocity.magnitude * Size * 2);
             Enemy.GetPunched(this, Velocity > 0.25f);
             OnAttack(Enemy, Velocity, HitType.Tackle);
             Rig.velocity *= 1.025f;
@@ -157,7 +220,7 @@ public class Player : Man
             Vector2 Dir = (Enemy.transform.position - transform.position).normalized;
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))
             {
-                Enemy.GetHit(Mathf.RoundToInt(Velocity * 5), Enemy, HitType.Fall);
+                Enemy.GetHit(Mathf.RoundToInt(Velocity * 5), Enemy, HitType.Fall, EffectType.Null);
                 Enemy.GetImpulse(new Vector2(Mathf.CeilToInt(Dir.x), Dir.y * 0.25f).normalized * Rig.velocity.magnitude);
                 Enemy.GetPunched(this, true);
                 Rig.velocity *= 1f;
@@ -208,17 +271,18 @@ public class Player : Man
         yield break;
     }
 
+
     public override void OnLandOof(Man Enemy, float velocity)
     {
         if (Vector2.Dot(transform.up, Vector2.up) > 0.5f)
             return;
-        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Fall);
+        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Fall, EffectType.Null);
         if (Punched && velocity > 1f)
         {
             ThrowOutWeapon();
         }
     }
-    public override void GetHit(int Damage, Man Enemy, HitType type)
+    public override void GetHit(int Damage, Man Enemy, HitType type, EffectType effect)
     {
         if (Dead)
             return;
@@ -229,10 +293,26 @@ public class Player : Man
             Die(Enemy, type);
         }
         Level.active.PrintDamageText();
+        Level.active.OnPlayerGetDamage(Enemy, type, effect);
+            
+
+        GetEffect(Enemy, effect);
+    }
+
+    public override void ThrowOutWeapon()
+    {
+        if (weapon == null || NoThrowOut)
+            return;
+        weapon.ThrowOut();
+        weapon = null;
+        StartCoroutine(TakeDelay());
+
+        Level.active.OnPlayerThrow();
     }
 
     public override void Die(Man Enemy, HitType type)
     {
+        Hp = 0;
         anim.SetBool("Dead", true);
         Dead = true;
         ThrowOutWeapon();

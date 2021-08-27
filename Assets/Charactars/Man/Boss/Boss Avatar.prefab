@@ -244,6 +244,7 @@ MonoBehaviour:
   weapon: {fileID: 0}
   SkinColor: {r: 0, g: 0, b: 0, a: 0}
   Effect: {fileID: 1701601127640724939}
+  fireEffect: {fileID: 0}
   Arm: {fileID: 2234815441503959361}
   Body: {fileID: 7155182789715069754}
   BodySolver: {fileID: 3024966008726172204}
@@ -265,6 +266,12 @@ MonoBehaviour:
   - {fileID: 7666975708228633034}
   - {fileID: 8322402215144089879}
   - {fileID: 1854933389574739346}
+  HeadSprite: {fileID: 0}
+  BodySprite: {fileID: 0}
+  LLeg0Sprite: {fileID: 0}
+  LLeg1Sprite: {fileID: 0}
+  RLeg0Sprite: {fileID: 0}
+  RLeg1Sprite: {fileID: 0}
 --- !u!114 &759833006604673038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -287,6 +294,7 @@ MonoBehaviour:
   Attack: {fileID: 11400000, guid: 7d56001e976924444b9f89ed7767528a, type: 2}
   BossAttack: {fileID: 11400000, guid: 7d56001e976924444b9f89ed7767528a, type: 2}
   DuelAttack: {fileID: 11400000, guid: 6fc88d60bce0b554bb96f1935a8c668f, type: 2}
+  GunAttack: {fileID: 11400000, guid: d60ef9b5c4ca5dc48926d5499c275d09, type: 2}
   AnimalAttack: {fileID: 0}
   RunAway: {fileID: 11400000, guid: 73ae4a210bf73d54aa6512e34c5797eb, type: 2}
   CurrantState: {fileID: 0}

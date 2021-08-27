@@ -20,13 +20,12 @@ public class WeaponIcon : MonoBehaviour
     private WeaponInfo.RareType rare;
     private const float IdleColorA = 0.1f;
     private const float SelectedColorA = 0.35f;
-    public delegate void Test();
     public void SetIconLevelUp(WeaponInfo info)
     {
         icon.sprite = info.Icon;
         rare = info.Rare;
         this.Index = info.Index;
-        SetOpened(true, true);
+        SetOpened(true, false, true);
     }
     public void SetIcon(WeaponInfo info, int Place)
     {
@@ -40,9 +39,9 @@ public class WeaponIcon : MonoBehaviour
         this.Index = info.Index;
         SetSelected(false);
     }
-    public void SetOpened(bool Opened, bool Avalible)
+    public void SetOpened(bool Opened, bool Premium, bool Avalible)
     {
-        if(Opened)
+        if(Opened || Premium)
         {
             icon.color = Color.white;
         }
@@ -88,7 +87,7 @@ public class WeaponIcon : MonoBehaviour
         OnBoughtUI.SetActive(true);
         yield return new WaitForSeconds(0.75f);
         OnBoughtUI.SetActive(false);
-        SetOpened(true, true);
+        SetOpened(true, false, true);
         Level.active.SelectWeapon(Index, Place);
         yield break;
     }

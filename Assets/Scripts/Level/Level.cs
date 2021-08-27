@@ -10,14 +10,16 @@ public class Level : MonoBehaviour
     public static Level active;
     public Man MainPlayer;
     private Player PlayerScript;
-    private int PrevPlayerLevel;
     private int NowArmor;
     public enum GameType { Levels, Bets, Waves}
+
+    public static bool OnPause;
+
     [Header("Level Settings")]
     public int NowGameType;
     public LevelTypes LevelType;
-    public enum LevelTypes { Menu, Idle, Learn, Duel, Levels, Boss, Nude, Waves};
-    public enum EnemyCreateType {Nude, Bets, Random, Similar, Duel, NoBrain, Waves, Boss}
+    public enum LevelTypes { Menu, Idle, Learn, Duel, Levels, Boss, Nude, Battle, KnightBattle, Waves};
+    public enum EnemyCreateType {Nude, Bets, Random, Similar, Duel, NoBrain, Waves, Friend, BattleEnemy, KnightEnemy, Boss}
 
     [Header("Enemys")]
     public List<Man> AllEnemy;
@@ -26,6 +28,13 @@ public class Level : MonoBehaviour
     public List<Man> BattleEnemy;
     public Man BossEnemy;
     public Man LastOfMan;
+    private Man PrevHit;
+    private int HitInRow;
+    [Header("Friends")]
+    public List<Man> AllFriends;
+    public List<Man> AliveFriends;
+    public List<Man> DefeatedFriends;
+    public List<Man> BattleFriends;
 
     [Header("Bet's")]
     private int BetForNum;
@@ -37,6 +46,7 @@ public class Level : MonoBehaviour
     public GameState EasyState;
     public GameState LevelState;
     public GameState DuelState;
+    public GameState BattleState;
     public GameState BossState;
     public GameState WavesState;
     public GameState DragonState;
@@ -65,9 +75,16 @@ public class Level : MonoBehaviour
     private Coroutine SetGameTypeCoroutine;
     private Coroutine NoLevelCoroutine;
     private Coroutine NoMoneyCoroutine;
+    private Coroutine HitInRowCoroutine;
+    private Coroutine TimeStopCoroutine;
     [Header("UI Game")]
     public GameObject Ui_Game;
     public Image Ui_Game_BackGround;
+    public GameObject Ui_Game_Ammo;
+    public TextMeshProUGUI Ui_Game_AmmoText;
+    public Bar GameHp;
+    public RectTransform Ui_Game_HitRow;
+    public TextMeshProUGUI Ui_Game_HitRowText;
 
     [Header("UI Stats")]
     public Bar Ui_Game_LevelBar;
@@ -99,6 +116,21 @@ public class Level : MonoBehaviour
     public TextMeshProUGUI Ui_BetsWin_Money;
     public GameObject Ui_BetsLose;
     public TextMeshProUGUI Ui_BetsLose_Money;
+
+    [Header("UI Pause")]
+    public GameObject Ui_Pause;
+    public Slider Ui_Pause_Volume;
+    public Slider Ui_Pause_Music;
+
+    [Header("UI Settings")]
+    public GameObject Ui_Settings;
+    public Slider Ui_Settings_Volume;
+    public Slider Ui_Settings_Music;
+    public Toggle Ui_Setting_Vibration;
+
+    [Header("UI Store")]
+    public GameObject Ui_Store;
+    public Transform Ui_Store_Weapon;
 
     [Header("UI Waves")]
     public GameObject Ui_Waves;
@@ -203,11 +235,11 @@ public class Level : MonoBehaviour
         Ui_LevelUp.SetActive(true);
         Ui_LevelUp_Close.SetActive(false);
         Ui_LevelUp_WeaponUnlock.SetActive(false);
-        Ui_LevelUp_From.text = PrevPlayerLevel.ToString();
+        Ui_LevelUp_From.text = GameData.PrevPlayerLevel.ToString();
         Ui_LevelUp_To.text = GameData.PlayerLevel.ToString();
         Ui_LevelUp_Text.text = "Level Up!";
         int Money = 0;
-        for(int i = PrevPlayerLevel; i < GameData.PlayerLevel; i++)
+        for(int i = GameData.PrevPlayerLevel; i < GameData.PlayerLevel; i++)
         {
             Money += GameData.MoneyPerPlayerLevel(i);
         }
@@ -217,7 +249,7 @@ public class Level : MonoBehaviour
         {
             Destroy(Ui_LevelUp_WeaponUnlockContent.transform.GetChild(i).gameObject);
         }
-        List<WeaponInfo> info = GameData.active.GetOpenedByLevelUp(PrevPlayerLevel, GameData.PlayerLevel);
+        List<WeaponInfo> info = GameData.active.GetOpenedByLevelUp(GameData.PrevPlayerLevel, GameData.PlayerLevel, 0);
         Ui_LevelUp_WeaponIcons = new WeaponIcon[info.Count];
         Ui_LevelUp_WeaponUnlock.SetActive(info.Count > 0);
         for (int i = 0; i < info.Count; i++)
@@ -225,7 +257,7 @@ public class Level : MonoBehaviour
             Ui_LevelUp_WeaponIcons[i] = Instantiate(GameData.active.IconPrefab, Ui_LevelUp_WeaponUnlockContent.transform);
             Ui_LevelUp_WeaponIcons[i].SetIconLevelUp(info[i]);
         }
-        PrevPlayerLevel = GameData.PlayerLevel;
+        GameData.PrevPlayerLevel = GameData.PlayerLevel;
         GameData.Save();
 
         yield return new WaitForSeconds(2f);
@@ -321,6 +353,32 @@ public class Level : MonoBehaviour
         yield break;
     }
 
+    private void SetHitinRow(int num)
+    {
+        HitInRow = num;
+        if(num == 0)
+        {
+            anim.Play("ComboIdle", 3);
+            Ui_Game_HitRow.gameObject.SetActive(false);
+        }
+        else if(num >= 7)
+        {
+            anim.Play("ComboMega", 3);
+            Ui_Game_HitRow.gameObject.SetActive(true);
+            int Right = Random.Range(0, 2) == 0 ? 1 : -1;
+            Ui_Game_HitRow.anchoredPosition = new Vector3(Right * Random.Range(400, 350), Random.Range(300, 400), 0);
+            Ui_Game_HitRowText.text = "Mega Combo: x" + num.ToString();
+        }
+        else
+        {
+            anim.Play("ComboNew", 3);
+            Ui_Game_HitRow.gameObject.SetActive(true);
+            int Right = Random.Range(0, 2) == 0 ? 1 : -1;
+            Ui_Game_HitRow.anchoredPosition = new Vector3(Right * Random.Range(400, 350), Random.Range(300, 400), 0);
+            Ui_Game_HitRowText.text = "Combo: x " + num.ToString();
+        }
+    }
+
     public void Learning(bool on)
     {
         if (on)
@@ -355,6 +413,36 @@ public class Level : MonoBehaviour
     }
     #endregion
     #region Game
+    public void GameStuff()
+    {
+        GameHp.FillArea((float)MainPlayer.Hp / (float)MainPlayer.MaxHp);
+    }
+    public void TimeStopEffect(float Power, float time)
+    {
+        if (TimeStopCoroutine == null)
+        {
+            TimeStopCoroutine = StartCoroutine(TimeStopEffectCour(Power, time));
+        }
+    }
+    private IEnumerator TimeStopEffectCour(float Power, float time)
+    {
+        while(Time.timeScale > Power + 0.01f)
+        {
+            Time.timeScale = Mathf.Lerp(Time.timeScale, Power, 0.05f);
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+        Time.timeScale = Power;
+        yield return new WaitForSecondsRealtime(time);
+        while (Time.timeScale < 0.95f)
+        {
+            Time.timeScale = Mathf.Lerp(Time.timeScale, 1, 0.05f);
+            yield return new WaitForSecondsRealtime(Time.fixedDeltaTime);
+        }
+        Time.timeScale = 1;
+        TimeStopCoroutine = null;
+        yield break;
+    }
+
     public List<Man> CreateEnemy(EnemyCreateType type, int count, Vector2[] Pos, float Amplitude)
     {
         List<Man> Enemys = new List<Man>();
@@ -386,6 +474,18 @@ public class Level : MonoBehaviour
                 case EnemyCreateType.Bets:
                     Vector2 BetsPos = i == 0 ? new Vector2(Random.Range(-5, -2), 0) : new Vector2(Random.Range(2, 5), 0);
                     Enemys.Add(CreateBetsEnemy(BetsPos, Random.Range(0.9f, 1.1f), i));
+                    break;
+                case EnemyCreateType.Friend:
+                    Position = Pos[0] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Enemys.Add(CreateFriend(Position, Random.Range(0.75f, 1.25f)));
+                    break;
+                case EnemyCreateType.BattleEnemy:
+                    Position = Pos[1] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Enemys.Add(CreateBattleEnemy(Position, Random.Range(1f, 2f)));
+                    break;
+                case EnemyCreateType.KnightEnemy:
+                    Position = Pos[1] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Enemys.Add(CreateKnightEnemy(Position, Random.Range(0.75f, 1.25f)));
                     break;
             }
 
@@ -470,7 +570,7 @@ public class Level : MonoBehaviour
         man.Speed = MainPlayer.Speed * Power;
         man.Type = Man.ManType.Duel;
         man.Experience = 3;
-        man.Power = Random.Range(1, 2);
+        man.Power = Power;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -510,8 +610,69 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Boss;
         man.Experience = Mathf.RoundToInt(25 * Power);
         man.Power = Random.Range(1, 2);
+        man.Money = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowLevel + 1) * 50);
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 50f * Power;
+        Weapon weapon = GameData.active.GetRandomWeapon();
+        if (weapon != null)
+        {
+            man.TakeWeapon(Instantiate(weapon));
+        }
+        return man;
+    }
+    public Man CreateFriend(Vector2 Position, float Power)
+    {
+        Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
+        man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
+        man.Size = MainPlayer.Size * Random.Range(1, 1.25f);
+        man.name = "Knight Friend";
+        man.Speed = MainPlayer.Speed * Power;
+        man.Type = Man.ManType.Player;
+        man.Experience = 0;
+        man.Power = Random.Range(1, 2);
+        AiController controller = man.GetComponent<AiController>();
+        controller.ViewLenght = 25f * Power;
+        Weapon weapon = GameData.active.GetRandomWeapon();
+        if (weapon != null)
+        {
+            man.TakeWeapon(Instantiate(weapon));
+        }
+        return man;
+    }
+    public Man CreateBattleEnemy(Vector2 Position, float Power)
+    {
+        Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 0.5f);
+        man.Size = MainPlayer.Size * Random.Range(0.75f, 1.5f);
+        man.name = "Cave Man";
+        man.Speed = MainPlayer.Speed * Power;
+        man.Type = Man.ManType.Enemy;
+        man.Experience = 3;
+        man.Power = Random.Range(1, 2);
+        AiController controller = man.GetComponent<AiController>();
+        controller.ViewLenght = 25f * Power;
+        Weapon weapon = GameData.active.GetRandomWeapon();
+        if (weapon != null)
+        {
+            man.TakeWeapon(Instantiate(weapon));
+        }
+        return man;
+    }
+    public Man CreateKnightEnemy(Vector2 Position, float Power)
+    {
+        Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
+        man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
+        man.Size = MainPlayer.Size * Power;
+        man.name = "Knight Enemy";
+        man.Speed = MainPlayer.Speed * Power;
+        man.Type = Man.ManType.Duel;
+        man.Experience = 5;
+        man.Power = Random.Range(1, 2);
+        man.Money = 25;
+        AiController controller = man.GetComponent<AiController>();
+        controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
         if (weapon != null)
         {
@@ -617,18 +778,43 @@ public class Level : MonoBehaviour
             GameData.IncreaseManKilled(type);
         }
     }
+    public void OnFriendDie(Man man, Man Enemy, Man.HitType type)
+    {
+        string DieName = Enemy != null ? (Enemy.name + " " + type.ToString() + " him.") : type.ToString();
+        Debug.Log("Friend " + man.name + " Defeated, cause of " + DieName);
+        CurrantState.OnFriendDie(man, Enemy, type);
+    }
     public void OnPlayerDie(Man man, Man Enemy, Man.HitType type)
     {
         string DieName = Enemy != null ? (Enemy.name + " " + type.ToString() + " him.") : type.ToString();
         Debug.Log(man.name + " Defeated, cause of " + DieName);
         CurrantState.OnPlayerDie(man, Enemy, type);
         GameData.IncreaseDeath();
+
     }
     public void OnObjectDestroyed(SceneObject Obj)
     {
 
     }
 
+    public void OnPlayerUpdateHp()
+    {
+        GameHp.FillArea((float)MainPlayer.Hp / (float)MainPlayer.MaxHp);
+    }
+    public void OnPlayerUpdateAmmo()
+    {
+        GunWeapon weapon = MainPlayer.weapon.GetComponent<GunWeapon>();
+        if (weapon == null)
+            return;
+        if (weapon.NowAmmo > 0)
+        {
+            Ui_Game_AmmoText.text = "Ammo: " + weapon.NowAmmo + "/" + weapon.MaxAmmo;
+        }
+        else
+        {
+            Ui_Game_AmmoText.text = "No Ammo!";
+        }
+    }
     public void OnPlayerMove(Vector2 Dir)
     {
         CurrantState.OnPlayerMove(Dir);
@@ -643,11 +829,47 @@ public class Level : MonoBehaviour
     }
     public void OnPlayerThrow()
     {
+        Ui_Game_Ammo.SetActive(false);
+
         CurrantState.OnPlayerThrow();
     }
     public void OnPlayerTakeWeapon(Weapon weapon)
     {
         CurrantState.OnPlayerTakeWeapon(weapon);
+
+        if(weapon.WeaponType == Weapon.Type.Gun)
+        {
+            Ui_Game_Ammo.SetActive(true);
+            OnPlayerUpdateAmmo();
+        }
+    }
+    public void OnPlayerAttack(Man Enemy, Man.HitType Type)
+    {
+        if(Enemy != null)
+        {
+            HitInRow++;
+            SetHitinRow(HitInRow);
+            if(HitInRow % 7 == 0)
+            {
+                MainPlayer.GetBuff(Buff.Type.Power, 5f);
+            }
+            if (HitInRowCoroutine != null)
+            {
+                StopCoroutine(HitInRowCoroutine);
+            }
+            HitInRowCoroutine = StartCoroutine(RemoveHitInRow());
+        }
+    }
+    public void OnPlayerGetDamage(Man Enemy, Man.HitType type, Man.EffectType effect)
+    {
+        SetHitinRow(0);
+    }
+
+    private IEnumerator RemoveHitInRow()
+    {
+        yield return new WaitForSeconds(1f);
+        SetHitinRow(0);
+        yield break;
     }
 
     public void RemoveEnemy_All(Man man, float Delay)
@@ -673,6 +895,14 @@ public class Level : MonoBehaviour
             if (Weapon[i].transform.parent == null)
             {
                 Destroy(Weapon[i]);
+            }
+        }
+        GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        for (int i = 0; i < Bullets.Length; i++)
+        {
+            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.tag != "Weapon")
+            {
+                Destroy(Bullets[i]);
             }
         }
         GameObject[] Buffs = GameObject.FindGameObjectsWithTag("Buff");
@@ -706,6 +936,26 @@ public class Level : MonoBehaviour
         BattleEnemy.Clear();
         DefeatedEnemy.Clear();
 
+        for (int i = 0; i < DefeatedFriends.Count; i++)
+        {
+            if (DefeatedFriends[i] != null)
+                Destroy(DefeatedFriends[i].gameObject);
+        }
+        for (int i = 0; i < AliveFriends.Count; i++)
+        {
+            if (AliveFriends[i] != null)
+                Destroy(AliveFriends[i].gameObject);
+        }
+        for (int i = 0; i < AllEnemy.Count; i++)
+        {
+            if (AllFriends[i] != null)
+                Destroy(AllFriends[i].gameObject);
+        }
+
+        AllFriends.Clear();
+        AliveFriends.Clear();
+        BattleFriends.Clear();
+        DefeatedFriends.Clear();
         /*
         if(MainPlayer.weapon != null)
         {
@@ -741,6 +991,27 @@ public class Level : MonoBehaviour
         AliveEnemy.Clear();
         BattleEnemy.Clear();
         DefeatedEnemy.Clear();
+
+        for (int i = 0; i < DefeatedFriends.Count; i++)
+        {
+            if (DefeatedFriends[i] != null)
+                Destroy(DefeatedFriends[i].gameObject);
+        }
+        for (int i = 0; i < AliveFriends.Count; i++)
+        {
+            if (AliveFriends[i] != null)
+                Destroy(AliveFriends[i].gameObject);
+        }
+        for (int i = 0; i < AllEnemy.Count; i++)
+        {
+            if (AllFriends[i] != null)
+                Destroy(AllFriends[i].gameObject);
+        }
+
+        AllFriends.Clear();
+        AliveFriends.Clear();
+        BattleFriends.Clear();
+        DefeatedFriends.Clear();
     }
 
     public void BoxSpawn()
@@ -802,9 +1073,38 @@ public class Level : MonoBehaviour
 
     public void SetPlayerGame()
     {
+        HitInRow = 0;
         MainPlayer.gameObject.SetActive(true);
         MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
         MainPlayer.transform.position = Vector3.zero;
+        MainPlayer.NoThrowOut = false;
+    }
+    public void SetPlayerBattle()
+    {
+        HitInRow = 0;
+        MainPlayer.gameObject.SetActive(true);
+        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
+        MainPlayer.transform.position = sceneMaker.GetEnemyPos()[0] + new Vector2(Random.Range(5f, 6f), -0.5f);
+        MainPlayer.NoThrowOut = false;
+    }
+    public void SetPlayerLearn()
+    {
+        MainPlayer.gameObject.SetActive(true);
+        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
+        MainPlayer.transform.position = Vector3.zero;
+        if(MainPlayer.weapon != null)
+        {
+            Destroy(MainPlayer.weapon.gameObject);
+            MainPlayer.weapon = null;
+        }
+        MainPlayer.NoThrowOut = false;
+    }
+    public void SetPlayerEasy()
+    {
+        MainPlayer.gameObject.SetActive(true);
+        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
+        MainPlayer.transform.position = Vector3.zero;
+        MainPlayer.NoThrowOut = true;
     }
     public void SetPlayerLikeNew()
     {
@@ -812,11 +1112,18 @@ public class Level : MonoBehaviour
     }
     public void SetPlayerWeapon()
     {
+        if (MainPlayer.weapon != null && !GameData.active.GetAvalibleWeapon(MainPlayer.weapon))
+        {
+            Destroy(MainPlayer.weapon.gameObject);
+            MainPlayer.weapon = null;
+        }
+
         if (MainPlayer.weapon == null)
         {
             Weapon weapon = Instantiate(GameData.active.GetSelectedWeapon());
             MainPlayer.TakeWeapon(weapon);
         }
+            
     }
     public void SetPlayerRandomWeapon()
     {
@@ -840,7 +1147,7 @@ public class Level : MonoBehaviour
     }
 
     #endregion
-    #region Anumition State
+    #region Anumition
     //-------------------------------Anumition States-----------------------------
     public void GoAmunition()
     {
@@ -889,7 +1196,7 @@ public class Level : MonoBehaviour
 
         for (int i = 0; i < Ui_Anum_WeaponIcons.Length; i++)
         {
-            Ui_Anum_WeaponIcons[i].SetOpened(info[i].Opened, GameData.active.GetAvalibleWeapon(info[i].Index));
+            Ui_Anum_WeaponIcons[i].SetOpened(info[i].Opened, info[i].Premium, GameData.active.GetAvalibleWeapon(info[i].Index));
             Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(false);
         }
 
@@ -972,10 +1279,10 @@ public class Level : MonoBehaviour
             {
                 GameData.active.UpdateHp();
                 UpdateMoney(-GameData.active.UpdateCost(GameData.active.playerInfo.HpNum));
+                GameData.active.playerInfo.HpNum++;
+                Ui_Anum_HpLevel.text = "Level " + GameData.active.playerInfo.HpNum.ToString();
+                Ui_Anum_HpCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.HpNum).ToString();
             }
-            GameData.active.playerInfo.HpNum++;
-            Ui_Anum_HpLevel.text = "Level " + GameData.active.playerInfo.HpNum.ToString();
-            Ui_Anum_HpCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.HpNum).ToString();
         }
         else
         {
@@ -992,10 +1299,11 @@ public class Level : MonoBehaviour
             {
                 GameData.active.UpdateSpeed();
                 UpdateMoney(-GameData.active.UpdateCost(GameData.active.playerInfo.SpeedNum));
+                GameData.active.playerInfo.SpeedNum++;
+                Ui_Anum_SpeedLevel.text = "Level " + GameData.active.playerInfo.SpeedNum.ToString();
+                Ui_Anum_SpeedCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.SpeedNum).ToString();
             }
-            GameData.active.playerInfo.SpeedNum++;
-            Ui_Anum_SpeedLevel.text = "Level " + GameData.active.playerInfo.SpeedNum.ToString();
-            Ui_Anum_SpeedCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.SpeedNum).ToString();
+
         }
         else
         {
@@ -1013,10 +1321,10 @@ public class Level : MonoBehaviour
             {
                 GameData.active.UpdatePower();
                 UpdateMoney(-GameData.active.UpdateCost(GameData.active.playerInfo.PowerNum));
+                GameData.active.playerInfo.PowerNum++;
+                Ui_Anum_PowerLevel.text = "Level " + GameData.active.playerInfo.PowerNum.ToString();
+                Ui_Anum_PowerCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.PowerNum).ToString();
             }
-            GameData.active.playerInfo.PowerNum++;
-            Ui_Anum_PowerLevel.text = "Level " + GameData.active.playerInfo.PowerNum.ToString();
-            Ui_Anum_PowerCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.PowerNum).ToString();
         }
         else
         {
@@ -1198,10 +1506,6 @@ public class Level : MonoBehaviour
         MainPlayer.TakeWeapon(thisWeapon);
     }
 
-    public void GoMenu()
-    {
-
-    }
     #endregion
     #region Bets State
 
@@ -1294,7 +1598,7 @@ public class Level : MonoBehaviour
     }
     public void PlayWaves()
     {
-        PrevPlayerLevel = GameData.PlayerLevel;
+        GameData.PrevPlayerLevel = GameData.PlayerLevel;
         StartCoroutine(PlayWavesCour());
     }
     private IEnumerator PlayWavesCour()
@@ -1328,7 +1632,6 @@ public class Level : MonoBehaviour
 
     public void PlayGame()
     {
-        PrevPlayerLevel = GameData.PlayerLevel;
         if (GameData.LearningEnded)
         {
             SelectState(0);
@@ -1358,7 +1661,7 @@ public class Level : MonoBehaviour
     }
     private void CheckForLevelUp()
     {
-        if(GameData.PlayerLevel > PrevPlayerLevel)
+        if(GameData.PlayerLevel > GameData.PrevPlayerLevel)
         {
             StartCoroutine(LevelUpCour());
         }
@@ -1406,28 +1709,11 @@ public class Level : MonoBehaviour
                 Debug.Log("Easy");
                 break;
             case 1:
-                switch (Random.Range(0, 3))
-                {
-                    case 0:
-                        SetState(EasyState);
-                        Debug.Log("R Easy");
-                        break;
-                    case 1:
-                        SetState(LevelState);
-                        Debug.Log("R Level");
-                        break;
-                    case 2:
-                        SetState(DuelState);
-                        Debug.Log("R Duel");
-                        break;
-                }
-                break;
-            case 2:
                 SetState(DuelState);
                 Debug.Log("Duel");
                 break;
-            case 3:
-                switch (Random.Range(0, 3))
+            case 2:
+                switch (Random.Range(0, 4))
                 {
                     case 0:
                         SetState(EasyState);
@@ -1441,14 +1727,22 @@ public class Level : MonoBehaviour
                         SetState(DuelState);
                         Debug.Log("R Duel");
                         break;
+                    case 3:
+                        SetState(BattleState);
+                        Debug.Log("R Duel");
+                        break;
                 }
                 break;
-            case 4:
+            case 3:
                 SetState(LevelState);
                 Debug.Log("Level");
                 break;
+            case 4:
+                SetState(BattleState);
+                Debug.Log("Battle");
+                break;
             case 5:
-                switch (Random.Range(0, 3))
+                switch (Random.Range(0, 4))
                 {
                     case 0:
                         SetState(EasyState);
@@ -1460,6 +1754,10 @@ public class Level : MonoBehaviour
                         break;
                     case 2:
                         SetState(DuelState);
+                        Debug.Log("R Duel");
+                        break;
+                    case 3:
+                        SetState(BattleState);
                         Debug.Log("R Duel");
                         break;
                 }
@@ -1571,24 +1869,6 @@ public class Level : MonoBehaviour
         yield break;
     }
 
-    public void Pause()
-    {
-        PlayMenu(0);
-    }
-    public void Return()
-    {
-
-    }
-    public void Restart(float delay)
-    {
-        StartCoroutine(RestartCour(delay));
-    }
-    private IEnumerator RestartCour(float delay)
-    {
-        yield return new WaitForSecondsRealtime(delay);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        yield break;
-    }
     public void DelayGame(float Delay)
     {
         if(DelayGameCoroutine != null)
@@ -1606,6 +1886,97 @@ public class Level : MonoBehaviour
         DelayGameCoroutine = null;
         yield break;
     }
+    #endregion
+    #region Pause and Settings
+    public void Pause()
+    {
+        OnPause = true;
+        Time.timeScale = 0;
+        Ui_Pause.SetActive(true);
+
+        Ui_Pause_Music.value = GameData.MusicVol; 
+        Ui_Pause_Volume.value = GameData.EffectVol;
+    }
+    public void Resume()
+    {
+        OnPause = true;
+        Time.timeScale = 1;
+        Ui_Pause.SetActive(false);
+    }
+    public void Restart()
+    {
+        StartCoroutine(RestartCour(0));
+    }
+    public void GoMainMenu()
+    {
+        SetState(MenuState);
+        Resume();
+    }
+    private IEnumerator RestartCour(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+        Resume();
+        SetState(CurrantState);
+        yield break;
+    }
+
+    public void SetEffectVolumeFromPause()
+    {
+        GameData.EffectVol = Ui_Pause_Volume.value;
+    }
+    public void SetMusicVolumeFromPause()
+    {
+        GameData.MusicVol = Ui_Pause_Music.value;
+    }
+
+    public void SettingsOn()
+    {
+        Ui_Settings.SetActive(true);
+
+        Ui_Settings_Volume.value = GameData.EffectVol;
+        Ui_Settings_Music.value = GameData.MusicVol;
+    }
+    public void SettingsOff()
+    {
+        Ui_Settings.SetActive(false);
+        GameData.Save();
+    }
+
+    public void SetVibration()
+    {
+        GameData.Vibration = Ui_Setting_Vibration.isOn;
+    }
+    public void SetEffectVolume()
+    {
+        GameData.EffectVol = Ui_Settings_Volume.value;
+    }
+    public void SetMusicVolume()
+    {
+        GameData.MusicVol = Ui_Settings_Music.value;
+
+    }
+    #endregion
+    #region PremiumStore
+    public void StoreOn()
+    {
+        Ui_Store.SetActive(true);
+
+        for (int i = 0; i < Ui_Store_Weapon.childCount; i++)
+        {
+            Destroy(Ui_Store_Weapon.GetChild(i).gameObject);
+        }
+        List<WeaponInfo> info = GameData.active.GetPremiumWeapon();
+        for (int i = 0; i < info.Count; i++)
+        {
+            WeaponIcon icon = Instantiate(GameData.active.IconPrefab, Ui_Store_Weapon);
+            icon.SetIconLevelUp(info[i]);
+        }
+    }
+    public void StoreOff()
+    {
+        Ui_Store.SetActive(false);
+    }
+
     #endregion
     #region Learning
     public void PlayLearn()
@@ -1664,6 +2035,7 @@ public class Level : MonoBehaviour
     }
     public void FixedUpdate()
     {
+        GameStuff();
         SelectingState();
     }
 }
@@ -1672,6 +2044,8 @@ public static class SideOwn
 {
     public static bool isEnemy(Man man1, Man man2)
     {
+        if (man1 == null || man2 == null)
+            return false;
         if (man1.Type == Man.ManType.Menu || man2.Type == Man.ManType.Menu)
             return true;
         else

@@ -15,6 +15,11 @@ public abstract class GameState : ScriptableObject
 
     public abstract void OnEnemyDie(Man man, Man Enemy, Man.HitType type);
 
+    public virtual void OnFriendDie(Man man, Man Enemy, Man.HitType type)
+    {
+
+    }
+
     public virtual void Action()
     {
 

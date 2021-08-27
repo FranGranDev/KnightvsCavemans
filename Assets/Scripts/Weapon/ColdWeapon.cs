@@ -25,7 +25,7 @@ public class ColdWeapon : Weapon
             {
                 //Attack
                 Owner.OnAttack(man, Mathf.Abs(SqrtRotation()), Man.HitType.Hit);
-                man.GetHit(Mathf.CeilToInt(Damage * Power), Owner, Man.HitType.Hit);
+                man.GetHit(Mathf.CeilToInt(Damage * Power), Owner, Man.HitType.Hit, NowEffect);
                 Vector2 Dir = ((Vector2)transform.up * 0.5f + Vector2.up * SqrtRotation() * (Owner.Velocity + 0.5f) * Right).normalized;
                 man.GetImpulse(Dir * Mathf.Sqrt(Lenght() * Mathf.Sqrt(Impusle) *
                 (man.OnTackle ? 0.25f : 1) * Weight) * Owner.Size * (Owner.OnGround ? 1 : 0.5f) * Owner.Power * 6);
@@ -59,7 +59,7 @@ public class ColdWeapon : Weapon
             {
                 //Attack
                 Owner.OnAttack(man, Speed, Man.HitType.Hit);
-                man.GetHit(Mathf.CeilToInt(Damage * Power), Owner, Man.HitType.Hit);
+                man.GetHit(Mathf.CeilToInt(Damage * Power), Owner, Man.HitType.Hit, NowEffect);
                 Vector2 Dir = ((Vector2)transform.up + Vector2.up * 0.5f).normalized;
                 man.GetImpulse(Owner.Rig.velocity.magnitude * Speed * Dir * Owner.Size * Owner.Power
                 * Mathf.Abs(Vector2.Dot(transform.up, Owner.Direction(man.transform))
@@ -96,7 +96,7 @@ public class ColdWeapon : Weapon
         if (man == null || NoAttack)
             return;
         //DelayAttack(0.25f);
-        man.GetHit(Mathf.RoundToInt(Damage * Weight + Owner.Power) + 1, Owner, Man.HitType.Throw);
+        man.GetHit(Mathf.RoundToInt(Damage * Weight + Owner.Power) + 1, Owner, Man.HitType.Throw, NowEffect);
         Owner.OnAttack(man, 0.76f, Man.HitType.Throw);
         Vector2 Dir = (Rig.velocity.normalized + Vector2.up * 0.5f).normalized;
         man.Rig.velocity *= 0.25f;
@@ -152,6 +152,6 @@ public class ColdWeapon : Weapon
 
     public override void GetBuff()
     {
-        CreateFireEffect();
+        FireBuff();
     }
 }

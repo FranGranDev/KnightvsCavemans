@@ -33,6 +33,7 @@ public class AiController : MonoBehaviour
     public State Attack;
     public State BossAttack;
     public State DuelAttack;
+    public State GunAttack;
     public State AnimalAttack;
     public State RunAway;
     [Header("Currant States")]
@@ -77,12 +78,13 @@ public class AiController : MonoBehaviour
     }
     private IEnumerator ThrowCour(Vector2 Dir)
     {
-        while (ThisPlayer.DotArm(Dir) < 0.99f)
+        while (ThisPlayer.DotArm(Dir) < 0.97f)
         {
             MoveArm(Dir);
             yield return new WaitForFixedUpdate();
         }
         yield return new WaitForSeconds(0.25f);
+        ThisPlayer.Arm.up = Dir;
         ThisPlayer.Throw();
         yield break;
     }
@@ -148,10 +150,17 @@ public class AiController : MonoBehaviour
 
     public void GetEnemy(Man Enemy)
     {
-        if (Enemy == ThisPlayer)
-            return;
-        this.Enemy = Enemy;
+        if(Enemy != ThisPlayer && SideOwn.isEnemy(ThisPlayer, Enemy))
+            this.Enemy = Enemy;
     }
+    public void TryGetEnemy(Man Enemy)
+    {
+        if (this.Enemy == null && Enemy != ThisPlayer)
+        {
+            this.Enemy = Enemy;
+        }
+    }
+
     public void LooseEnemy(Man man)
     {
         if(LooseCoroutine == null && this.Enemy != null)
@@ -413,6 +422,8 @@ public class AiController : MonoBehaviour
     }
     private void SelectState()
     {
+        if (ThisPlayer == null)
+            return;
         if(!CurrantState.isFinished)
         {
             if(GameData.GameStarted)
@@ -430,23 +441,30 @@ public class AiController : MonoBehaviour
             }
             else if(HaveEnemy() && !Level.active.NextLava(Enemy))
             {
-                switch(ThisPlayer.Type)
+                if (ThisPlayer.weapon?.WeaponType == Weapon.Type.Gun)
                 {
-                    case Man.ManType.Boss:
-                        SetState(BossAttack);
-                        break;
-                    case Man.ManType.Duel:
-                        SetState(DuelAttack);
-                        break;
-                    case Man.ManType.Enemy:
-                        SetState(Attack);
-                        break;
-                    case Man.ManType.Menu:
-                        SetState(DuelAttack);
-                        break;
-                    case Man.ManType.Player:
-                        SetState(Attack);
-                        break;
+                    SetState(GunAttack);
+                }
+                else
+                {
+                    switch (ThisPlayer.Type)
+                    {
+                        case Man.ManType.Boss:
+                            SetState(BossAttack);
+                            break;
+                        case Man.ManType.Duel:
+                            SetState(DuelAttack);
+                            break;
+                        case Man.ManType.Enemy:
+                            SetState(Attack);
+                            break;
+                        case Man.ManType.Menu:
+                            SetState(DuelAttack);
+                            break;
+                        case Man.ManType.Player:
+                            SetState(Attack);
+                            break;
+                    }
                 }
             }
             else
@@ -459,7 +477,7 @@ public class AiController : MonoBehaviour
 
     private void Awake()
     {
-        ThisPlayer.SetController(this);
+        ThisPlayer?.SetController(this);
     }
     private void Start()
     {

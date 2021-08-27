@@ -13,11 +13,11 @@ public class Game_Easy : GameState
         level.Learning(false);
         level.SetGame(true);
         level.ClearGame();
-        level.SetPlayerGame();
+        level.SetPlayerEasy();
         level.SetPlayerWeapon();
         level.cameraMove.TurnPlayerFollow();
         level.sceneMaker.MakeRandomScene(100);
-        level.BoxSpawn();
+
         level.BuffSpawn();
         CreateEnemys();
 
@@ -34,7 +34,8 @@ public class Game_Easy : GameState
 
     private void CreateEnemys()
     {
-        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Nude, GameData.NowLevel + Random.Range(1, 3), level.sceneMaker.GetEnemyPos(), 50);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(3, 6);
+        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Nude, EnemyCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveEnemy = level.AllEnemy;
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();

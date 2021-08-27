@@ -15,7 +15,7 @@ public class Game_Learn : GameState
         level.Learning(true);
         level.SetGame(true);
         level.ClearGame();
-        level.SetPlayerGame();
+        level.SetPlayerLearn();
         level.cameraMove.TurnPlayerFollow();
         level.sceneMaker.MakeEmptyScene(300);
 

@@ -43,7 +43,7 @@ public class Buff : MonoBehaviour
         if(collision.tag == "Player" && !Used)
         {
             Used = true;
-            collision.GetComponent<Man>().GetBuff(BuffType);
+            collision.GetComponent<Man>().GetBuff(BuffType, BuffTime);
             StartCoroutine(DestroyThis());
         }
     }

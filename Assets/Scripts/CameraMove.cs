@@ -34,16 +34,20 @@ public class CameraMove : MonoBehaviour
         Main = Level.active.MainPlayer;
 
         float TrackleRatio = Main.OnTackle ? 2 : 1;
-        transform.position = Vector3.Lerp(transform.position, Main.transform.position + (Vector3)Main.Rig.velocity * Mathf.Sqrt(TrackleRatio) * 0.5f + Offset, CurrantSpeed);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Rig.velocity.magnitude * TrackleRatio * 0.33f, CurrantSpeed);
+        float GunWeapon = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? 5 : 0;
+        Vector3 GunDir = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? Main.Arm.up * 5 : Vector3.zero;
+        transform.position = Vector3.Lerp(transform.position, Main.transform.position + (Vector3)Main.Rig.velocity * Mathf.Sqrt(TrackleRatio) * 0.5f + GunDir + Offset, CurrantSpeed);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Rig.velocity.magnitude * TrackleRatio * 0.33f + GunWeapon, CurrantSpeed);
     }
     private void BossFollow()
     {
         Main = Level.active.MainPlayer;
         if(Main.DistX(Target[0]) > 30)
         {
-            transform.position = Vector3.Lerp(transform.position, Main.transform.position + Offset, CurrantSpeed);
-            Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Rig.velocity.magnitude * 0.5f, CurrantSpeed);
+            float GunWeapon = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? 5 : 0;
+            Vector3 GunDir = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? Main.Arm.up * 5 : Vector3.zero;
+            transform.position = Vector3.Lerp(transform.position, Main.transform.position + GunDir + Offset, CurrantSpeed);
+            Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Rig.velocity.magnitude * 0.5f + GunWeapon, CurrantSpeed);
         }
         else
         {
@@ -59,8 +63,8 @@ public class CameraMove : MonoBehaviour
     }
     private void FailedFollow()
     {
-        transform.position = Vector3.Lerp(transform.position, Main.transform.position + Offset, CurrantSpeed);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * 0.5f, CurrantSpeed);
+        transform.position = Vector3.Lerp(transform.position, Main.transform.position + Offset, CurrantSpeed + 0.01f);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * 0.25f, CurrantSpeed + 0.01f);
     }
     public void BetsFollow(List<Man> Enemy)
     {
@@ -129,9 +133,10 @@ public class CameraMove : MonoBehaviour
             Pos = Main.transform.position + (Vector3)Main.Rig.velocity * Mathf.Sqrt(TrackleRatio) * 0.5f;
             Dist = Main.Rig.velocity.magnitude * TrackleRatio * 0.33f;
         }
-
-        transform.position = Vector3.Lerp(transform.position, Pos + Offset, CurrantSpeed);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Dist, CurrantSpeed);
+        float GunWeapon = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? 5 : 0;
+        Vector3 GunDir = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? Main.Arm.up * 5 : Vector3.zero;
+        transform.position = Vector3.Lerp(transform.position, Pos + GunDir + Offset, CurrantSpeed);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Dist + GunWeapon, CurrantSpeed);
     }
 
     public void TurnFailedShow()

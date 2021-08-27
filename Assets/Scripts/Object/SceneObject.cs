@@ -47,7 +47,7 @@ public abstract class SceneObject : MonoBehaviour
             return;
         man.GetPunched(PrevMan, true);
         man.GetImpulse(Rig.velocity.normalized * Mathf.Sqrt(Weight * Rig.velocity.magnitude) * 2);
-        man.GetHit(3, man, Man.HitType.Object);
+        man.GetHit(3, man, Man.HitType.Object, Man.EffectType.Null);
         if(Random.Range(0, 2) == 0)
         {
             man.ThrowOutWeapon();
