@@ -24,6 +24,7 @@ ScriptedImporter:
     isReadable: 0
     streamingMipmaps: 1
     streamingMipmapsPriority: 0
+    vTOnly: 0
     nPOTScale: 1
     sRGBTexture: 1
     spriteMode: 2
@@ -42,6 +43,9 @@ ScriptedImporter:
     textureType: 8
     textureShape: 1
     singleChannelComponent: 0
+    flipbookRows: 0
+    flipbookColumns: 0
+    ignorePngGamma: 0
     filterMode: 0
     aniso: 1
     mipBias: 0
@@ -187,7 +191,7 @@ ScriptedImporter:
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 47
+      x: 53
       y: 4
       width: 5
       height: 11
@@ -374,7 +378,7 @@ ScriptedImporter:
     - {x: 14, y: 6}
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: 21, y: -8}
+    uvTransform: {x: 27, y: -8}
   - name: "\u0421\u043B\u043E\u0439 4"
     originalName: 
     pivot: {x: 0.5, y: 0.9}
@@ -383,7 +387,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 32
-      y: 4
+      y: 24
       width: 7
       height: 12
     spriteID: 44f78012c2a5243498873b7200939232
@@ -531,7 +535,7 @@ ScriptedImporter:
     - {x: 2, y: 1}
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: 7, y: -15}
+    uvTransform: {x: 7, y: 5}
   - name: "\u0421\u043B\u043E\u0439 7"
     originalName: 
     pivot: {x: 0.5, y: 0.9}
@@ -735,7 +739,7 @@ ScriptedImporter:
     rect:
       serializedVersion: 2
       x: 32
-      y: 24
+      y: 4
       width: 7
       height: 12
     spriteID: 7cf95296041201349bd423a586b86c66
@@ -872,7 +876,7 @@ ScriptedImporter:
     - {x: 0, y: 10}
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: 16, y: 5}
+    uvTransform: {x: 16, y: -15}
   - name: "\u0421\u043B\u043E\u0439 2"
     originalName: 
     pivot: {x: 0.5, y: 0.5}
@@ -1067,14 +1071,14 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: 44f78012c2a5243498873b7200939232
     layerID: 8
-    mosaicPosition: {x: 32, y: 4}
+    mosaicPosition: {x: 32, y: 24}
   - name: "\u0421\u043B\u043E\u0439 6"
     spriteName: "\u0421\u043B\u043E\u0439 6"
     isGroup: 0
     parentIndex: -1
     spriteID: 7cf95296041201349bd423a586b86c66
     layerID: 10
-    mosaicPosition: {x: 32, y: 24}
+    mosaicPosition: {x: 32, y: 4}
   - name: "\u0421\u043B\u043E\u0439 7"
     spriteName: "\u0421\u043B\u043E\u0439 7"
     isGroup: 0
@@ -1088,7 +1092,7 @@ ScriptedImporter:
     parentIndex: -1
     spriteID: 7e165909fd8042c4b9bb860549e8c000
     layerID: 9
-    mosaicPosition: {x: 47, y: 4}
+    mosaicPosition: {x: 53, y: 4}
   - name: "\u0421\u043B\u043E\u0439 2"
     spriteName: "\u0421\u043B\u043E\u0439 2"
     isGroup: 0
