@@ -37,7 +37,7 @@ public class Bullet : MonoBehaviour
             if(FireEffect != null)
                 FireEffect.gameObject.SetActive(false);
             man.GetHit(Damage, hitInfo.Owner, Man.HitType.Bullet, Effect);
-            man.GetImpulse((Rig.velocity.normalized + Vector2.up * 0.5f).normalized * Mathf.Sqrt(Damage) * 5);
+            man.GetImpulse((Rig.velocity.normalized + Vector2.up).normalized * Mathf.Sqrt(Damage) * 2);
             man.GetPunched(hitInfo.Owner, true);
 
             Fly = false;

@@ -21,7 +21,7 @@ public class Game_Duel : GameState
         level.BoxSpawn();
         level.BuffSpawn();
 
-        Waves = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(0, 2);
+        Waves = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) * 0.75f) + Random.Range(0, 2);
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Дуэльки: Уровень " + GameData.NowLevel, 3f);
@@ -90,6 +90,11 @@ public class Game_Duel : GameState
         level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
         level.cameraMove.TurnFailedShow();
         level.PlayMenu(4);
+
+        for (int i = 0; i < level.AliveEnemy.Count; i++)
+        {
+            level.AliveEnemy[i].MakeFun();
+        }
     }
 
 

@@ -65,13 +65,14 @@ public abstract class Man : MonoBehaviour
     public bool Punched { get; protected set; }
     public bool OnGround { get; protected set; }
     public Color SkinColor;
-    public const float MaxImpulse = 15;
+    public const float MaxImpulse = 25;
 
     public Coroutine PunchCoroutine { get; protected set; }
     public Coroutine DelayAttackCoroutine { get; protected set; }
+    public Coroutine FunCoroutine { get; protected set; }
     public Coroutine FireEffectCoroutine { get; protected set; }
     public Dictionary<Buff.Type, Coroutine> BuffCoroutine { get; protected set; }
-    private List<Collider2D> PassedMan;
+    protected List<Collider2D> PassedMan;
 
     [Header("Components")]
     public ParticleSystem Effect;
@@ -136,6 +137,7 @@ public abstract class Man : MonoBehaviour
 
     private void Start()
     {
+        OnStart();
         SetParams();
     }
     public virtual void OnStart()
@@ -144,12 +146,9 @@ public abstract class Man : MonoBehaviour
     }
     public virtual void SetParams()
     {
-        OnStart();
-
         Dead = false;
         anim.SetBool("Dead", false);
         Hp = MaxHp;
-        Power = 1;
         transform.localScale = Vector3.one * Size;
         Rig.mass *= Size * Size;
         BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
@@ -257,6 +256,39 @@ public abstract class Man : MonoBehaviour
     public abstract void MoveArm(Vector2 Dir);
 
     public abstract void Jump();
+
+    public void MakeFun()
+    {
+        if(FunCoroutine == null)
+        {
+            FunCoroutine = StartCoroutine(JumpForceCour());
+        }
+    }
+    public void StopFun()
+    {
+        if(FunCoroutine != null)
+        {
+            StopCoroutine(FunCoroutine);
+            FunCoroutine = null;
+        }
+    }
+    private IEnumerator JumpForceCour()
+    {
+        while(!Static)
+        {
+            while (!OnGround)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            ForceFlip(Random.Range(0, 2) == 0);
+            yield return new WaitForSeconds(0.25f);
+            Rig.velocity = new Vector2(Rig.velocity.x * 0.5f, 0);
+            Rig.velocity += Vector2.up * JumpForce * 0.5f;
+            yield return new WaitForFixedUpdate();
+        }
+        FunCoroutine = null;
+        yield break;
+    }
 
     public abstract void Tackle();
 
@@ -398,6 +430,10 @@ public abstract class Man : MonoBehaviour
             Punched = true;
             StartCoroutine(WaitGround(Enemy));
             StartCoroutine(GetPunchedCour());
+            if(weapon != null && weapon.WeaponType == Weapon.Type.Gun)
+            {
+                ThrowOutWeapon();
+            }
         }
     }
     public virtual IEnumerator GetPunchedCour()

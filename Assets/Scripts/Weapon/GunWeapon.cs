@@ -12,7 +12,7 @@ public class GunWeapon : Weapon
     public float AttackRange;
     public float ReloadTime;
     private bool Reloading;
-    private bool Reloaded;
+    public bool Reloaded;
     private bool TryingGetEnemy;
     private Man TryGetEnemy()
     {
@@ -37,6 +37,7 @@ public class GunWeapon : Weapon
     public Bullet bullet;
     public ParticleSystem StartFireEffect;
     private Coroutine ThrowOutCoroutine;
+    private Coroutine ReloadCoroutine;
 
     public override void Attack(Man man)
     {
@@ -170,7 +171,18 @@ public class GunWeapon : Weapon
     public override void OnFixedUpdate()
     {
         if (!InHand)
+        {
+            if(Reloading)
+            {
+                StopCoroutine(ReloadCoroutine);
+                ReloadCoroutine = null;
+                Reloading = false;
+                Reloaded = false;
+                anim.Play("Idle");
+            }
             return;
+        }
+            
         if(NowAmmo == 0)
         {
             if(ThrowOutCoroutine == null)
@@ -181,7 +193,10 @@ public class GunWeapon : Weapon
         }
         if(!Reloaded && !Reloading)
         {
-            StartCoroutine(ReloadCour());
+            if (ReloadCoroutine == null)
+            {
+                ReloadCoroutine = StartCoroutine(ReloadCour());
+            }
         }
 
         if(Reloaded && !TryingGetEnemy)
@@ -198,7 +213,6 @@ public class GunWeapon : Weapon
     {
         if(Reloaded)
         {
-            NowAmmo--;
             anim.SetTrigger("Fire");
         }
         else if(!Reloading)
@@ -219,6 +233,8 @@ public class GunWeapon : Weapon
         }
         Vector2 Velocity = (transform.up + transform.right * Random.Range(-Miss, Miss) * 0.5f) * 30 * Impusle;
         NowBullet.Fire(new HitInfo(Owner, Damage, Velocity));
+
+        NowAmmo--;
     }
     private IEnumerator StartFireEffectCour()
     {
@@ -244,7 +260,16 @@ public class GunWeapon : Weapon
         NowBullet.SetOnPlace();
         Reloading = false;
         Reloaded = true;
+        ReloadCoroutine = null;
         yield break;
+    }
+    private void SetReloaded()
+    {
+        anim.Play("LoadIdle");
+        NowBullet = Instantiate(bullet, BulletPos.position, BulletPos.rotation, BulletPos);
+        NowBullet.SetOnPlace();
+        Reloading = false;
+        Reloaded = true;
     }
     private IEnumerator ThrowOutCour()
     {
@@ -261,5 +286,9 @@ public class GunWeapon : Weapon
     {
         NowAmmo = MaxAmmo;
         anim.SetFloat("ReloadSpeed", 1 / ReloadTime);
+        if (Reloaded)
+        {
+            SetReloaded();
+        }
     }
 }

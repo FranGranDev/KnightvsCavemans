@@ -64,7 +64,7 @@ public class CameraMove : MonoBehaviour
     private void FailedFollow()
     {
         transform.position = Vector3.Lerp(transform.position, Main.transform.position + Offset, CurrantSpeed + 0.01f);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * 0.25f, CurrantSpeed + 0.01f);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * 0.5f, CurrantSpeed);
     }
     public void BetsFollow(List<Man> Enemy)
     {

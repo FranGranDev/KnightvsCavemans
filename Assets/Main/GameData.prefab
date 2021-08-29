@@ -45,14 +45,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MansKilled: 00000000000000000000000000000000000000000000000000000000000000000000000000000000
   GameHard: 1
+  premiumInfo:
+    WeaponOpen: 0100000016000000180000001d000000
+    ArmorOpen: 07000000
+    GameTypeOpen: 
+    NoAdd: 1
+    Money: 10000
   GameType:
   - Name: Levels
+    Opened: 0
     type: 0
     Index: 0
   - Name: Bets
+    Opened: 0
     type: 1
     Index: 1
   - Name: Waves
+    Opened: 0
     type: 2
     Index: 2
   playerInfo:
@@ -91,6 +100,7 @@ MonoBehaviour:
     Rare: 0
     RequiredLevel: 0
     Cost: 0
+    Premium: 0
     Opened: 0
     Hp: 0
     Power: 0
@@ -116,6 +126,7 @@ MonoBehaviour:
     Rare: 0
     RequiredLevel: 0
     Cost: 0
+    Premium: 0
     Opened: 0
     Hp: 0
     Power: 0
@@ -123,9 +134,9 @@ MonoBehaviour:
     Speed: 0
     Jump: 0
   upInfo:
-    MaxHp: 50
+    MaxHp: 55
     HpAdd: 2
-    StandartHp: 20
+    StandartHp: 25
     MaxSize: 2
     SizeAdd: 0.1
     StandartSize: 1
@@ -186,6 +197,7 @@ MonoBehaviour:
     Rare: 0
     RequiredLevel: 0
     Cost: 0
+    Premium: 0
     Opened: 1
     Hp: 0
     Power: 0
@@ -213,7 +225,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 0
     RequiredLevel: 3
-    Cost: 500
+    Cost: 1000
+    Premium: 0
     Opened: 0
     Hp: 0.25
     Power: 0.1
@@ -241,7 +254,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 1
     RequiredLevel: 5
-    Cost: 750
+    Cost: 1500
+    Premium: 0
     Opened: 0
     Hp: -0.1
     Power: 0.1
@@ -269,7 +283,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 1
     RequiredLevel: 7
-    Cost: 1000
+    Cost: 2000
+    Premium: 0
     Opened: 0
     Hp: 0.3
     Power: 0.15
@@ -297,7 +312,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 2
     RequiredLevel: 9
-    Cost: 1250
+    Cost: 2750
+    Premium: 0
     Opened: 0
     Hp: 0.4
     Power: 0.35
@@ -310,7 +326,7 @@ MonoBehaviour:
     HeadLayer: 12
     Body: {fileID: 787891997118475647, guid: 1fcbd1ceed121b747935ccc5c4bda162, type: 3}
     BodyLayer: 11
-    LeftLeg0: {fileID: -5810701723532304795, guid: 1fcbd1ceed121b747935ccc5c4bda162,
+    LeftLeg0: {fileID: 6069690147470084794, guid: 1fcbd1ceed121b747935ccc5c4bda162,
       type: 3}
     LeftLeg0Layer: 9
     LeftLeg1: {fileID: -5796861906046312123, guid: 1fcbd1ceed121b747935ccc5c4bda162,
@@ -325,7 +341,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 2
     RequiredLevel: 11
-    Cost: 1500
+    Cost: 3500
+    Premium: 0
     Opened: 0
     Hp: 0.1
     Power: 0.25
@@ -353,7 +370,8 @@ MonoBehaviour:
     Effect: 0
     Rare: 3
     RequiredLevel: 13
-    Cost: 2500
+    Cost: 5000
+    Premium: 0
     Opened: 0
     Hp: 0.35
     Power: 0.35
@@ -382,12 +400,13 @@ MonoBehaviour:
     Rare: 3
     RequiredLevel: 14
     Cost: 0
+    Premium: 1
     Opened: 0
     Hp: 0.5
     Power: 0.4
     Size: 0.25
-    Speed: 0
-    Jump: 0
+    Speed: 0.1
+    Jump: 0.25
   IconPrefab: {fileID: 3807928924805129908, guid: 762e636c2e6b5ca43a0858981aa1a311,
     type: 3}
   weapon:
@@ -415,7 +434,7 @@ MonoBehaviour:
     Place: 0
   - Name: Big Club
     Index: 2
-    Cost: 250
+    Cost: 500
     RequiredLevel: 8
     Opened: 0
     Premium: 0
@@ -426,7 +445,7 @@ MonoBehaviour:
     Place: 0
   - Name: Club
     Index: 3
-    Cost: 150
+    Cost: 250
     RequiredLevel: 4
     Opened: 0
     Premium: 0
@@ -437,7 +456,7 @@ MonoBehaviour:
     Place: 0
   - Name: Elite Great Sword
     Index: 4
-    Cost: 750
+    Cost: 1250
     RequiredLevel: 12
     Opened: 0
     Premium: 0
@@ -448,7 +467,7 @@ MonoBehaviour:
     Place: 0
   - Name: Elite Sword
     Index: 5
-    Cost: 500
+    Cost: 750
     RequiredLevel: 10
     Opened: 0
     Premium: 0
@@ -459,7 +478,7 @@ MonoBehaviour:
     Place: 0
   - Name: Great Axe
     Index: 6
-    Cost: 250
+    Cost: 750
     RequiredLevel: 6
     Opened: 0
     Premium: 0
@@ -470,7 +489,7 @@ MonoBehaviour:
     Place: 0
   - Name: Greate Sword
     Index: 7
-    Cost: 450
+    Cost: 800
     RequiredLevel: 8
     Opened: 0
     Premium: 0
@@ -481,7 +500,7 @@ MonoBehaviour:
     Place: 0
   - Name: Great Hammer
     Index: 8
-    Cost: 500
+    Cost: 1000
     RequiredLevel: 13
     Opened: 0
     Premium: 0
@@ -492,7 +511,7 @@ MonoBehaviour:
     Place: 0
   - Name: Great Lance
     Index: 9
-    Cost: 300
+    Cost: 1250
     RequiredLevel: 9
     Opened: 0
     Premium: 0
@@ -503,7 +522,7 @@ MonoBehaviour:
     Place: 0
   - Name: Hammer
     Index: 10
-    Cost: 175
+    Cost: 250
     RequiredLevel: 5
     Opened: 0
     Premium: 0
@@ -525,7 +544,7 @@ MonoBehaviour:
     Place: 0
   - Name: Large Club
     Index: 12
-    Cost: 400
+    Cost: 1500
     RequiredLevel: 11
     Opened: 0
     Premium: 0
@@ -536,7 +555,7 @@ MonoBehaviour:
     Place: 0
   - Name: PoleAxe
     Index: 13
-    Cost: 400
+    Cost: 1350
     RequiredLevel: 7
     Opened: 0
     Premium: 0
@@ -546,7 +565,7 @@ MonoBehaviour:
     Place: 0
   - Name: Two Side Axe
     Index: 14
-    Cost: 300
+    Cost: 650
     RequiredLevel: 7
     Opened: 0
     Premium: 0
@@ -556,7 +575,7 @@ MonoBehaviour:
     Place: 0
   - Name: Rake
     Index: 15
-    Cost: 50
+    Cost: 100
     RequiredLevel: 1
     Opened: 0
     Premium: 0
@@ -567,7 +586,7 @@ MonoBehaviour:
     Place: 0
   - Name: Pitchfork
     Index: 16
-    Cost: 125
+    Cost: 175
     RequiredLevel: 3
     Opened: 0
     Premium: 0
@@ -578,7 +597,7 @@ MonoBehaviour:
     Place: 0
   - Name: Pick
     Index: 17
-    Cost: 100
+    Cost: 125
     RequiredLevel: 2
     Opened: 0
     Premium: 0
@@ -610,7 +629,7 @@ MonoBehaviour:
     Place: 0
   - Name: Pan
     Index: 20
-    Cost: 150
+    Cost: 125
     RequiredLevel: 5
     Opened: 0
     Premium: 0
@@ -621,7 +640,7 @@ MonoBehaviour:
     Place: 0
   - Name: Bardiche
     Index: 21
-    Cost: 500
+    Cost: 1500
     RequiredLevel: 12
     Opened: 0
     Premium: 0
@@ -643,7 +662,7 @@ MonoBehaviour:
     Place: 0
   - Name: Zweihander
     Index: 23
-    Cost: 600
+    Cost: 2000
     RequiredLevel: 12
     Opened: 0
     Premium: 0
@@ -679,18 +698,18 @@ MonoBehaviour:
     RequiredLevel: 5
     Opened: 0
     Premium: 0
-    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+    weapon: {fileID: 5859202298631620406, guid: fee9ee92bcd32b54a91e3c8528cb4e61,
       type: 3}
     Icon: {fileID: 9135076359821902065, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 1
     Place: 0
   - Name: Bow
     Index: 27
-    Cost: 350
+    Cost: 750
     RequiredLevel: 3
     Opened: 0
     Premium: 0
-    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+    weapon: {fileID: 4315623610848259408, guid: f1d50bafd13455e4e8a39f7af885c51c,
       type: 3}
     Icon: {fileID: -7594048697255639695, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 1
@@ -701,7 +720,7 @@ MonoBehaviour:
     RequiredLevel: 11
     Opened: 0
     Premium: 0
-    weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
+    weapon: {fileID: 3807801396502915189, guid: 992b2e4020f076c488373e36e4ea3501,
       type: 3}
     Icon: {fileID: 7048928126449685737, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 3
@@ -723,29 +742,29 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.76057893
-      outSlope: 0.76057893
+      inSlope: 0.71509093
+      outSlope: 0.71509093
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.08250119
+      outWeight: 0.19298245
     - serializedVersion: 3
-      time: 0.68407935
-      value: 0.35943392
-      inSlope: 1.0617224
-      outSlope: 1.0617224
+      time: 0.6896824
+      value: 0.33480766
+      inSlope: 0.81555533
+      outSlope: 0.81555533
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33392766
+      inWeight: 0.08160103
+      outWeight: 0.2263683
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 4.489436
-      outSlope: 4.489436
+      inSlope: 4.152857
+      outSlope: 4.152857
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.297319
+      inWeight: 0.07914925
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

@@ -159,6 +159,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 6
+  Index: 27
   NowEffect: 0
   Damage: 1
   Weight: 1
@@ -173,6 +174,7 @@ MonoBehaviour:
   NowAmmo: 0
   AttackRange: 15
   ReloadTime: 0.25
+  Reloaded: 1
   anim: {fileID: 8210375518319547864}
   BulletPos: {fileID: 2716219158613571755}
   bullet: {fileID: 2953213806193086767, guid: bbcd23ac3acc30440a7a604e17fd5e5a, type: 3}

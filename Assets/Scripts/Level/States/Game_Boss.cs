@@ -72,6 +72,11 @@ public class Game_Boss : GameState
         level.PrintText("Толстый меня побил((", 1.5f);
         level.cameraMove.TurnFailedShow();
         level.PlayMenu(4);
+
+        if(!level.BossEnemy.Dead)
+        {
+            level.BossEnemy.MakeFun();
+        }
     }
 
     public override void OnEnemyDie(Man man, Man Enemy, Man.HitType type)

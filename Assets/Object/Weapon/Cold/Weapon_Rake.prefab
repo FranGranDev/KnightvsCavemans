@@ -284,6 +284,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 5
+  Index: 15
+  NowEffect: 0
   Damage: 1
   Weight: 1
   Impusle: 1

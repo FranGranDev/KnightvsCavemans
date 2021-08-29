@@ -26,7 +26,19 @@ public class AiBoss : Man
 
     public override void SetParams()
     {
-        base.SetParams();
+        Dead = false;
+        anim.SetBool("Dead", false);
+        MaxHp = Mathf.RoundToInt(MaxHp * Hard());
+        Hp = MaxHp;
+        transform.localScale = Vector3.one * Size;
+        Rig.mass *= Size * Size;
+        BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
+        PassedMan = new List<Collider2D>();
+
+        StartJump = JumpForce;
+        StartPower = Power;
+        StartSize = Size;
+        StartSpeed = Speed;
 
         SkinColor = GameData.active.GetRandColorHVS();
         for (int i = 0; i < Sprites.Length; i++)
@@ -59,7 +71,7 @@ public class AiBoss : Man
         {
             PrevDir = Dir;
         }
-        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.3f * Hard() / Mathf.Sqrt(Size * WeaponWeight()));
+        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.25f * Hard() / Mathf.Sqrt(Size * WeaponWeight()));
     }
 
     public override void Jump()
@@ -154,7 +166,7 @@ public class AiBoss : Man
     public override void OnLandOof(Man Enemy, float velocity)
     {
         GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 5), Enemy, HitType.Punch, EffectType.Null);
-        if (Punched && velocity > 1f && Random.Range(0, 3) == 0)
+        if (Punched && Random.Range(0, 5) == 0)
         {
             ThrowOutWeapon();
         }

@@ -21,7 +21,6 @@ public class Player : Man
         Dead = false;
         anim.SetBool("Dead", false);
         Hp = MaxHp;
-        Power = 1;
         transform.localScale = Vector3.one * Size;
         Rig.mass *= Size * Size;
         BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();

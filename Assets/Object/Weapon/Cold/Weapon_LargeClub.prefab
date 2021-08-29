@@ -341,9 +341,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponType: 4
+  Index: 12
+  NowEffect: 0
   Damage: 3
   Weight: 3
-  Impusle: 2
+  Impusle: 2.75
   Owner: {fileID: 0}
   Trail: {fileID: 0}
   Handle: {fileID: 0}

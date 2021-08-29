@@ -120,8 +120,8 @@ public class AiPlayer : Man
             else
             {
                 Vector2 Up = Velocity > 0.25f ? Vector2.up : Vector2.zero;
-                Enemy.GetImpulse((Rig.velocity.normalized + Up).normalized * Rig.velocity.magnitude * Hard() * Size * 2f);
-                Enemy.GetPunched(this, Velocity * Size > 0.25f);
+                Enemy.GetImpulse((Rig.velocity.normalized + Up).normalized * Rig.velocity.magnitude * Hard() * Size * 2.25f);
+                Enemy.GetPunched(this, Velocity * Size > 0.2f);
                 Rig.velocity *= 0.5f * Size;
                 OnAttack(Enemy, Velocity, HitType.Punch);
             }

@@ -11,6 +11,7 @@ public class Level : MonoBehaviour
     public Man MainPlayer;
     private Player PlayerScript;
     private int NowArmor;
+    private int TempWeapon;
     public enum GameType { Levels, Bets, Waves}
 
     public static bool OnPause;
@@ -131,6 +132,7 @@ public class Level : MonoBehaviour
     [Header("UI Store")]
     public GameObject Ui_Store;
     public Transform Ui_Store_Weapon;
+    public GameObject Ui_Store_Thanks;
 
     [Header("UI Waves")]
     public GameObject Ui_Waves;
@@ -141,7 +143,7 @@ public class Level : MonoBehaviour
     public GameObject Ui_Amunition;
     public RectTransform Ui_Amun_Weapon;
     public RectTransform Ui_Anum_ScrollWeapon;
-    private int WeaponSelected;
+
     private WeaponIcon[] Ui_Anum_WeaponIcons;
     public Bar Ui_Anum_HpBar;
     public TextMeshProUGUI Ui_Anum_HpLevel;
@@ -279,6 +281,7 @@ public class Level : MonoBehaviour
             StopCoroutine(MoneyUpdateCoroutine);
         }
         MoneyUpdateCoroutine = StartCoroutine(UpdateMoneyCour(Up));
+        GameData.Save();
     }
     private IEnumerator UpdateMoneyCour(int Up)
     {
@@ -496,18 +499,19 @@ public class Level : MonoBehaviour
     {
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
         man.MaxHp = Mathf.RoundToInt(15 * Power);
+        man.Power = Power;
         man.Size = Power;
         man.name = index.ToString();
         man.Speed = 12 * Power;
         man.Type = Man.ManType.Bets;
         man.Experience = 0;
-        man.MoveArm(index == 0 ? Vector2.right : Vector2.left);
         man.ForceFlip(index == 0);
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
         if (weapon != null)
         {
+            weapon.transform.up = ((index == 0 ? Vector2.right : Vector2.left) + Vector2.up).normalized;
             man.TakeWeapon(Instantiate(weapon));
         }
         return man;
@@ -517,6 +521,7 @@ public class Level : MonoBehaviour
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
         man.Type = Man.ManType.Enemy;
         man.Experience = 1;
+        man.Power = 1;
         return man;
     }
     public Man CreateNoBrainEnemy(Vector2 Position)
@@ -524,6 +529,7 @@ public class Level : MonoBehaviour
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
         man.Static = true;
         man.Type = Man.ManType.Player;
+        man.Power = 1;
         return man;
     }
     public Man CreateSpecialEnemy(Vector2 Position, ManInfo info)
@@ -535,6 +541,7 @@ public class Level : MonoBehaviour
         man.Speed = info.Speed;
         man.Type = info.Type;
         man.Experience = info.Exp;
+        man.Power = 1;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = info.ViewLength;
         if(info.weapon != null)
@@ -550,8 +557,10 @@ public class Level : MonoBehaviour
         man.Size = 1 * Random.Range(0.75f, 1.25f);
         man.name = "Cave Man";
         man.Speed = MainPlayer.Speed * Power;
+        man.Power = Power;
         man.Type = Man.ManType.Enemy;
         man.Experience = 1;
+
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 15f * Power;
         Weapon weapon = Random.Range(0, 3) != 0 ? GameData.active.GetRandomWeapon() : null;
@@ -589,8 +598,8 @@ public class Level : MonoBehaviour
         man.Speed = MainPlayer.Speed * Power;
         man.Type = Man.ManType.Enemy;
         man.Experience = 0;
-        man.Money = 25;
-        man.Power = Random.Range(1, 2);
+        man.Money = 40;
+        man.Power = Power;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -609,7 +618,7 @@ public class Level : MonoBehaviour
         man.Speed = MainPlayer.Speed * Power * 0.75f;
         man.Type = Man.ManType.Boss;
         man.Experience = Mathf.RoundToInt(25 * Power);
-        man.Power = Random.Range(1, 2);
+        man.Power = Power;
         man.Money = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowLevel + 1) * 50);
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 50f * Power;
@@ -803,9 +812,19 @@ public class Level : MonoBehaviour
     }
     public void OnPlayerUpdateAmmo()
     {
+        StartCoroutine(UpdateAmmoCour());
+    }
+    private IEnumerator UpdateAmmoCour()
+    {
+        yield return new WaitForFixedUpdate();
+        if (MainPlayer.weapon == null)
+        {
+            yield break;
+        }
         GunWeapon weapon = MainPlayer.weapon.GetComponent<GunWeapon>();
         if (weapon == null)
-            return;
+            yield break;
+
         if (weapon.NowAmmo > 0)
         {
             Ui_Game_AmmoText.text = "Ammo: " + weapon.NowAmmo + "/" + weapon.MaxAmmo;
@@ -814,6 +833,7 @@ public class Level : MonoBehaviour
         {
             Ui_Game_AmmoText.text = "No Ammo!";
         }
+        yield break;
     }
     public void OnPlayerMove(Vector2 Dir)
     {
@@ -1013,6 +1033,25 @@ public class Level : MonoBehaviour
         BattleFriends.Clear();
         DefeatedFriends.Clear();
     }
+    public void ClearWeapon()
+    {
+        GameObject[] Weapon = GameObject.FindGameObjectsWithTag("Weapon");
+        for (int i = 0; i < Weapon.Length; i++)
+        {
+            if (Weapon[i].transform.parent == null)
+            {
+                Destroy(Weapon[i]);
+            }
+        }
+        GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        for (int i = 0; i < Bullets.Length; i++)
+        {
+            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.tag != "Weapon")
+            {
+                Destroy(Bullets[i]);
+            }
+        }
+    }
 
     public void BoxSpawn()
     {
@@ -1112,18 +1151,34 @@ public class Level : MonoBehaviour
     }
     public void SetPlayerWeapon()
     {
-        if (MainPlayer.weapon != null && !GameData.active.GetAvalibleWeapon(MainPlayer.weapon))
+        if(MainPlayer.weapon != null)
         {
-            Destroy(MainPlayer.weapon.gameObject);
-            MainPlayer.weapon = null;
-        }
+            
+            WeaponInfo info = GameData.active.GetWeaponInfo(MainPlayer.weapon);
+            if (info.Opened)
+            {
+            }
+            else if(info.Premium)
+            {
+                Destroy(MainPlayer.weapon.gameObject);
+                MainPlayer.weapon = null;
 
-        if (MainPlayer.weapon == null)
+                Weapon weapon = Instantiate(GameData.active.GetRandomOpened());
+                MainPlayer.TakeWeapon(weapon);
+            }
+            else
+            {
+
+            }
+
+        }
+        else
         {
             Weapon weapon = Instantiate(GameData.active.GetSelectedWeapon());
             MainPlayer.TakeWeapon(weapon);
         }
-            
+
+        MainPlayer.weapon.OnStart();
     }
     public void SetPlayerRandomWeapon()
     {
@@ -1144,6 +1199,7 @@ public class Level : MonoBehaviour
         SetPlayerWeapon();
         UpdatePlayerStatsUI();
         anim.Play("StartFade");
+        NowArmor = GameData.NowArmor;
     }
 
     #endregion
@@ -1197,12 +1253,12 @@ public class Level : MonoBehaviour
         for (int i = 0; i < Ui_Anum_WeaponIcons.Length; i++)
         {
             Ui_Anum_WeaponIcons[i].SetOpened(info[i].Opened, info[i].Premium, GameData.active.GetAvalibleWeapon(info[i].Index));
-            Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(false);
+            Ui_Anum_WeaponIcons[GameData.NowWeaponPlace].SetSelected(false);
         }
 
-        Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(true);
+        Ui_Anum_WeaponIcons[GameData.NowWeaponPlace].SetSelected(true);
         Ui_Amun_Weapon.anchoredPosition = new Vector2(Ui_Anum_WeaponIcons.Length * 120, 0);
-        SetPlayerWeapon(info[WeaponSelected].weapon);
+        SetPlayerWeapon(info[GameData.NowWeaponPlace].weapon);
 
 
         NowArmor = GameData.NowArmor;
@@ -1403,6 +1459,13 @@ public class Level : MonoBehaviour
             Ui_Anum_ArmorButtonColor.color = new Color(color.r, color.g, color.b, 0.1f);
             Ui_Anum_ArmorName.text = GameData.active.tempArmorInfo.Name;
         }
+        else if(GameData.active.tempArmorInfo.Premium)
+        {
+            Ui_Anum_ArmorCosts.SetActive(false);
+            Ui_Anum_ArmorButton.enabled = false;
+            Ui_Anum_ArmorName.text = GameData.active.tempArmorInfo.Name;
+            StoreOn(1.5f);
+        }
         else
         {
             Ui_Anum_ArmorCosts.SetActive(true);
@@ -1428,7 +1491,7 @@ public class Level : MonoBehaviour
             if(GameData.active.armor[NowArmor].Cost <= GameData.Money)
             {
                 GameData.active.armor[NowArmor].Opened = true;
-
+                UpdateMoney(-GameData.active.armor[NowArmor].Cost);
                 SetArmor();
             }
             else
@@ -1467,13 +1530,18 @@ public class Level : MonoBehaviour
 
     public void SelectWeapon(int index, int Place)
     {
-        Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(false);
-        WeaponSelected = Place;
+        Ui_Anum_WeaponIcons[GameData.NowWeaponPlace].SetSelected(false);
+        GameData.NowWeaponPlace = Place;
         if (GameData.active.weapon[index].Opened)
         {
-            Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(false);
-            Ui_Anum_WeaponIcons[WeaponSelected].SetSelected(true);
+            Ui_Anum_WeaponIcons[GameData.NowWeaponPlace].SetSelected(true);
             GameData.NowWeapon = index;
+            SetPlayerWeapon(GameData.active.weapon[index].weapon);
+        }
+        else if(GameData.active.weapon[index].Premium)
+        {
+            TempWeapon = index;
+            StoreOn(1.5f);
             SetPlayerWeapon(GameData.active.weapon[index].weapon);
         }
         else
@@ -1481,6 +1549,11 @@ public class Level : MonoBehaviour
             Ui_Anum_WeaponIcons[Place].SetTryToBuy(true);
         }
     }
+    private void SelectNowWeapon()
+    {
+        SetPlayerWeapon(GameData.active.weapon[GameData.NowWeapon].weapon);
+    }
+
     public void TryToBuyWeapon(WeaponIcon icon)
     {
         if(GameData.Money >= GameData.active.weapon[icon.Index].Cost)
@@ -1909,7 +1982,7 @@ public class Level : MonoBehaviour
     }
     public void GoMainMenu()
     {
-        SetState(MenuState);
+        PlayMenu(0f);
         Resume();
     }
     private IEnumerator RestartCour(float delay)
@@ -1972,11 +2045,87 @@ public class Level : MonoBehaviour
             icon.SetIconLevelUp(info[i]);
         }
     }
+    public void StoreOn(float delay)
+    {
+        StartCoroutine(StoreOnCour(delay));
+    }
+    private IEnumerator StoreOnCour(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StoreOn();
+        yield break;
+    }
     public void StoreOff()
     {
         Ui_Store.SetActive(false);
     }
 
+    public void Buy()
+    {
+        if(GameData.PremiumOn)
+        {
+            StoreOff();
+            return;
+        }
+        OnBought();
+        StartCoroutine(OnBoughtCour());
+    }
+    public void OnBought()
+    {
+        PremiusInfo info = GameData.active.premiumInfo;
+        for (int i = 0; i < info.WeaponOpen.Length; i++)
+        {
+            GameData.active.weapon[info.WeaponOpen[i]].Opened = true;
+        }
+        for (int i = 0; i < info.ArmorOpen.Length; i++)
+        {
+            GameData.active.armor[info.ArmorOpen[i]].Opened = true;
+        }
+        for (int i = 0; i < info.GameTypeOpen.Length; i++)
+        {
+            GameData.active.GameType[info.GameTypeOpen[i]].Opened = true;
+        }
+        UpdateMoney(info.Money);
+        GameData.PremiumOn = true;
+
+        if(GameData.active.weapon[TempWeapon].Premium)
+        {
+            SelectWeapon(TempWeapon, GameData.NowWeaponPlace);
+        }
+        if (GameData.active.tempArmorInfo.Premium)
+        {
+            NowArmor = GameData.active.tempArmorInfo.Index;
+            SetArmor();
+        }
+
+        GameData.Save();
+    }
+    private IEnumerator OnBoughtCour()
+    {
+        Ui_Store_Thanks.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        Ui_Store_Thanks.SetActive(false);
+        StoreOff();
+        yield break;
+    }
+
+    public void NoThanks()
+    {
+        StoreOff();
+
+        if (GameData.active.weapon[TempWeapon].Premium)
+        {
+            SelectNowWeapon();
+        }
+        if(GameData.active.tempArmorInfo.Premium)
+        {
+            GameData.active.SetTempArmorInfo(GameData.active.armor[GameData.NowArmor]);
+            Ui_Anum_ArmorCosts.SetActive(false);
+            Ui_Anum_ArmorButton.enabled = false;
+            Ui_Anum_ArmorName.text = GameData.active.tempArmorInfo.Name;
+            MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.tempArmorInfo);
+        }
+    }
     #endregion
     #region Learning
     public void PlayLearn()

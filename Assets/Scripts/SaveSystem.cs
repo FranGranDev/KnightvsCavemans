@@ -44,6 +44,7 @@ public class SaveData
     public int LevelAttempt;
     public int MaxWave;
     public int NowWave;
+    public bool PremiumOn;
 
     public PlayerInfo PlayerData;
 
@@ -51,11 +52,14 @@ public class SaveData
     public bool LearningEnded;
     public int NowWeapon;
     public int NowArmor;
+    public int NowWeaponPlace;
 
     public int DeathNum;
     public int[] MansKilled;
 
     public bool[] WeaponOpened;
+    public bool[] ArmorOpened;
+    public bool[] GameTypeOpened;
 
     public bool Vibration;
     public float MusicVol;
@@ -67,9 +71,11 @@ public class SaveData
         LearningEnded = GameData.LearningEnded;
         NowWeapon = GameData.NowWeapon;
         NowArmor = GameData.NowArmor;
+        NowWeaponPlace = GameData.NowWeaponPlace;
         LevelAttempt = GameData.AttempForLevel;
         GameHard = data.GameHard;
 
+        PremiumOn = GameData.PremiumOn;
         NowWave = GameData.NowWave;
         MaxWave = GameData.MaxWave;
         DeathNum = GameData.DeathNum;
@@ -88,6 +94,16 @@ public class SaveData
         for(int i = 0; i < WeaponOpened.Length; i++)
         {
             WeaponOpened[i] = data.weapon[i].Opened;
+        }
+        ArmorOpened = new bool[data.armor.Length];
+        for(int i = 0; i < ArmorOpened.Length; i++)
+        {
+            ArmorOpened[i] = data.armor[i].Opened;
+        }
+        GameTypeOpened = new bool[data.GameType.Length];
+        for(int i = 0; i < GameTypeOpened.Length; i++)
+        {
+            GameTypeOpened[i] = data.GameType[i].Opened;
         }
     }
 }

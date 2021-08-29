@@ -30,7 +30,7 @@ public class Game_Waves : GameState
 
     private void CreateEnemys()
     {
-        int count = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowWave + 1) * 2);
+        int count = Mathf.RoundToInt(Mathf.Pow(GameData.NowWave + 1, 0.75f) * 2);
         level.AliveEnemy = level.CreateEnemy(Level.EnemyCreateType.Waves, count, level.sceneMaker.GetLongEnemyPos(), 5);
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();
@@ -92,6 +92,10 @@ public class Game_Waves : GameState
     private void OnWaveStart()
     {
         level.ClearEnemy();
+        if (GameData.NowWave % 2 == 0)
+        {
+            level.ClearWeapon();
+        }
         level.SetPlayerLikeNew();
         if (GameData.NowWave == 0)
         {
@@ -125,6 +129,11 @@ public class Game_Waves : GameState
         level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
         level.cameraMove.TurnFailedShow();
         level.PlayMenu(4);
+
+        for (int i = 0; i < level.AliveEnemy.Count; i++)
+        {
+            level.AliveEnemy[i].MakeFun();
+        }
     }
 
 

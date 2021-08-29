@@ -9,6 +9,7 @@ public class GameData : MonoBehaviour
     //-------GameData------------
     public static int NowLevel;
     public static int NowWeapon;
+    public static int NowWeaponPlace;
     public static int NowArmor;
     public static int AttempForLevel;
     public static int NowWave;
@@ -65,6 +66,8 @@ public class GameData : MonoBehaviour
     [Header("Game Setting's")]
     [Range(0, 1f)]
     public float GameHard;
+    [Header("Premium")]
+    public PremiusInfo premiumInfo;
     [Header("Game Types")]
     public GameTypeInfo[] GameType;
     [Header("Player")]
@@ -176,7 +179,7 @@ public class GameData : MonoBehaviour
     public static int PlayerExperience;
     public static int NextLevelExperience()
     {
-        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.6f) * 20);
+        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.75f) * 20);
     }
     public static int PlayerLevel;
     public static int PrevPlayerLevel;
@@ -197,7 +200,7 @@ public class GameData : MonoBehaviour
     }
     public static int MoneyPerPlayerLevel(int level)
     {
-        return Mathf.RoundToInt(Mathf.Sqrt(level + 1) * 100);
+        return Mathf.RoundToInt(Mathf.Sqrt(level + 1) * 150);
     }
     public static int Money;
     [Header("Man's")]
@@ -285,18 +288,14 @@ public class GameData : MonoBehaviour
     {
         return weapon[Index].RequiredLevel <= PlayerLevel;
     }
-    public bool GetAvalibleWeapon(Weapon weapon)
+    public WeaponInfo GetWeaponInfo(Weapon obj)
     {
-        if (weapon == null)
-            return false;
-        for(int i = 0; i < this.weapon.Length; i++)
+        for(int i = 0; i < weapon.Length; i++)
         {
-            if(this.weapon[i].weapon == weapon)
-            {
-                return GetAvalibleWeapon(i);
-            }
+            if (weapon[i].weapon.Index == obj.Index)
+                return weapon[i];
         }
-        return false;
+        return this.weapon[0];
     }
     public Weapon GetWeapon(int index)
     {
@@ -306,11 +305,34 @@ public class GameData : MonoBehaviour
     {
         return weapon[NowWeapon].weapon;
     }
+    public Weapon GetLastOpenedWeapon()
+    {
+        WeaponInfo temp = weapon[NowWeapon];
+        for (int i = 0; i < weapon.Length; i++)
+        {
+            if (weapon[i].Opened && weapon[i].RequiredLevel > temp.RequiredLevel)
+                temp = weapon[i];
+        }
+        return temp.weapon;
+    }
     public Weapon GetRandomWeapon()
     {
-        WeaponInfo[] temp = GetWeaponSortedByLevel();
-        int index = Mathf.RoundToInt(WeaponRand.Evaluate(Random.Range(0, 1f)) * (temp.Length - 1));
-        return temp[index].weapon;
+        int index = Mathf.RoundToInt(WeaponRand.Evaluate(Random.Range(0f, 1f)) * (weapon.Length - 1));
+        return weapon[index].weapon;
+
+    }
+    public Weapon GetRandomOpened()
+    {
+        List<WeaponInfo> info = new List<WeaponInfo>();
+        for(int i = 0; i < weapon.Length; i++)
+        {
+            if(weapon[i].Opened)
+            {
+                info.Add(weapon[i]);
+            }
+        }
+
+        return info[Random.Range(0, info.Count)].weapon;
     }
     [Header("Effects")]
     public EffectInfo[] Effects;
@@ -390,11 +412,13 @@ public class GameData : MonoBehaviour
             MaxWave = data.MaxWave;
             NowLevel = data.level;
             NowWeapon = data.NowWeapon;
+            NowWeaponPlace = data.NowWeaponPlace;
             NowArmor = data.NowArmor;
             LearningEnded = data.LearningEnded;
             playerInfo = data.PlayerData;
             GameHard = data.GameHard;
             AttempForLevel = data.LevelAttempt;
+            PremiumOn = data.PremiumOn;
 
             Vibration = data.Vibration;
             MusicVol = data.MusicVol;
@@ -410,6 +434,14 @@ public class GameData : MonoBehaviour
             for(int i = 0; i < data.WeaponOpened.Length; i++)
             {
                 weapon[i].Opened = data.WeaponOpened[i];
+            }
+            for(int i = 0; i < data.ArmorOpened.Length; i++)
+            {
+                armor[i].Opened = data.ArmorOpened[i];
+            }
+            for(int i = 0; i < data.GameTypeOpened.Length; i++)
+            {
+                GameType[i].Opened = data.GameTypeOpened[i];
             }
         }
     }
@@ -433,6 +465,7 @@ public class GameData : MonoBehaviour
 public struct GameTypeInfo
 {
     public string Name;
+    public bool Opened;
     public Level.GameType type;
     public int Index;
 }
@@ -537,6 +570,7 @@ public struct ArmorInfo
     public WeaponInfo.RareType Rare;
     public int RequiredLevel;
     public int Cost;
+    public bool Premium;
     public bool Opened;
 
     public float Hp;
@@ -584,4 +618,13 @@ public struct BuffInfo
     public string Name;
     public int Index;
     public Buff obj;
+}
+[System.Serializable] 
+public struct PremiusInfo
+{
+    public int[] WeaponOpen;
+    public int[] ArmorOpen;
+    public int[] GameTypeOpen;
+    public bool NoAdd;
+    public int Money;
 }

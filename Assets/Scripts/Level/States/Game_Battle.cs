@@ -169,6 +169,11 @@ public class Game_Battle : GameState
         level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
         level.cameraMove.TurnFailedShow();
         level.PlayMenu(4);
+
+        for (int i = 0; i < level.AliveEnemy.Count; i++)
+        {
+            level.AliveEnemy[i].MakeFun();
+        }
     }
 
 

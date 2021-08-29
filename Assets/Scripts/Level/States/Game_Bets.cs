@@ -33,8 +33,6 @@ public class Game_Bets : GameState
     private void CreateDuel()
     {
         level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Bets, 2, level.sceneMaker.GetEnemyPos(), 0);
-        level.AllEnemy[0].GetEnemy(level.AllEnemy[1]);
-        level.AllEnemy[1].GetEnemy(level.AllEnemy[0]);
         level.AliveEnemy = level.AllEnemy;
     }
     private void StartDuel()
@@ -43,6 +41,8 @@ public class Game_Bets : GameState
         {
             level.AllEnemy[i].Type = Man.ManType.Menu;
         }
+        level.AllEnemy[0].GetEnemy(level.AllEnemy[1]);
+        level.AllEnemy[1].GetEnemy(level.AllEnemy[0]);
     }
     private void CheckForEnd()
     {
@@ -68,6 +68,11 @@ public class Game_Bets : GameState
             {
                 level.OnBetEnd(man);
                 FirstDeath = true;
+            }
+
+            for(int i = 0; i < level.AliveEnemy.Count; i++)
+            {
+                level.AliveEnemy[i].MakeFun();
             }
         }
     }

@@ -6,13 +6,14 @@ public abstract class Weapon : MonoBehaviour
 {
     public enum Type { Sword, Axe, Lance, Hammer, Club, Tool, Gun };
     public Type WeaponType;
+    public int Index;
     public Man.EffectType NowEffect;
     private Man.EffectType PrevEffect;
     [Range(0, 5)]
     public int Damage;
     [Range(1, 3f)]
     public float Weight;
-    [Range(0.5f, 2f)]
+    [Range(0.5f, 3f)]
     public float Impusle;
     public float Lenght()
     {

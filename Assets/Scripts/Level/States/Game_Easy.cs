@@ -34,7 +34,7 @@ public class Game_Easy : GameState
 
     private void CreateEnemys()
     {
-        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(3, 6);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.75f)) + Random.Range(0, 3);
         level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Nude, EnemyCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveEnemy = level.AllEnemy;
         level.DefeatedEnemy = new List<Man>();
@@ -127,6 +127,11 @@ public class Game_Easy : GameState
         level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
         level.cameraMove.TurnFailedShow();
         level.PlayMenu(4);
+
+        for (int i = 0; i < level.AliveEnemy.Count; i++)
+        {
+            level.AliveEnemy[i].MakeFun();
+        }
     }
 
 

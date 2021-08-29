@@ -29,7 +29,7 @@ public class WeaponIcon : MonoBehaviour
     }
     public void SetIcon(WeaponInfo info, int Place)
     {
-        if (GameData.active.GetAvalibleWeapon(info.Index))
+        if (GameData.active.GetAvalibleWeapon(info.Index) || info.Premium)
         {
             button.onClick.AddListener(delegate { Level.active.SelectWeapon(info.Index, Place); });
         }
