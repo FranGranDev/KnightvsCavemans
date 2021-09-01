@@ -24,6 +24,7 @@ public class Game_Learn : GameState
 
         StartState();
         Controller.active.Subscribe(StopAnimation);
+        level.OnLevelStart();
     }
 
     public override void Run()

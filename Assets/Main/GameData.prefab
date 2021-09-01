@@ -48,22 +48,30 @@ MonoBehaviour:
   premiumInfo:
     WeaponOpen: 0100000016000000180000001d000000
     ArmorOpen: 07000000
-    GameTypeOpen: 
+    GameTypeOpen: 03000000
     NoAdd: 1
     Money: 10000
   GameType:
   - Name: Levels
-    Opened: 0
+    Opened: 1
+    Premium: 0
     type: 0
     Index: 0
   - Name: Bets
-    Opened: 0
+    Opened: 1
+    Premium: 0
     type: 1
     Index: 1
   - Name: Waves
-    Opened: 0
+    Opened: 1
+    Premium: 0
     type: 2
     Index: 2
+  - Name: Elite Battle
+    Opened: 0
+    Premium: 1
+    type: 2
+    Index: 3
   playerInfo:
     Name: Knight
     MaxHp: 25
@@ -224,7 +232,7 @@ MonoBehaviour:
     RightLeg1Layer: 12
     Effect: 0
     Rare: 0
-    RequiredLevel: 3
+    RequiredLevel: 5
     Cost: 1000
     Premium: 0
     Opened: 0
@@ -253,7 +261,7 @@ MonoBehaviour:
     RightLeg1Layer: 9
     Effect: 0
     Rare: 1
-    RequiredLevel: 5
+    RequiredLevel: 10
     Cost: 1500
     Premium: 0
     Opened: 0
@@ -282,7 +290,7 @@ MonoBehaviour:
     RightLeg1Layer: 12
     Effect: 0
     Rare: 1
-    RequiredLevel: 7
+    RequiredLevel: 15
     Cost: 2000
     Premium: 0
     Opened: 0
@@ -311,7 +319,7 @@ MonoBehaviour:
     RightLeg1Layer: 12
     Effect: 0
     Rare: 2
-    RequiredLevel: 9
+    RequiredLevel: 20
     Cost: 2750
     Premium: 0
     Opened: 0
@@ -340,7 +348,7 @@ MonoBehaviour:
     RightLeg1Layer: 10
     Effect: 0
     Rare: 2
-    RequiredLevel: 11
+    RequiredLevel: 25
     Cost: 3500
     Premium: 0
     Opened: 0
@@ -369,7 +377,7 @@ MonoBehaviour:
     RightLeg1Layer: 12
     Effect: 0
     Rare: 3
-    RequiredLevel: 13
+    RequiredLevel: 30
     Cost: 5000
     Premium: 0
     Opened: 0
@@ -398,7 +406,7 @@ MonoBehaviour:
     RightLeg1Layer: 12
     Effect: 1
     Rare: 3
-    RequiredLevel: 14
+    RequiredLevel: 0
     Cost: 0
     Premium: 1
     Opened: 0
@@ -406,7 +414,7 @@ MonoBehaviour:
     Power: 0.4
     Size: 0.25
     Speed: 0.1
-    Jump: 0.25
+    Jump: 0.1
   IconPrefab: {fileID: 3807928924805129908, guid: 762e636c2e6b5ca43a0858981aa1a311,
     type: 3}
   weapon:
@@ -424,29 +432,29 @@ MonoBehaviour:
   - Name: Alebarda
     Index: 1
     Cost: 500
-    RequiredLevel: 10
+    RequiredLevel: 6
     Opened: 0
     Premium: 1
     weapon: {fileID: -5489435138435424582, guid: fd59a20928a2b8049949397de66c43e2,
       type: 3}
     Icon: {fileID: -1201781469886174915, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 1
+    Rare: 2
     Place: 0
   - Name: Big Club
     Index: 2
     Cost: 500
-    RequiredLevel: 8
+    RequiredLevel: 10
     Opened: 0
     Premium: 0
     weapon: {fileID: 4575685520726181005, guid: ae896048a5ed2964f84e9e1b72b2a2e9,
       type: 3}
     Icon: {fileID: 6343528850096420921, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 0
+    Rare: 1
     Place: 0
   - Name: Club
     Index: 3
-    Cost: 250
-    RequiredLevel: 4
+    Cost: 200
+    RequiredLevel: 5
     Opened: 0
     Premium: 0
     weapon: {fileID: -5363904333159045422, guid: 78a3e64adba207949ba1a1bf88917ec2,
@@ -456,30 +464,30 @@ MonoBehaviour:
     Place: 0
   - Name: Elite Great Sword
     Index: 4
-    Cost: 1250
-    RequiredLevel: 12
+    Cost: 1750
+    RequiredLevel: 19
     Opened: 0
     Premium: 0
     weapon: {fileID: 7925853757073430869, guid: 4ad8ac4d83b1cf145adae1b5d4004520,
       type: 3}
     Icon: {fileID: 5397309336251975985, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 3
+    Rare: 2
     Place: 0
   - Name: Elite Sword
     Index: 5
-    Cost: 750
-    RequiredLevel: 10
+    Cost: 1000
+    RequiredLevel: 15
     Opened: 0
     Premium: 0
     weapon: {fileID: -6244012180598552178, guid: 6c784273b7a3cce4294d1dbc6ceb11fa,
       type: 3}
     Icon: {fileID: -7905450923409390786, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 1
     Place: 0
   - Name: Great Axe
     Index: 6
     Cost: 750
-    RequiredLevel: 6
+    RequiredLevel: 12
     Opened: 0
     Premium: 0
     weapon: {fileID: 9128354321437096536, guid: 762e9e5a9d1234d4fa54fae848e9dcff,
@@ -499,9 +507,9 @@ MonoBehaviour:
     Rare: 2
     Place: 0
   - Name: Great Hammer
-    Index: 8
-    Cost: 1000
-    RequiredLevel: 13
+    Index: 21
+    Cost: 2000
+    RequiredLevel: 21
     Opened: 0
     Premium: 0
     weapon: {fileID: -7348993945448162406, guid: b52f447b169b39540976e7ed0914dcc6,
@@ -512,18 +520,18 @@ MonoBehaviour:
   - Name: Great Lance
     Index: 9
     Cost: 1250
-    RequiredLevel: 9
+    RequiredLevel: 15
     Opened: 0
     Premium: 0
     weapon: {fileID: 8623710150773392088, guid: 9d54511a330e8004a86293b5fe900183,
       type: 3}
     Icon: {fileID: 7876722415442848751, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 1
+    Rare: 2
     Place: 0
   - Name: Hammer
     Index: 10
-    Cost: 250
-    RequiredLevel: 5
+    Cost: 350
+    RequiredLevel: 7
     Opened: 0
     Premium: 0
     weapon: {fileID: 6691549251597124274, guid: 16d2d5b164e95764a87728ea6ee90ab8,
@@ -533,30 +541,30 @@ MonoBehaviour:
     Place: 0
   - Name: Lance
     Index: 11
-    Cost: 200
-    RequiredLevel: 6
+    Cost: 400
+    RequiredLevel: 8
     Opened: 0
     Premium: 0
     weapon: {fileID: 4645482641037742207, guid: 31f6936d5e4425749b64579207ec37b3,
       type: 3}
     Icon: {fileID: 3525681342201372738, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 0
+    Rare: 1
     Place: 0
   - Name: Large Club
     Index: 12
-    Cost: 1500
-    RequiredLevel: 11
+    Cost: 1300
+    RequiredLevel: 18
     Opened: 0
     Premium: 0
     weapon: {fileID: -9013468668132671761, guid: f28d360b2fcd46549a3b263c3be88b94,
       type: 3}
     Icon: {fileID: -5428110156632507908, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 3
     Place: 0
   - Name: PoleAxe
     Index: 13
-    Cost: 1350
-    RequiredLevel: 7
+    Cost: 750
+    RequiredLevel: 14
     Opened: 0
     Premium: 0
     weapon: {fileID: 509812880334392657, guid: 45178343a0ecbd24d9296f6df8b1a0b7, type: 3}
@@ -565,8 +573,8 @@ MonoBehaviour:
     Place: 0
   - Name: Two Side Axe
     Index: 14
-    Cost: 650
-    RequiredLevel: 7
+    Cost: 450
+    RequiredLevel: 10
     Opened: 0
     Premium: 0
     weapon: {fileID: 193811027679847317, guid: 0f0031af20021904d9aab217c74682b9, type: 3}
@@ -586,8 +594,8 @@ MonoBehaviour:
     Place: 0
   - Name: Pitchfork
     Index: 16
-    Cost: 175
-    RequiredLevel: 3
+    Cost: 150
+    RequiredLevel: 4
     Opened: 0
     Premium: 0
     weapon: {fileID: 8735657926360071520, guid: b5987291cddee6e46886c0d5eb164138,
@@ -597,8 +605,8 @@ MonoBehaviour:
     Place: 0
   - Name: Pick
     Index: 17
-    Cost: 125
-    RequiredLevel: 2
+    Cost: 175
+    RequiredLevel: 5
     Opened: 0
     Premium: 0
     weapon: {fileID: 3232490601882562395, guid: 87142f408a03a584787c5231a2342b24,
@@ -608,8 +616,8 @@ MonoBehaviour:
     Place: 0
   - Name: Scythe
     Index: 18
-    Cost: 100
-    RequiredLevel: 5
+    Cost: 300
+    RequiredLevel: 6
     Opened: 0
     Premium: 0
     weapon: {fileID: 757191780823901296, guid: 3751a2b9929c9824bb0c2d0390f0ccf2, type: 3}
@@ -618,8 +626,8 @@ MonoBehaviour:
     Place: 0
   - Name: Showel
     Index: 19
-    Cost: 75
-    RequiredLevel: 1
+    Cost: 125
+    RequiredLevel: 2
     Opened: 0
     Premium: 0
     weapon: {fileID: 3906354599097324131, guid: aef28e3f9c88ae645ba070c61a015788,
@@ -629,7 +637,7 @@ MonoBehaviour:
     Place: 0
   - Name: Pan
     Index: 20
-    Cost: 125
+    Cost: 250
     RequiredLevel: 5
     Opened: 0
     Premium: 0
@@ -640,8 +648,8 @@ MonoBehaviour:
     Place: 0
   - Name: Bardiche
     Index: 21
-    Cost: 1500
-    RequiredLevel: 12
+    Cost: 2250
+    RequiredLevel: 20
     Opened: 0
     Premium: 0
     weapon: {fileID: 8516805417368363239, guid: 51daa147d0546914592f90d7c5080a84,
@@ -658,23 +666,23 @@ MonoBehaviour:
     weapon: {fileID: 2916771687994967609, guid: 02bea9544828af645ad77ea93e969bf7,
       type: 3}
     Icon: {fileID: 51877033005449554, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 3
     Place: 0
   - Name: Zweihander
     Index: 23
-    Cost: 2000
-    RequiredLevel: 12
+    Cost: 3000
+    RequiredLevel: 22
     Opened: 0
     Premium: 0
     weapon: {fileID: 3310593643497627951, guid: 64700606bbf066d4c8c8b03de055bbad,
       type: 3}
     Icon: {fileID: -4633819844380998089, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 3
     Place: 0
   - Name: Elite Zweihander
     Index: 24
     Cost: 1000
-    RequiredLevel: 13
+    RequiredLevel: 16
     Opened: 0
     Premium: 1
     weapon: {fileID: 5497986501523041708, guid: f61f17fe3b4639f4a8b3b50064d1c19b,
@@ -684,40 +692,40 @@ MonoBehaviour:
     Place: 0
   - Name: Crossbow
     Index: 25
-    Cost: 1500
-    RequiredLevel: 9
+    Cost: 2500
+    RequiredLevel: 20
     Opened: 0
     Premium: 0
     weapon: {fileID: 341459756886440285, guid: c342fda1b59d48b418aba28889a477bb, type: 3}
     Icon: {fileID: 5579144479164033125, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 2
+    Rare: 3
     Place: 0
   - Name: Small Crossbow
     Index: 26
-    Cost: 1000
-    RequiredLevel: 5
+    Cost: 750
+    RequiredLevel: 10
     Opened: 0
     Premium: 0
     weapon: {fileID: 5859202298631620406, guid: fee9ee92bcd32b54a91e3c8528cb4e61,
       type: 3}
     Icon: {fileID: 9135076359821902065, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 1
+    Rare: 2
     Place: 0
   - Name: Bow
     Index: 27
-    Cost: 750
-    RequiredLevel: 3
+    Cost: 500
+    RequiredLevel: 5
     Opened: 0
     Premium: 0
     weapon: {fileID: 4315623610848259408, guid: f1d50bafd13455e4e8a39f7af885c51c,
       type: 3}
     Icon: {fileID: -7594048697255639695, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
-    Rare: 1
+    Rare: 2
     Place: 0
   - Name: Elite Bow
     Index: 28
-    Cost: 1750
-    RequiredLevel: 11
+    Cost: 1500
+    RequiredLevel: 17
     Opened: 0
     Premium: 0
     weapon: {fileID: 3807801396502915189, guid: 992b2e4020f076c488373e36e4ea3501,
@@ -727,14 +735,80 @@ MonoBehaviour:
     Place: 0
   - Name: Musket
     Index: 29
-    Cost: 2500
-    RequiredLevel: 13
+    Cost: 0
+    RequiredLevel: 23
     Opened: 0
     Premium: 1
     weapon: {fileID: 3871845960423684970, guid: 4ad35233686198c439efd3942de1d9eb,
       type: 3}
     Icon: {fileID: -5587630956021105233, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
     Rare: 3
+    Place: 0
+  - Name: Hoe
+    Index: 30
+    Cost: 125
+    RequiredLevel: 3
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 7620046034645291267, guid: dc85ac3cc5d74b7418c6d53da7b6fefb,
+      type: 3}
+    Icon: {fileID: -7669924985917013497, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 0
+    Place: 0
+  - Name: Broke Elite Sword
+    Index: 31
+    Cost: 350
+    RequiredLevel: 9
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 8787672682203706807, guid: 833f0e3ca09eb41489be6b8b692da952,
+      type: 3}
+    Icon: {fileID: -5841022891263825203, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Mace
+    Index: 32
+    Cost: 1000
+    RequiredLevel: 15
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 8360481250227727021, guid: d9837b1dfee3f804f9a921d6db103a18,
+      type: 3}
+    Icon: {fileID: -3952379872380511356, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 2
+    Place: 0
+  - Name: Elite Great Axe
+    Index: 33
+    Cost: 2000
+    RequiredLevel: 20
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 3451818500081351792, guid: 33fd579eecd11c44caa79d86d5e6cee8,
+      type: 3}
+    Icon: {fileID: 6696880791094077099, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 3
+    Place: 0
+  - Name: Fat Sword
+    Index: 34
+    Cost: 600
+    RequiredLevel: 11
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 1850529979460981327, guid: 109c8aae82aad25498a512d8833f57f5,
+      type: 3}
+    Icon: {fileID: 3551338027931694330, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
+    Place: 0
+  - Name: Tridan
+    Index: 35
+    Cost: 1250
+    RequiredLevel: 16
+    Opened: 0
+    Premium: 0
+    weapon: {fileID: 4126315683657159978, guid: 6a9f967f58da6274cb2cb43d550e8e7a,
+      type: 3}
+    Icon: {fileID: -9053841817315427636, guid: 0c788785970da624ead7bbaa41c28899, type: 3}
+    Rare: 1
     Place: 0
   WeaponRand:
     serializedVersion: 2
@@ -769,6 +843,100 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  soundInfo:
+  - Name: Block
+    Clip:
+    - {fileID: 8300000, guid: 668eab4c2c409f54ca2e9dc8aa36d962, type: 3}
+    - {fileID: 8300000, guid: 1a9e1220b075bd94db46ced0037d4fab, type: 3}
+    - {fileID: 8300000, guid: 2319c5ae09c19aa4f92e4c5e5abe24b7, type: 3}
+    Volume: 0.5
+  - Name: Click
+    Clip:
+    - {fileID: 8300000, guid: 6c550ecf1bf75c544be6ca3ef608b6e8, type: 3}
+    - {fileID: 8300000, guid: 28eca4d3a25f3b4479e6b4d351474ce0, type: 3}
+    - {fileID: 8300000, guid: 720cb34f6a3e3d34a830adf80a1c1018, type: 3}
+    Volume: 0.5
+  - Name: CantBuy
+    Clip:
+    - {fileID: 8300000, guid: 9f74b24b7cf2fbc4d8b8d8efac19291a, type: 3}
+    Volume: 0.5
+  - Name: TakeCoin
+    Clip:
+    - {fileID: 8300000, guid: cf3416b8a1f9e554793ff717e77b4b93, type: 3}
+    - {fileID: 8300000, guid: d532e0cfeb524234894abaeb8b5b2ae3, type: 3}
+    Volume: 0.5
+  - Name: TakeExp
+    Clip:
+    - {fileID: 8300000, guid: 638c3a771b9bb954c838b89f9ffb5202, type: 3}
+    Volume: 0.5
+  - Name: Hit
+    Clip:
+    - {fileID: 8300000, guid: 27ed9a3328b0b5d4ebee2d57cec50043, type: 3}
+    - {fileID: 8300000, guid: 91e32605223301f45b8aac80945ad526, type: 3}
+    - {fileID: 8300000, guid: e255fce5a7b24d24d8849d941915ba58, type: 3}
+    - {fileID: 8300000, guid: 73578f507cab4ca48bc1969747e9a6b6, type: 3}
+    - {fileID: 8300000, guid: 6909a311018324441ad062315c2def1a, type: 3}
+    Volume: 0.5
+  - Name: Jump
+    Clip:
+    - {fileID: 8300000, guid: e1d5a4ad2bef3c74492e116ff9b35971, type: 3}
+    - {fileID: 8300000, guid: 8c008a69740bb08408476bcc8a3efa01, type: 3}
+    - {fileID: 8300000, guid: 8c2c5848f88f9114f9b35dd6f5576728, type: 3}
+    Volume: 0.5
+  - Name: LevelDone
+    Clip:
+    - {fileID: 8300000, guid: 67444d84639ccc24f918d57f3f461643, type: 3}
+    - {fileID: 8300000, guid: 5dfda78aa4e78084e82f46815ef5b47c, type: 3}
+    - {fileID: 8300000, guid: 197a86bcba6060d45bcc26f977d55d7a, type: 3}
+    Volume: 0.5
+  - Name: LevelFailed
+    Clip:
+    - {fileID: 8300000, guid: 0a8b8113e16847c43a48086a04b90a71, type: 3}
+    - {fileID: 8300000, guid: 19f1f83c1d5cc574fa30cbbdcd47ed3c, type: 3}
+    - {fileID: 8300000, guid: c12f1b3c79eff3249bc091c692b22261, type: 3}
+    Volume: 0.5
+  - Name: LevelUp
+    Clip:
+    - {fileID: 8300000, guid: f7630ec92ce0cfe4492fe4b9ffc9a563, type: 3}
+    Volume: 0.5
+  - Name: PowerUp
+    Clip:
+    - {fileID: 8300000, guid: e1424ec67b27c364fb749679aa5f814a, type: 3}
+    Volume: 0.5
+  - Name: Punch
+    Clip:
+    - {fileID: 8300000, guid: 2cff4651c3c457a4c858ec464b1f20e0, type: 3}
+    - {fileID: 8300000, guid: 99c0c8ce5e5cb5f4ca620b0a9668224a, type: 3}
+    - {fileID: 8300000, guid: d966571dffd426948b4a8f2048b06d9d, type: 3}
+    Volume: 0.5
+  - Name: Shoot
+    Clip:
+    - {fileID: 8300000, guid: e7e71d13f97441443b4888ce5919cf0e, type: 3}
+    - {fileID: 8300000, guid: a483e3d364e1c464ab8dec7e15fe5eff, type: 3}
+    - {fileID: 8300000, guid: 5dc37f2495ccea948ab19ab7c4df92c8, type: 3}
+    Volume: 0.5
+  - Name: Throw
+    Clip:
+    - {fileID: 8300000, guid: 4f4119ab1e6e0c648a5c9b7c438fb248, type: 3}
+    - {fileID: 8300000, guid: 057a6738dfa5b56439ed7b14d03f9ebf, type: 3}
+    Volume: 0.5
+  musicInfo:
+  - Name: 0
+    Clip:
+    - {fileID: 8300000, guid: d1f1143f7a9099e47805e46f852ad414, type: 3}
+    Volume: 1
+  - Name: 1
+    Clip:
+    - {fileID: 8300000, guid: 3d96e48531195b141834c79c9bb972f8, type: 3}
+    Volume: 1
+  - Name: 2
+    Clip:
+    - {fileID: 8300000, guid: d40d166a97d36f94faa7a5b828432c07, type: 3}
+    Volume: 1
+  - Name: 3
+    Clip:
+    - {fileID: 8300000, guid: b00b162842193c94f9a0020043ad3c7b, type: 3}
+    Volume: 1
   Effects:
   - Name: Sparks
     Index: 0

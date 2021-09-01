@@ -9,6 +9,7 @@ public class Player : Man
     private Coroutine TackleCoroutine;
     private Man PrevHit;
     private int HitinRow;
+    private bool Throwing;
 
     public override void OnStart()
     {
@@ -108,7 +109,7 @@ public class Player : Man
 
     public override void MoveArm(Vector2 Dir)
     {
-        if (Dead)
+        if (Dead || Throwing)
             return;
         if (Dir != Vector2.zero)
         {
@@ -123,8 +124,9 @@ public class Player : Man
         {
             if (OnGround && !Jumped && RotationSpeed < Velocity)
             {
+                float TackleRatio = OnTackle ? 2 : 1;
                 Rig.velocity = new Vector2(Rig.velocity.x, 0);
-                Rig.velocity += Vector2.up * JumpForce;
+                Rig.velocity += Vector2.up * JumpForce * TackleRatio;
                 StartCoroutine(JumpDelay());
                 Level.active.OnPlayerJump();
             }
@@ -132,6 +134,22 @@ public class Player : Man
         else
         {
             NowHorse.Jump();
+        }
+    }
+    public override void JumpDir(Vector2 Dir)
+    {
+        if (OnGround && !Jumped)
+        {
+            float TackleRatio = OnTackle ? 1.5f : 1;
+            Dir.y *= 1 + Mathf.Abs(Dir.x) * 0.5f;
+            Rig.velocity = new Vector2(Rig.velocity.x * 0.75f, 0);
+            Rig.velocity += Dir * JumpForce * TackleRatio;
+            StartCoroutine(JumpDelay());
+            if (Dir != Vector2.zero)
+            {
+                PrevDir = Dir;
+            }
+            Level.active.OnPlayerJump();
         }
     }
     private IEnumerator JumpDelay()
@@ -152,10 +170,42 @@ public class Player : Man
                 Level.active.OnPlayerTackle();
             }
         }
-        else
+    }
+    public override void TackleDir(Vector2 Dir)
+    {
+        if (!OnHouse)
         {
-
+            if(TackleCoroutine != null)
+            {
+                StopCoroutine(TackleCoroutine);
+                TackleCoroutine = null;
+            }
+            if (OnGround)
+            {
+                TackleCoroutine = StartCoroutine(TackleDirCour(Dir));
+                Level.active.OnPlayerTackle();
+            }
         }
+    }
+    private IEnumerator TackleDirCour(Vector2 Dir)
+    {
+        OnTackle = true;
+        anim.Play("Tackle");
+        anim.SetBool("Tackle", true);
+        PrevDir = Dir;
+        Rig.velocity = (Dir.x > 0 ? Vector2.right : Vector2.left) * Speed;
+        yield return new WaitForFixedUpdate();
+        while (PrevDir.y < -0.5f && Velocity > 0.4f && OnGround && !Punched)
+        {
+            transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.2f).normalized, 0.1f);
+
+            yield return new WaitForFixedUpdate();
+        }
+        anim.SetBool("Tackle", false);
+        Rig.velocity *= 0.5f;
+        TackleCoroutine = null;
+        OnTackle = false;
+        yield break;
     }
     private IEnumerator TackleCour()
     {
@@ -163,9 +213,9 @@ public class Player : Man
         anim.Play("Tackle");
         anim.SetBool("Tackle", true);
         Rig.velocity *= 1.5f;
-        while (PrevDir.y < -0.8f && Velocity > 0.25f && OnGround)
+        while (PrevDir.y < -0.5f && Velocity > 0.25f && OnGround && !Punched)
         {
-            transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.1f).normalized, 0.1f);
+            transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.2f).normalized, 0.1f);
 
             yield return new WaitForFixedUpdate();
         }
@@ -184,6 +234,28 @@ public class Player : Man
         weapon = null;
         StartCoroutine(TakeDelay());
         Level.active.OnPlayerThrow();
+    }
+    public override void ThrowForce(Vector2 Dir)
+    {
+        if(!Throwing)
+        {
+            StartCoroutine(ThrowForceCour(Dir));
+        }
+    }
+    private IEnumerator ThrowForceCour(Vector2 Dir)
+    {
+        Throwing = true;
+        while(Vector2.Dot(Arm.transform.up, Dir) < 0.99f)
+        {
+            Arm.transform.up = Vector2.Lerp(Arm.transform.up, Dir, 0.35f / Mathf.Sqrt(Size * WeaponWeight()));
+        }
+        if (Dir != Vector2.zero)
+        {
+            PrevDir = Dir;
+        }
+        Throw();
+        Throwing = false;
+        yield break;
     }
 
     public override void OnAttack(Man Enemy, float Power, HitType Type)

@@ -14,6 +14,8 @@ public class Game_Menu : GameState
         level.AllEnemy = new List<Man>();
         level.sceneMaker.MakeRandomScene(50);
         level.DelayGame(0f);
+
+        level.OnLevelStart();
     }
 
     public override void Run()

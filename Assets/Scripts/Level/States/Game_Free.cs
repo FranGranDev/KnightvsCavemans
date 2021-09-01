@@ -23,6 +23,7 @@ public class Game_Free : GameState
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Test", 3f);
+        level.OnLevelStart();
     }
 
     public override void Run()
@@ -81,7 +82,7 @@ public class Game_Free : GameState
     private void LevelDone()
     {
         level.cameraMove.TurnAiFollow(level.LastOfMan, true);
-        GameData.NowLevel++;
+        GameData.IncreaseNowLevel();
         isEnd = true;
         level.PrintText("Красава, всех раскидал", 1.5f);
         GameData.Save();

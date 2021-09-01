@@ -41,9 +41,13 @@ public class SaveData
     public int PlayerExperience;
     public int Money;
     public float GameHard;
+    public float GameGlobalHard;
     public int LevelAttempt;
     public int MaxWave;
     public int NowWave;
+    public int MaxStage;
+    public int NowStage;
+
     public bool PremiumOn;
 
     public PlayerInfo PlayerData;
@@ -74,13 +78,19 @@ public class SaveData
         NowWeaponPlace = GameData.NowWeaponPlace;
         LevelAttempt = GameData.AttempForLevel;
         GameHard = data.GameHard;
+        GameGlobalHard = GameData.GameGlobalHard;
 
         PremiumOn = GameData.PremiumOn;
+
         NowWave = GameData.NowWave;
         MaxWave = GameData.MaxWave;
+        NowStage = GameData.NowStage;
+        MaxStage = GameData.MaxStage;
+
         DeathNum = GameData.DeathNum;
         PlayerData = data.playerInfo;
         MansKilled = data.MansKilled;
+
         PlayerLevel = GameData.PlayerLevel;
         PrevPlayerLevel = GameData.PrevPlayerLevel;
         PlayerExperience = GameData.PlayerExperience;

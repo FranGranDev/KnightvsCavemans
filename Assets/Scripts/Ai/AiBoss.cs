@@ -6,7 +6,7 @@ public class AiBoss : Man
 {
     private float Hard()
     {
-        return 0.5f + GameData.active.GameHard * 0.5f;
+        return 0.5f + GameData.active.GameHard * GameData.GameGlobalHard * 0.5f;
     }
     private AiController Control;
 

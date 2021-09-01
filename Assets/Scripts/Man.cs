@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Man : MonoBehaviour
 {
     public bool Static;
-    public enum ManType { Player, Enemy, Boss, Duel, Menu, Bets }
+    public enum ManType { Player, Enemy, KnightEnemy, Boss, Duel, Menu, Bets }
     public ManType Type;
     public enum HitType { Hit, HitFire, Throw, Bullet, Punch, Magic, Fall, Tackle, Object, Lava };
     public enum EffectType { Null, Fire }
@@ -256,6 +256,10 @@ public abstract class Man : MonoBehaviour
     public abstract void MoveArm(Vector2 Dir);
 
     public abstract void Jump();
+    public virtual void JumpDir(Vector2 Dir)
+    {
+
+    }
 
     public void MakeFun()
     {
@@ -281,9 +285,8 @@ public abstract class Man : MonoBehaviour
                 yield return new WaitForFixedUpdate();
             }
             ForceFlip(Random.Range(0, 2) == 0);
-            yield return new WaitForSeconds(0.25f);
             Rig.velocity = new Vector2(Rig.velocity.x * 0.5f, 0);
-            Rig.velocity += Vector2.up * JumpForce * 0.5f;
+            Rig.velocity += Vector2.up * 8f;
             yield return new WaitForFixedUpdate();
         }
         FunCoroutine = null;
@@ -291,6 +294,10 @@ public abstract class Man : MonoBehaviour
     }
 
     public abstract void Tackle();
+    public virtual void TackleDir(Vector2 Dir)
+    {
+
+    }
 
     private void Land()
     {
@@ -360,6 +367,11 @@ public abstract class Man : MonoBehaviour
     }
 
     public abstract void Throw();
+
+    public virtual void ThrowForce(Vector2 Dir)
+    {
+
+    }
 
     public abstract void Punch(Man Enemy);
     public abstract void Punch(SceneObject Obj);
@@ -668,7 +680,7 @@ public abstract class Man : MonoBehaviour
     }
     private IEnumerator IgonoreObjCour(Collider2D obj)
     {
-        yield return new WaitForSeconds(OnGround ? 0.25f : 0);
+        yield return new WaitForSeconds(OnGround && !OnTackle ? 0.25f : 0);
         if(obj == null)
         {
             PrevObj = null;
@@ -713,7 +725,7 @@ public abstract class Man : MonoBehaviour
         else if(collision.tag == "Object")
         {
             SceneObject Obj = collision.GetComponent<SceneObject>();
-            if(Velocity > 0.5f)
+            if(Velocity > 0.5f && !OnTackle)
             {
                 Punch(Obj);
             }

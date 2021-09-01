@@ -92,6 +92,24 @@ TextureImporter:
   - first:
       213: -5587630956021105233
     second: WeaponUI_29
+  - first:
+      213: -7669924985917013497
+    second: WeaponUI_30
+  - first:
+      213: -9053841817315427636
+    second: WeaponUI_31
+  - first:
+      213: 3551338027931694330
+    second: WeaponUI_32
+  - first:
+      213: 6696880791094077099
+    second: WeaponUI_33
+  - first:
+      213: -3952379872380511356
+    second: WeaponUI_34
+  - first:
+      213: -5841022891263825203
+    second: WeaponUI_35
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -113,6 +131,7 @@ TextureImporter:
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -122,8 +141,8 @@ TextureImporter:
   textureSettings:
     serializedVersion: 2
     filterMode: 0
-    aniso: -1
-    mipBias: -100
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -144,9 +163,12 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 0
   platformSettings:
   - serializedVersion: 3
@@ -830,7 +852,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -838,6 +860,132 @@ TextureImporter:
       bones: []
       spriteID: fadb262004fb472b0800000000000000
       internalID: -5587630956021105233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_30
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 68
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7020680ccd3fe8590800000000000000
+      internalID: -7669924985917013497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_31
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 68
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cca365226da4a5280800000000000000
+      internalID: -9053841817315427636
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_32
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 66
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af47430ee13e84130800000000000000
+      internalID: 3551338027931694330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_33
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 33
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba6ac40199910fc50800000000000000
+      internalID: 6696880791094077099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_34
+      rect:
+        serializedVersion: 2
+        x: 413
+        y: 33
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 48b1b5952735629c0800000000000000
+      internalID: -3952379872380511356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: WeaponUI_35
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dca6b41a0a480fea0800000000000000
+      internalID: -5841022891263825203
       vertices: []
       indices: 
       edges: []

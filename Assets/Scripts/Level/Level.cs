@@ -12,7 +12,8 @@ public class Level : MonoBehaviour
     private Player PlayerScript;
     private int NowArmor;
     private int TempWeapon;
-    public enum GameType { Levels, Bets, Waves}
+    public enum GameType { Levels, Bets, Waves, Knights}
+
 
     public static bool OnPause;
 
@@ -20,7 +21,15 @@ public class Level : MonoBehaviour
     public int NowGameType;
     public LevelTypes LevelType;
     public enum LevelTypes { Menu, Idle, Learn, Duel, Levels, Boss, Nude, Battle, KnightBattle, Waves};
-    public enum EnemyCreateType {Nude, Bets, Random, Similar, Duel, NoBrain, Waves, Friend, BattleEnemy, KnightEnemy, Boss}
+    public enum EnemyCreateType {Nude, Bets, Random, Similar, Duel, NoBrain, Waves, Friend, SimilarFriend, BattleEnemy, KnightEnemy, Boss}
+    public bool InGame()
+    {
+        return Ui_Game.activeSelf && !Ui_Pause.activeSelf;
+    }
+    public bool CanSwipe()
+    {
+        return !Ui_Game.activeSelf && !Ui_Amunition.activeSelf && !Ui_Settings.activeSelf && !Ui_Store.activeSelf;
+    }
 
     [Header("Enemys")]
     public List<Man> AllEnemy;
@@ -50,6 +59,7 @@ public class Level : MonoBehaviour
     public GameState BattleState;
     public GameState BossState;
     public GameState WavesState;
+    public GameState KnightsState;
     public GameState DragonState;
     public GameState FreeState;
     public GameState LearnState;
@@ -63,6 +73,8 @@ public class Level : MonoBehaviour
     public Transform CameraMenuPos;
     public SceneMaker sceneMaker;
     public CameraMove cameraMove;
+    public AudioSource musicSource;
+    public AudioSource effectSource;
     //--------Coroutines----------
     private Coroutine SelectStateCoroutine;
     private Coroutine DelayGameCoroutine;
@@ -138,6 +150,11 @@ public class Level : MonoBehaviour
     public GameObject Ui_Waves;
     public TextMeshProUGUI Ui_Waves_Max;
     public TextMeshProUGUI Ui_Waves_Now;
+
+    [Header("UI Knights")]
+    public GameObject Ui_Knights;
+    public TextMeshProUGUI Ui_Knights_Max;
+    public TextMeshProUGUI Ui_Knights_Now;
 
     [Header("UI Amunition")]
     public GameObject Ui_Amunition;
@@ -359,12 +376,31 @@ public class Level : MonoBehaviour
     private void SetHitinRow(int num)
     {
         HitInRow = num;
+        int NumForMega = 7;
+        switch(LevelType)
+        {
+            case LevelTypes.Battle:
+                NumForMega = 14;
+                break;
+            case LevelTypes.Boss:
+                NumForMega = 5;
+                break;
+            case LevelTypes.KnightBattle:
+                NumForMega = 15;
+                break;
+            case LevelTypes.Nude:
+                NumForMega = 10;
+                break;
+            case LevelTypes.Waves:
+                NumForMega = 8;
+                break;
+        }
         if(num == 0)
         {
             anim.Play("ComboIdle", 3);
             Ui_Game_HitRow.gameObject.SetActive(false);
         }
-        else if(num >= 7)
+        else if(NumForMega >= 7)
         {
             anim.Play("ComboMega", 3);
             Ui_Game_HitRow.gameObject.SetActive(true);
@@ -481,6 +517,10 @@ public class Level : MonoBehaviour
                 case EnemyCreateType.Friend:
                     Position = Pos[0] + new Vector2(Random.Range(-5f, 5f), -0.5f);
                     Enemys.Add(CreateFriend(Position, Random.Range(0.75f, 1.25f)));
+                    break;
+                case EnemyCreateType.SimilarFriend:
+                    Position = Pos[0] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Enemys.Add(CreateSimilarFriend(Position, Random.Range(0.75f, 1.25f)));
                     break;
                 case EnemyCreateType.BattleEnemy:
                     Position = Pos[1] + new Vector2(Random.Range(-5f, 5f), -0.5f);
@@ -649,6 +689,26 @@ public class Level : MonoBehaviour
         }
         return man;
     }
+    public Man CreateSimilarFriend(Vector2 Position, float Power)
+    {
+        Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
+        man.SetParams(GameData.active.playerInfo, GameData.active.armorInfo);
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
+        man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
+        man.name = "Knight Friend";
+        man.Speed = MainPlayer.Speed * Power;
+        man.Type = Man.ManType.Player;
+        man.Experience = 0;
+        man.Power = MainPlayer.Power * Power;
+        AiController controller = man.GetComponent<AiController>();
+        controller.ViewLenght = 25f * Power;
+        Weapon weapon = GameData.active.GetRandomWeapon();
+        if (weapon != null)
+        {
+            man.TakeWeapon(Instantiate(weapon));
+        }
+        return man;
+    }
     public Man CreateBattleEnemy(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
@@ -671,15 +731,14 @@ public class Level : MonoBehaviour
     public Man CreateKnightEnemy(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
-        man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
+        man.SetParams(GameData.active.playerInfo, GameData.active.GetEnemyArmor());
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
-        man.Size = MainPlayer.Size * Power;
+        man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
         man.name = "Knight Enemy";
         man.Speed = MainPlayer.Speed * Power;
-        man.Type = Man.ManType.Duel;
-        man.Experience = 5;
-        man.Power = Random.Range(1, 2);
-        man.Money = 25;
+        man.Type = Man.ManType.KnightEnemy;
+        man.Experience = 3;
+        man.Power = MainPlayer.Power * Power;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -884,6 +943,18 @@ public class Level : MonoBehaviour
     {
         SetHitinRow(0);
     }
+
+    public void OnSwipe(Vector2 Dir)
+    {
+        if(CanSwipe())
+        {
+            if(Mathf.Abs(Dir.x) > Mathf.Abs(Dir.y * 2))
+            {
+                ChangeGameType(Dir.x > 0);
+            }
+        }
+    }
+
 
     private IEnumerator RemoveHitInRow()
     {
@@ -1118,6 +1189,14 @@ public class Level : MonoBehaviour
         MainPlayer.transform.position = Vector3.zero;
         MainPlayer.NoThrowOut = false;
     }
+    public void SetPlayerKnightBattle()
+    {
+        HitInRow = 0;
+        MainPlayer.gameObject.SetActive(true);
+        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
+        MainPlayer.transform.position = sceneMaker.GetEnemyPos()[0] + new Vector2(Random.Range(6f, 7f), -0.5f);
+        MainPlayer.NoThrowOut = false;
+    }
     public void SetPlayerBattle()
     {
         HitInRow = 0;
@@ -1177,8 +1256,10 @@ public class Level : MonoBehaviour
             Weapon weapon = Instantiate(GameData.active.GetSelectedWeapon());
             MainPlayer.TakeWeapon(weapon);
         }
-
-        MainPlayer.weapon.OnStart();
+        if (MainPlayer.weapon != null)
+        {
+            MainPlayer.weapon.OnStart();
+        }
     }
     public void SetPlayerRandomWeapon()
     {
@@ -1200,6 +1281,8 @@ public class Level : MonoBehaviour
         UpdatePlayerStatsUI();
         anim.Play("StartFade");
         NowArmor = GameData.NowArmor;
+        SwipeManager.OnSwipeEvent += OnSwipe;
+        PlayMusic();
     }
 
     #endregion
@@ -1693,6 +1776,56 @@ public class Level : MonoBehaviour
         yield break;
     }
     #endregion
+    #region Sound
+    public void PlaySound(string name)
+    {
+
+    }
+
+    public void PlayMusic()
+    {
+        ClipInfo info = GameData.active.GetMusicRand();
+        musicSource.clip = info.Clip;
+        musicSource.volume = info.Volume * GameData.MusicVol;
+        musicSource.Play();
+    }
+    #endregion
+    #region KnightBattle
+    public void SetKnightsWavesUi()
+    {
+        Ui_Knights_Now.text = "Now Stage: " + (GameData.NowWave + 1).ToString();
+        Ui_Knights_Max.text = "Max Stage: " + (GameData.MaxWave + 1).ToString();
+    }
+    public void PlayKnightsWaves()
+    {
+        if(GameData.active.GameType[NowGameType].Opened)
+        {
+            GameData.PrevPlayerLevel = GameData.PlayerLevel;
+            Ui_Knights.SetActive(false);
+            Ui_Game.SetActive(true);
+            CurrantState.Action();
+        }
+        else if(GameData.active.GameType[NowGameType].Premium)
+        {
+            StoreOn(0.5f);
+        }
+        else
+        {
+
+        }
+    }
+
+    public void OnKnightsWavesDone(float Delay)
+    {
+        StartCoroutine(OnKnightsWaveDoneCour(Delay));
+    }
+    private IEnumerator OnKnightsWaveDoneCour(float Delay)
+    {
+        yield return new WaitForSeconds(Delay);
+        CurrantState.Action();
+        yield break;
+    }
+    #endregion
     #region GameStates
     //--------------------------------GameStates----------------------------
     public void SetPlayerMenu()
@@ -1738,6 +1871,16 @@ public class Level : MonoBehaviour
         {
             StartCoroutine(LevelUpCour());
         }
+    }
+
+    public void OnLevelStart()
+    {
+        Controller.active.enabled = InGame();
+    }
+
+    public void PlayFastFade()
+    {
+        anim.SetTrigger("FastFade");
     }
 
     private void SetState(GameState state)
@@ -1845,7 +1988,7 @@ public class Level : MonoBehaviour
     }
     //------------------------------------------------------------------------
     #endregion
-    #region GameInteract
+    #region GameTypes
     public void SetGame(bool on)
     {
         if(LevelType != LevelTypes.Menu)
@@ -1909,32 +2052,33 @@ public class Level : MonoBehaviour
     {
         anim.SetTrigger("Fade");
         yield return new WaitForSeconds(0.25f);
-        switch((GameType)NowGameType)
+        Ui_Menu.SetActive(false);
+        Ui_Bets.SetActive(false);
+        Ui_Waves.SetActive(false);
+        Ui_Game.SetActive(false);
+        Ui_Knights.SetActive(false);
+        switch ((GameType)NowGameType)
         {
             case GameType.Levels:
                 Ui_Menu.SetActive(true);
-                Ui_Bets.SetActive(false);
-                Ui_Waves.SetActive(false);
-                Ui_Game.SetActive(false);
                 SetState(MenuState);
                 CheckForLevelUp();
                 break;
             case GameType.Bets:
                 Ui_Bets.SetActive(true);
-                Ui_Menu.SetActive(false);
-                Ui_Waves.SetActive(false);
-                Ui_Game.SetActive(false);
                 Ui_Bets_Slider.value = 0;
                 SetBetMoney();
                 SetState(BetsState);
                 break;
             case GameType.Waves:
                 Ui_Waves.SetActive(true);
-                Ui_Bets.SetActive(false);
-                Ui_Menu.SetActive(false);
-                Ui_Game.SetActive(false);
                 SetWavesUi();
                 SetState(IdleBattle);
+                break;
+            case GameType.Knights:
+                Ui_Knights.SetActive(true);
+                SetKnightsWavesUi();
+                SetState(KnightsState);
                 break;
         }
 
@@ -2026,7 +2170,7 @@ public class Level : MonoBehaviour
     public void SetMusicVolume()
     {
         GameData.MusicVol = Ui_Settings_Music.value;
-
+        musicSource.volume = GameData.MusicVol;
     }
     #endregion
     #region PremiumStore
@@ -2202,6 +2346,8 @@ public static class SideOwn
     }
     public static bool isFriend(Man man1, Man man2)
     {
+        if (man1 == null || man2 == null)
+            return false;
         if (man1.Type == Man.ManType.Menu || man2.Type == Man.ManType.Menu)
             return false;
         else

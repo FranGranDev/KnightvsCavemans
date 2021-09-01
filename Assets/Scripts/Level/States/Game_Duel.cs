@@ -25,6 +25,7 @@ public class Game_Duel : GameState
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Дуэльки: Уровень " + GameData.NowLevel, 3f);
+        level.OnLevelStart();
     }
 
     public override void Run()
@@ -79,7 +80,7 @@ public class Game_Duel : GameState
         GameData.active.DecreaseAttempt();
         level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Duel);
-        GameData.NowLevel++;
+        GameData.IncreaseNowLevel();
         isEnd = true;
         level.PrintText("Красава, победил турнир епта", 1.5f);
         GameData.Save();

@@ -11,21 +11,47 @@ public class Controller : MonoBehaviour
     private float x;
     private float y;
     private bool JoystickActive;
+    private bool isJoystickActive()
+    {
+        return joystick.transform.GetChild(0).gameObject.activeSelf;
+    }
     public delegate void OnJoystickActive();
     public event OnJoystickActive JoystickClick;
 
     private void Awake()
     {
         active = this;
+
+        SwipeManager.OnSwipeEvent += OnSwipe;
     }
     private void Start()
     {
-
+        
     }
-
     public void Subscribe(OnJoystickActive SomeVoid)
     {
         JoystickClick += SomeVoid;
+    }
+
+    public void OnSwipe(Vector2 Dir)
+    {
+        if (!Level.active.InGame())
+            return;
+        if (!isJoystickActive())
+        {
+            if(Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x) * 0.25f)
+            {
+                if(Dir.y > 0)
+                {
+                    JumpForce(Dir);
+                }
+                else
+                {
+                    TackleForce(Dir);
+                }
+            }
+            
+        }
     }
 
     public void CheckMovement()
@@ -65,13 +91,25 @@ public class Controller : MonoBehaviour
     {
         Target.Throw();
     }
+    public void ThrowForce(Vector2 Dir)
+    {
+        Target.ThrowForce(Dir);
+    }
     public void Jump()
     {
         Target.Jump();
     }
+    public void JumpForce(Vector2 Dir)
+    {
+        Target.JumpDir(Dir);
+    }
     public void Tackle()
     {
         Target.Tackle();
+    }
+    public void TackleForce(Vector2 Dir)
+    {
+        Target.TackleDir(Dir);
     }
     private IEnumerator OnJoystickClick()
     {

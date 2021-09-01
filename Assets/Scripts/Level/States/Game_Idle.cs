@@ -12,6 +12,8 @@ public class Game_Idle : GameState
         level.AllEnemy = new List<Man>();
         level.sceneMaker.MakeScene(50, SceneMaker.SceneType.Arena);
         level.DelayGame(0f);
+
+        level.OnLevelStart();
     }
 
     public override void Run()

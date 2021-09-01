@@ -21,6 +21,8 @@ public class Game_Waves : GameState
 
         level.cameraMove.UpToDown();
         OnWaveStart();
+
+        level.OnLevelStart();
     }
 
     public override void Run()

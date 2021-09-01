@@ -24,6 +24,8 @@ public class Game_Battle : GameState
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Battle: Level " + GameData.NowLevel, 3f);
+
+        level.OnLevelStart();
     }
 
     public override void Run()
@@ -35,14 +37,14 @@ public class Game_Battle : GameState
     private void CreateBattle()
     {
         int FriendCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(0, 2);
-        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.75f) * Random.Range(2f, 3f)) + Random.Range(0, 3);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) * 2) + Random.Range(0, 4);
 
         level.AllFriends = level.CreateEnemy(Level.EnemyCreateType.Friend, FriendCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveFriends = level.AllFriends;
         level.DefeatedFriends = new List<Man>();
         level.BattleFriends = new List<Man>();
 
-        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.BattleEnemy, FriendCount * 2, level.sceneMaker.GetEnemyPos(), 50);
+        level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.BattleEnemy, EnemyCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveEnemy = level.AllEnemy;
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();
@@ -158,10 +160,15 @@ public class Game_Battle : GameState
         GameData.active.DecreaseAttempt();
         level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Levels);
-        GameData.NowLevel++;
+        GameData.IncreaseNowLevel();
         isEnd = true;
         level.PrintText("Красава, всех раскидали", 1.5f);
         GameData.Save();
+
+        for (int i = 0; i < level.AliveFriends.Count; i++)
+        {
+            level.AliveFriends[i].MakeFun();
+        }
     }
     private void LevelFailed()
     {

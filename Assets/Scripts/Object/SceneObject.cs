@@ -43,7 +43,7 @@ public abstract class SceneObject : MonoBehaviour
     }
     private void Punch(Man man)
     {
-        if (man == PrevMan || !Fly)
+        if (man == PrevMan || !Fly || SideOwn.isFriend(PrevMan, man))
             return;
         man.GetPunched(PrevMan, true);
         man.GetImpulse(Rig.velocity.normalized * Mathf.Sqrt(Weight * Rig.velocity.magnitude) * 2);

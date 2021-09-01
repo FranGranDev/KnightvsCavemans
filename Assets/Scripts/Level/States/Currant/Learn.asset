@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12baaccf74fdf9c40a2536afad2526e1, type: 3}
   m_Name: Learn
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 2
   level: {fileID: 0}
   learnStates:
   - Name: About

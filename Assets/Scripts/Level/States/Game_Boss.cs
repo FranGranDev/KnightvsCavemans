@@ -24,6 +24,7 @@ public class Game_Boss : GameState
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Босс: Уровень  " + GameData.NowLevel, 3f);
+        level.OnLevelStart();
     }
 
     public override void Run()
@@ -60,7 +61,7 @@ public class Game_Boss : GameState
         BossDefeated = true;
         level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Boss);
-        GameData.NowLevel++;
+        GameData.IncreaseNowLevel();
         isEnd = true;
         level.PrintText("Уложил жирного", 1.5f);
         GameData.Save();

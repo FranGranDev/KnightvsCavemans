@@ -18,6 +18,7 @@ public class Game_Bets : GameState
         level.sceneMaker.MakeScene(50, SceneMaker.SceneType.Cave);
 
         CreateDuel();
+        level.OnLevelStart();
     }
 
     public override void Run()

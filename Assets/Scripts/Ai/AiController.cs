@@ -458,6 +458,9 @@ public class AiController : MonoBehaviour
                         case Man.ManType.Enemy:
                             SetState(Attack);
                             break;
+                        case Man.ManType.KnightEnemy:
+                            SetState(DuelAttack);
+                            break;
                         case Man.ManType.Menu:
                             SetState(DuelAttack);
                             break;

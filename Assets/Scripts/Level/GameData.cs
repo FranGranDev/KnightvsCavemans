@@ -6,19 +6,34 @@ public class GameData : MonoBehaviour
 {
 
     public static GameData active;
-    //-------GameData------------
-    public static int NowLevel;
+    //-------------GameData--------------
+    public static int NowLevel { get; private set; }
+    public static void IncreaseNowLevel()
+    {
+        NowLevel++;
+        GameGlobalHard = 0.5f + (float)NowLevel > 15 ? 0.5f : (float)NowLevel / 30;
+    }
     public static int NowWeapon;
     public static int NowWeaponPlace;
     public static int NowArmor;
+    public static int NowKnightEnemyArmor;
     public static int AttempForLevel;
     public static int NowWave;
     public static int MaxWave;
     public static void IncreaseMaxWave()
     {
-        if(NowWave > MaxWave)
+        if (NowWave > MaxWave)
         {
             MaxWave = NowWave;
+        }
+    }
+    public static int NowStage;
+    public static int MaxStage;
+    public static void IncreaseMaxStage()
+    {
+        if (NowStage > MaxStage)
+        {
+            MaxStage = NowStage;
         }
     }
     public void IncreaseAttempt()
@@ -66,6 +81,7 @@ public class GameData : MonoBehaviour
     [Header("Game Setting's")]
     [Range(0, 1f)]
     public float GameHard;
+    public static float GameGlobalHard;
     [Header("Premium")]
     public PremiusInfo premiumInfo;
     [Header("Game Types")]
@@ -82,6 +98,18 @@ public class GameData : MonoBehaviour
     public ArmorInfo GetRandomArmor()
     {
         return armor[Random.Range(0, armor.Length)];
+    }
+    public ArmorInfo GetEnemyArmor()
+    {
+        return armor[NowKnightEnemyArmor];
+    }
+    public void SetRandomEnemyArmor()
+    {
+        NowKnightEnemyArmor = Random.Range(0, armor.Length);
+        while(NowKnightEnemyArmor == NowArmor)
+        {
+            NowKnightEnemyArmor = Random.Range(0, armor.Length);
+        }
     }
     public void SetTempArmorInfo(ArmorInfo info)
     {
@@ -334,6 +362,42 @@ public class GameData : MonoBehaviour
 
         return info[Random.Range(0, info.Count)].weapon;
     }
+    [Header("Sounds")]
+    public SoundInfo[] soundInfo;
+    public SoundInfo[] musicInfo;
+    public ClipInfo GetSound(string name, int num)
+    {
+        for (int i = 0; i < soundInfo.Length; i++)
+        {
+            if (soundInfo[i].Name == name)
+            {
+                AudioClip clip = num < soundInfo[i].Clip.Length ? soundInfo[i].Clip[num] : soundInfo[i].Clip[0];
+                return new ClipInfo(clip, soundInfo[i].Volume);
+            }
+        }
+        return new ClipInfo(soundInfo[0].Clip[0], 0);
+    }
+    public ClipInfo GetSoundRand(string name)
+    {
+        for (int i = 0; i < soundInfo.Length; i++)
+        {
+            if (soundInfo[i].Name == name)
+            {
+                return new ClipInfo(soundInfo[i].Clip[Random.Range(0, soundInfo[i].Clip.Length)], soundInfo[i].Volume);
+            }
+        }
+        return new ClipInfo(soundInfo[0].Clip[0], 0);
+    }
+    public ClipInfo GetMusic(int num)
+    {
+        return new ClipInfo(musicInfo[num].Clip[0], musicInfo[num].Volume);
+    }
+    public ClipInfo GetMusicRand()
+    {
+        int num = Random.Range(0, musicInfo.Length);
+        return new ClipInfo(musicInfo[num].Clip[0], musicInfo[num].Volume);
+    }
+
     [Header("Effects")]
     public EffectInfo[] Effects;
     public GameObject GetEffect(string name)
@@ -405,11 +469,14 @@ public class GameData : MonoBehaviour
             Vibration = true;
             MusicVol = 1f;
             EffectVol = 1f;
+            GameGlobalHard = 0.5f;
         }
         else
         {
             NowWave = data.NowWave;
             MaxWave = data.MaxWave;
+            NowStage = data.NowStage;
+            MaxStage = data.MaxStage;
             NowLevel = data.level;
             NowWeapon = data.NowWeapon;
             NowWeaponPlace = data.NowWeaponPlace;
@@ -417,6 +484,7 @@ public class GameData : MonoBehaviour
             LearningEnded = data.LearningEnded;
             playerInfo = data.PlayerData;
             GameHard = data.GameHard;
+            GameGlobalHard = data.GameGlobalHard;
             AttempForLevel = data.LevelAttempt;
             PremiumOn = data.PremiumOn;
 
@@ -466,6 +534,7 @@ public struct GameTypeInfo
 {
     public string Name;
     public bool Opened;
+    public bool Premium;
     public Level.GameType type;
     public int Index;
 }
@@ -627,4 +696,24 @@ public struct PremiusInfo
     public int[] GameTypeOpen;
     public bool NoAdd;
     public int Money;
+}
+[System.Serializable]
+public struct SoundInfo
+{
+    public string Name;
+    public AudioClip[] Clip;
+    [Range(0, 1f)]
+    public float Volume;
+}
+[System.Serializable]
+public struct ClipInfo
+{
+    public AudioClip Clip;
+    public float Volume;
+
+    public ClipInfo(AudioClip clip, float volume)
+    {
+        Clip = clip;
+        Volume = volume;
+    }
 }

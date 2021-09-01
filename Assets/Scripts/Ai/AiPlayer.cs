@@ -6,7 +6,7 @@ public class AiPlayer : Man
 {
     private float Hard()
     {
-        return 0.5f + GameData.active.GameHard * 0.5f;
+        return 0.5f + GameData.active.GameHard * GameData.GameGlobalHard * 0.5f;
     }
     private AiController Control;
 
@@ -29,7 +29,7 @@ public class AiPlayer : Man
         base.SetParams();
 
         SkinColor = GameData.active.GetRandColorHVS();
-        if (Type != ManType.Player)
+        if (Type != ManType.Player && Type != ManType.KnightEnemy)
         {
             for (int i = 0; i < Sprites.Length; i++)
             {
@@ -106,7 +106,7 @@ public class AiPlayer : Man
 
     public override void Punch(Man Enemy)
     {
-        if (Rig.velocity.magnitude * Size > Enemy.Rig.velocity.magnitude * Enemy.Size * Random.Range(0.9f, 1.1f) && DistY(Enemy) < 0.25f && !Punched && !NoPunch && !Enemy.NoPunch && !Enemy.OnTackle)
+        if (Rig.velocity.magnitude * Size > Enemy.Rig.velocity.magnitude * Enemy.Size * Random.Range(0.9f, 1.1f) && DistY(Enemy) < 0.25f && !Punched && !NoPunch && !Enemy.NoPunch)
         {
             Vector2 Dir = (Enemy.transform.position - transform.position).normalized;
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))

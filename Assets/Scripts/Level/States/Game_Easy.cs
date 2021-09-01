@@ -24,6 +24,7 @@ public class Game_Easy : GameState
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
         level.PrintText("Культурный отдых: Уровень " + GameData.NowLevel, 3f);
+        level.OnLevelStart();
     }
 
     public override void Run()
@@ -116,7 +117,7 @@ public class Game_Easy : GameState
         GameData.active.DecreaseAttempt();
         level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Nude);
-        GameData.NowLevel++;
+        GameData.IncreaseNowLevel();
         isEnd = true;
         level.PrintText("Красава, всех раскидал", 1.5f);
         GameData.Save();
