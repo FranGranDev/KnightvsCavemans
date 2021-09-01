@@ -28,7 +28,7 @@ public class ColdWeapon : Weapon
                 man.GetHit(Mathf.CeilToInt(Damage), Owner, Man.HitType.Hit, NowEffect);
                 Vector2 Dir = ((Vector2)transform.up * 0.5f + Vector2.up * SqrtRotation() * (Owner.Velocity + 0.5f) * Right).normalized;
                 man.GetImpulse(Dir * Mathf.Sqrt(Lenght() * Mathf.Sqrt(Impusle) *
-                (man.OnTackle ? 0.25f : 1) * Weight) * Owner.Size * (Owner.OnGround ? 1 : 0.5f) * Owner.Power * 6);
+                (man.OnTackle ? 0.25f : 1) * Weight) * Owner.Size * (Owner.OnGround ? 1 : 0.5f) * Owner.Power * 5);
                 man.GetPunched(Owner, Mathf.Abs(Rotation) * Owner.Power > 1f);
                 CreateHitEffect(man);
                 DelayAttack(man, 0.5f);
@@ -63,7 +63,7 @@ public class ColdWeapon : Weapon
                 Vector2 Dir = ((Vector2)transform.up + Vector2.up * 0.5f).normalized;
                 man.GetImpulse(Owner.Rig.velocity.magnitude * Speed * Dir * Owner.Size * Owner.Power
                 * Mathf.Abs(Vector2.Dot(transform.up, Owner.Direction(man.transform))
-                * Mathf.Sqrt(Impusle) * (Owner.OnGround ? 1 : 0.5f)) * 1.5f);
+                * Mathf.Sqrt(Impusle) * (Owner.OnGround ? 1 : 0.5f)) * 1.25f);
                 man.GetPunched(Owner, true);
                 Owner.Rig.velocity *= 0.5f;
 

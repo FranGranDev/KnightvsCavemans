@@ -212,7 +212,7 @@ public class Player : Man
         OnTackle = true;
         anim.Play("Tackle");
         anim.SetBool("Tackle", true);
-        Rig.velocity *= 1.5f;
+        Rig.velocity *= 1.25f;
         while (PrevDir.y < -0.5f && Velocity > 0.25f && OnGround && !Punched)
         {
             transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.2f).normalized, 0.1f);
