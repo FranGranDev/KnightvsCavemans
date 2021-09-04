@@ -15,7 +15,6 @@ public class Game_Learn : GameState
         level.Learning(true);
         level.SetGame(true);
         level.ClearGame();
-        level.SetPlayerLearn();
         level.cameraMove.TurnPlayerFollow();
         level.sceneMaker.MakeEmptyScene(300);
 
@@ -23,8 +22,8 @@ public class Game_Learn : GameState
         level.DelayGame(1f);
 
         StartState();
-        Controller.active.Subscribe(StopAnimation);
         level.OnLevelStart();
+        level.SetPlayerLearn();
     }
 
     public override void Run()

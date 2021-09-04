@@ -56,23 +56,14 @@ public class Game_Boss : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        GameData.active.DecreaseAttempt();
-        GameData.BossCompleated++;
-        BossDefeated = true;
-        level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Boss);
-        GameData.IncreaseNowLevel();
+        BossDefeated = true;
         isEnd = true;
-        level.PrintText("Уложил жирного", 1.5f);
-        GameData.Save();
     }
 
     private void LevelFailed()
     {
-        GameData.active.IncreaseAttempt();
-        level.PrintText("Толстый меня побил((", 1.5f);
-        level.cameraMove.TurnFailedShow();
-        level.PlayMenu(4);
+        level.OnLevelFailed(Level.LevelTypes.Boss);
 
         if(!level.BossEnemy.Dead)
         {

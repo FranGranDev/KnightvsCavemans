@@ -51,6 +51,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -152,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5e520e33245a24da282e60cce33c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Hp: 4
+  Hp: 2
   Destroyed: 0
   Weight: 2
   Fly: 0
@@ -206,6 +207,7 @@ TrailRenderer:
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

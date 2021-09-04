@@ -10,7 +10,7 @@ public class ColdWeapon : Weapon
             return;
         if (Mathf.Abs(Rotation) >= 1f)
         {
-            if (Vector2.Dot(man.BodyDirection(Owner), man.WeaponDir()) > 0.98f && Power == 1)
+            if (Vector2.Dot(man.BodyDirection(Owner), man.WeaponDir()) > 0.75f && Power == 1)
             {
                 //Block
                 Owner.OnAttack(man, Speed, Man.HitType.Hit);
@@ -20,6 +20,8 @@ public class ColdWeapon : Weapon
                 man.GetPunched(Owner, true);
                 CreateSparks(man);
                 DelayAttack(man, 0.5f);
+
+                Owner.PlaySound("Block");
             }
             else
             {
@@ -32,6 +34,8 @@ public class ColdWeapon : Weapon
                 man.GetPunched(Owner, Mathf.Abs(Rotation) * Owner.Power > 1f);
                 CreateHitEffect(man);
                 DelayAttack(man, 0.5f);
+
+                OnAttack();
             }
 
         }
@@ -42,7 +46,7 @@ public class ColdWeapon : Weapon
             return;
         if (Speed * Owner.Size > 0.5f && Mathf.Abs(Rotation) < 0.4f)
         {
-            if (Vector2.Dot(man.WeaponDir(), transform.up) < -0.95f && Power == 1)
+            if (Vector2.Dot(man.WeaponDir(), transform.up) < -0.75f && Power == 1)
             {
                 //Block
                 Owner.OnAttack(man, Speed, Man.HitType.Hit);
@@ -54,6 +58,7 @@ public class ColdWeapon : Weapon
                 man.GetPunched(Owner, true);
 
                 CreateSparks(man);
+                Owner.PlaySound("Block");
             }
             else
             {
@@ -68,13 +73,14 @@ public class ColdWeapon : Weapon
                 Owner.Rig.velocity *= 0.5f;
 
                 CreateHitEffect(man);
+                OnAttack();
             }
             DelayAttack(man, 1f);
         }
     }
     public override void Attack(SceneObject obj)
     {
-        if (obj == null || obj.Fly || Owner.NoAttack || Owner.Punched || NoAttack)
+        if (obj == null || obj.Fly)
             return;
         if (Mathf.Abs(Rotation) > 0.25f)
         {
@@ -146,7 +152,7 @@ public class ColdWeapon : Weapon
                 break;
         }
         SizeUpWeapon(Vector3.one);
-
+        OnAttack();
         Handle.enabled = true;
     }
 

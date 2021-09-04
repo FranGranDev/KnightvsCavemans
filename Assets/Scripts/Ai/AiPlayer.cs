@@ -79,6 +79,7 @@ public class AiPlayer : Man
         {
             Rig.velocity = new Vector2(Rig.velocity.x, 0);
             Rig.velocity += Vector2.up * JumpForce;
+            PlaySound("Jump");
         }
     }
 
@@ -93,6 +94,7 @@ public class AiPlayer : Man
             return;
         weapon.Throw(PrevDir);
         weapon = null;
+        PlaySound("Throw");
     }
 
     public override void OnAttack(Man Enemy, float Power, HitType Type)
@@ -126,6 +128,7 @@ public class AiPlayer : Man
                 OnAttack(Enemy, Velocity, HitType.Punch);
             }
             PunchDelay();
+            PlaySound("Punch");
         }
     }
     public override void Punch(SceneObject Obj)
@@ -182,9 +185,10 @@ public class AiPlayer : Man
             Die(Enemy, type);
         }
         StartCoroutine(TakeDelay());
-        DelayAttack(1 / Size);  
-
+        DelayAttack(1 / Size);
         GetEffect(Enemy, effect);
+
+        PlaySound("Hit");
     }
 
     public override void GetEnemy(Man Enemy)
@@ -210,6 +214,8 @@ public class AiPlayer : Man
         {
             Level.active.OnFriendDie(this, Enemy, type);
         }
+
+        PlaySound("Die");
     }
 
     private IEnumerator HitEffect()

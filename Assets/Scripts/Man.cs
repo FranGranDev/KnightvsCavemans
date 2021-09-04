@@ -65,12 +65,13 @@ public abstract class Man : MonoBehaviour
     public bool Punched { get; protected set; }
     public bool OnGround { get; protected set; }
     public Color SkinColor;
-    public const float MaxImpulse = 25;
+    public const float MaxImpulse = 20;
 
     public Coroutine PunchCoroutine { get; protected set; }
     public Coroutine DelayAttackCoroutine { get; protected set; }
     public Coroutine FunCoroutine { get; protected set; }
     public Coroutine FireEffectCoroutine { get; protected set; }
+    public Coroutine LavaHitCoroutine { get; protected set; }
     public Dictionary<Buff.Type, Coroutine> BuffCoroutine { get; protected set; }
     protected List<Collider2D> PassedMan;
 
@@ -83,6 +84,7 @@ public abstract class Man : MonoBehaviour
     public Rigidbody2D Rig;
     public Collider2D Col;
     public Animator anim;
+    public AudioSource audioSource;
     public GameObject FakeSprite;
     public SpriteRenderer[] FakeSprites;
     public SpriteRenderer[] Sprites;
@@ -140,6 +142,8 @@ public abstract class Man : MonoBehaviour
         OnStart();
         SetParams();
     }
+
+    #region InitAndLevelStuff
     public virtual void OnStart()
     {
 
@@ -153,6 +157,7 @@ public abstract class Man : MonoBehaviour
         Rig.mass *= Size * Size;
         BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
         PassedMan = new List<Collider2D>();
+        BodyY = 0;
 
         StartJump = JumpForce;
         StartPower = Power;
@@ -184,7 +189,7 @@ public abstract class Man : MonoBehaviour
         RLeg1Sprite.sprite = armorInfo.RightLeg1;
         RLeg1Sprite.sortingOrder = armorInfo.RightLeg1Layer;
 
-        if(FakeSprite != null)
+        if (FakeSprite != null)
         {
             FakeSprites[0].sprite = armorInfo.Head;
             FakeSprites[0].sortingOrder = armorInfo.HeadLayer;
@@ -205,7 +210,7 @@ public abstract class Man : MonoBehaviour
             FakeSprites[5].sortingOrder = armorInfo.RightLeg1Layer;
         }
 
-        switch(armorInfo.Effect)
+        switch (armorInfo.Effect)
         {
             case ArmorInfo.EffectType.Null:
                 fireEffect.gameObject.SetActive(false);
@@ -213,7 +218,7 @@ public abstract class Man : MonoBehaviour
             case ArmorInfo.EffectType.Fire:
                 fireEffect.gameObject.SetActive(true);
                 break;
-                    
+
         }
 
         MaxHp = Mathf.RoundToInt(info.MaxHp * (armorInfo.Hp + 1));
@@ -239,17 +244,19 @@ public abstract class Man : MonoBehaviour
     }
     public virtual void SetStatic(bool on)
     {
-        
-    }
 
+    }
     protected void TurnSkeleton(bool On)
     {
-        for(int i = 0; i < Sprites.Length; i++)
+        for (int i = 0; i < Sprites.Length; i++)
         {
             Sprites[i].gameObject.SetActive(On);
         }
         FakeSprite.SetActive(!On);
     }
+
+    #endregion
+    #region Movement
 
     public abstract void Movement(Vector2 Dir);
 
@@ -263,14 +270,14 @@ public abstract class Man : MonoBehaviour
 
     public void MakeFun()
     {
-        if(FunCoroutine == null)
+        if (FunCoroutine == null)
         {
             FunCoroutine = StartCoroutine(JumpForceCour());
         }
     }
     public void StopFun()
     {
-        if(FunCoroutine != null)
+        if (FunCoroutine != null)
         {
             StopCoroutine(FunCoroutine);
             FunCoroutine = null;
@@ -278,7 +285,7 @@ public abstract class Man : MonoBehaviour
     }
     private IEnumerator JumpForceCour()
     {
-        while(!Static)
+        while (!Static)
         {
             while (!OnGround)
             {
@@ -299,56 +306,14 @@ public abstract class Man : MonoBehaviour
 
     }
 
-    private void Land()
-    {
-        Landing = true;
-        StartCoroutine(LandingCour());
-        anim.SetBool("OnGround", true);
-        if (Vector2.Dot(transform.up, Vector2.up) > 0.5f)
-        {
-            anim.Play("Land");
-        }
-        float Size = Mathf.Abs(Vector2.Dot(transform.up, Vector2.right));
-        GameData.active.CreateLandEffect(Body.transform, Size);
-    }
-    protected IEnumerator LandingCour()
-    {
-        yield return new WaitForSeconds(0.1f);
-        while (Vector2.Dot(Vector2.up, transform.up) < 0.75f)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        Landing = false;
-        yield break;
-    }
-    protected IEnumerator WaitGround(Man Enemy)
-    {
-        float PrevVelocity = Velocity;
-        yield return new WaitForSeconds(0.25f);
-        while (!OnGround)
-        {
-            PrevVelocity = Velocity;
-            yield return new WaitForFixedUpdate();
-        }
-        if (PrevVelocity > 0.9f)
-        {
-            yield return new WaitForSeconds(0.05f);
-            OnLandOof(Enemy, PrevVelocity);
-        }
-        yield return new WaitForFixedUpdate();
-        Punched = false;
-        yield break;
-    }
-    public virtual void OnLandOof(Man Enemy, float velocity)
-    {
-        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Punch, EffectType.Null);
-        if(Punched && velocity > 1)
-        {
-            ThrowOutWeapon();
-        }
-    }
-
     public abstract void TakeWeapon(Weapon weapon);
+
+    public abstract void Throw();
+
+    public virtual void ThrowForce(Vector2 Dir)
+    {
+
+    }
 
     public virtual void ThrowOutWeapon()
     {
@@ -366,230 +331,6 @@ public abstract class Man : MonoBehaviour
         yield break;
     }
 
-    public abstract void Throw();
-
-    public virtual void ThrowForce(Vector2 Dir)
-    {
-
-    }
-
-    public abstract void Punch(Man Enemy);
-    public abstract void Punch(SceneObject Obj);
-    public virtual void PunchDelay()
-    {
-        if(PunchCoroutine != null)
-        {
-            StopCoroutine(PunchCoroutine);
-        }
-        PunchCoroutine = StartCoroutine(PunchDelayCour());
-    }
-    public virtual IEnumerator PunchDelayCour()
-    {
-        NoPunch = true;
-        yield return new WaitForSeconds(2f);
-        NoPunch = false;
-        yield break;
-    }
-
-
-    private void Pass(Man man, Collider2D col)
-    {
-        Physics2D.IgnoreCollision(Col, man.Col, true);
-        StartCoroutine(PassCour(man, col));
-    }
-    private IEnumerator PassCour(Man man, Collider2D col)
-    {
-        PassedMan.Add(col);
-        while (DistX(man) < 3)
-        {
-            yield return new WaitForFixedUpdate();
-        }
-        if (man != null)
-        {
-            Physics2D.IgnoreCollision(Col, man.Col, false);
-        }
-        PassedMan.Remove(col);
-        yield break;
-    }
-
-    public virtual void ForceFlip(bool right)
-    {
-        if(right)
-        {
-            anim.SetTrigger("FlipRight");
-        }
-        else
-        {
-            anim.SetTrigger("FlipLeft");
-        }
-    }
-
-    public abstract void OnAttack(Man Enemy, float Power, HitType Type);
-
-    public virtual void GetEnemy(Man Enemy)
-    {
-
-    }
-    public virtual void TryGetEnemy(Man Enemy)
-    {
-
-    }
-
-    public void GetPunched(Man Enemy, bool Up)
-    {
-        if (Up)
-        {
-            Punched = true;
-            StartCoroutine(WaitGround(Enemy));
-            StartCoroutine(GetPunchedCour());
-            if(weapon != null && weapon.WeaponType == Weapon.Type.Gun)
-            {
-                ThrowOutWeapon();
-            }
-        }
-    }
-    public virtual IEnumerator GetPunchedCour()
-    {
-        NoGetPunch = true;
-        yield return new WaitForSeconds(1f);
-        NoGetPunch = false;
-        yield break;
-    }
-
-    protected void DelayAttack(float Delay)
-    {
-        if(DelayAttackCoroutine == null)
-        {
-            DelayAttackCoroutine = StartCoroutine(NoAttackCour(Delay));
-        }
-    }
-    private IEnumerator NoAttackCour(float Delay)
-    {
-        NoAttack = true;
-        yield return new WaitForSeconds(Delay);
-        NoAttack = false;
-        DelayAttackCoroutine = null;
-        yield break;
-    }
-
-    public abstract void GetHit(int Damage, Man Enemy, HitType type, EffectType effect);
-
-    public abstract void Die(Man Enemy, HitType type);
-
-    public virtual void GetBuff(Buff.Type type, float time)
-    {
-        if(BuffCoroutine.ContainsKey(type))
-        {
-            if(BuffCoroutine[type] != null)
-                StopCoroutine(BuffCoroutine[type]);
-            BuffCoroutine[type] = StartCoroutine(BuffCour(type, time));
-        }
-        else
-        {
-            BuffCoroutine.Add(type, StartCoroutine(BuffCour(type, time)));
-        }
-
-    }
-    private IEnumerator BuffCour(Buff.Type type, float time)
-    {
-        switch(type)
-        {
-            case Buff.Type.Hp:
-                Hp += Buff.HpBuff;
-
-                break;
-            case Buff.Type.Power:
-                Power = StartPower * Buff.PowerBuff;
-                if (weapon != null)
-                {
-                    weapon.GetBuff();
-                }
-                yield return new WaitForSeconds(time);
-                Power = StartPower;
-                break;
-            case Buff.Type.Size:
-                Size = StartSize * Buff.SizeBuff;
-                yield return new WaitForSeconds(time);
-                Size = StartSize;
-                break;
-            case Buff.Type.Speed:
-                Speed = StartSpeed * Buff.SpeedBuff;
-                JumpForce = StartJump * Buff.JumpBuff;
-                yield return new WaitForSeconds(time);
-                Speed = StartSpeed;
-                JumpForce = StartJump;
-                break;
-        }
-        BuffCoroutine.Remove(type);
-        yield break;
-    }
-    public void StopAllBuff()
-    {
-        if(BuffCoroutine.ContainsKey(Buff.Type.Hp))
-        {
-            StopCoroutine(BuffCoroutine[Buff.Type.Hp]);
-        }
-        if (BuffCoroutine.ContainsKey(Buff.Type.Power))
-        {
-            StopCoroutine(BuffCoroutine[Buff.Type.Power]);
-        }
-        if (BuffCoroutine.ContainsKey(Buff.Type.Size))
-        {
-            StopCoroutine(BuffCoroutine[Buff.Type.Size]);
-        }
-        if (BuffCoroutine.ContainsKey(Buff.Type.Speed))
-        {
-            StopCoroutine(BuffCoroutine[Buff.Type.Speed]);
-        }
-        BuffCoroutine.Clear();
-    }
-
-    public void GetEffect(Man man, EffectType effect)
-    {
-        switch(effect)
-        {
-            case EffectType.Fire:
-                if(FireEffectCoroutine == null)
-                {
-                    FireEffectCoroutine = StartCoroutine(FireEffectCour(man));
-                }
-                break;
-        }
-    }
-    private IEnumerator FireEffectCour(Man man)
-    {
-        ParticleSystem fire = Instantiate(GameData.active.GetEffect("ManFired"), Body.position, Body.rotation, transform).GetComponent<ParticleSystem>();
-        var Shape = fire.shape;
-        Shape.scale = Vector3.one * Size;
-        var Emmision = fire.emission;
-        Emmision.rateOverTime = 100 * Size;
-
-        float time = 5;
-        for(int i = 0; i < time; i++)
-        {
-            GetHit(1, man, HitType.HitFire, EffectType.Null);
-            yield return new WaitForSeconds(1);
-        }
-
-        Destroy(fire.gameObject);
-        FireEffectCoroutine = null;
-        yield break;
-    }
-
-    public virtual void GetImpulse(Vector2 Impulse)
-    {
-        Vector2 CurrantImpulse = (OnGround || Landing) ? Impulse : Impulse * 0.5f;
-
-        if(Impulse.magnitude / Mathf.Sqrt(Size) < MaxImpulse)
-        {
-            Rig.velocity = CurrantImpulse / Mathf.Sqrt(Size);
-        }
-        else
-        {
-            Rig.velocity = CurrantImpulse.normalized / Mathf.Sqrt(Size) * MaxImpulse;
-        }
-        
-    }
 
     private void MovementStuff()
     {
@@ -641,35 +382,62 @@ public abstract class Man : MonoBehaviour
         anim.SetBool("Right", PrevDirX > 0);
     }
 
-    private void SetOnGround(bool on)
+    public virtual void ForceFlip(bool right)
     {
-        bool Prev = OnGround;
-        OnGround = on;
-        if(on && !Prev)
+        if (right)
         {
-            Land();
+            anim.SetTrigger("FlipRight");
         }
-        if(!on && Prev)
+        else
         {
-            StartCoroutine(LeaveGround());
-        }
-
-        if(on)
-        {
-            Rig.velocity = new Vector2(Rig.velocity.x, Rig.velocity.y * 0.75f);
+            anim.SetTrigger("FlipLeft");
         }
     }
-    protected IEnumerator LeaveGround()
+
+    #endregion
+    #region InteractWithEnemy
+    public abstract void Punch(Man Enemy);
+    public abstract void Punch(SceneObject Obj);
+    public virtual void PunchDelay()
     {
-        yield return new WaitForSeconds(0.25f);
-        if(!OnGround)
-            anim.SetBool("OnGround", false);
+        if (PunchCoroutine != null)
+        {
+            StopCoroutine(PunchCoroutine);
+        }
+        PunchCoroutine = StartCoroutine(PunchDelayCour());
+    }
+    public virtual IEnumerator PunchDelayCour()
+    {
+        NoPunch = true;
+        yield return new WaitForSeconds(2f);
+        NoPunch = false;
+        yield break;
+    }
+
+
+    private void Pass(Man man, Collider2D col)
+    {
+        Physics2D.IgnoreCollision(Col, man.Col, true);
+        StartCoroutine(PassCour(man, col));
+    }
+    private IEnumerator PassCour(Man man, Collider2D col)
+    {
+        PassedMan.Add(col);
+        while (DistX(man) < 3)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        if (man != null)
+        {
+            Physics2D.IgnoreCollision(Col, man.Col, false);
+        }
+        PassedMan.Remove(col);
         yield break;
     }
 
     protected void IgnoreObject(bool on, Collider2D obj)
     {
-        if(on)
+        if (on)
         {
             StartCoroutine(IgonoreObjCour(obj));
         }
@@ -681,7 +449,7 @@ public abstract class Man : MonoBehaviour
     private IEnumerator IgonoreObjCour(Collider2D obj)
     {
         yield return new WaitForSeconds(OnGround && !OnTackle ? 0.25f : 0);
-        if(obj == null)
+        if (obj == null)
         {
             PrevObj = null;
             yield break;
@@ -702,10 +470,306 @@ public abstract class Man : MonoBehaviour
         yield break;
     }
 
-    public virtual void OnHorseEnter(Horse horse)
+    public abstract void OnAttack(Man Enemy, float Power, HitType Type);
+    #endregion
+    #region Landing
+    private void Land()
+    {
+        Landing = true;
+        StartCoroutine(LandingCour());
+        anim.SetBool("OnGround", true);
+        if (Vector2.Dot(transform.up, Vector2.up) > 0.5f)
+        {
+            anim.Play("Land");
+        }
+        float Size = Mathf.Abs(Vector2.Dot(transform.up, Vector2.right));
+        GameData.active.CreateLandEffect(Body.transform, Size);
+        PlaySound("Land");
+    }
+    protected IEnumerator LandingCour()
+    {
+        yield return new WaitForSeconds(0.1f);
+        while (Vector2.Dot(Vector2.up, transform.up) < 0.75f)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+        Landing = false;
+        yield break;
+    }
+    protected IEnumerator WaitGround(Man Enemy)
+    {
+        float PrevVelocity = Velocity;
+        yield return new WaitForSeconds(0.25f);
+        while (!OnGround)
+        {
+            PrevVelocity = Velocity;
+            yield return new WaitForFixedUpdate();
+        }
+        if (PrevVelocity > 0.9f)
+        {
+            yield return new WaitForSeconds(0.05f);
+            OnLandOof(Enemy, PrevVelocity);
+        }
+        yield return new WaitForFixedUpdate();
+        Punched = false;
+        yield break;
+    }
+    public virtual void OnLandOof(Man Enemy, float velocity)
+    {
+        GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity)), Enemy, HitType.Punch, EffectType.Null);
+        if (Punched && velocity > 1)
+        {
+            ThrowOutWeapon();
+        }
+    }
+
+    private void SetOnGround(bool on)
+    {
+        bool Prev = OnGround;
+        OnGround = on;
+        if (on && !Prev)
+        {
+            Land();
+        }
+        if (!on && Prev)
+        {
+            StartCoroutine(LeaveGround());
+        }
+
+        if (on)
+        {
+            Rig.velocity = new Vector2(Rig.velocity.x, Rig.velocity.y * 0.75f);
+        }
+    }
+    protected IEnumerator LeaveGround()
+    {
+        yield return new WaitForSeconds(0.25f);
+        if (!OnGround)
+            anim.SetBool("OnGround", false);
+        yield break;
+    }
+
+
+    #endregion
+    #region Sound
+    public void PlayStep()
+    {
+        if (OnGround)
+        {
+            PlaySound("Step");
+        }
+    }
+
+    public void PlaySound(string name)
+    {
+        ClipInfo info = GameData.active.GetSoundRand(name);
+        StartCoroutine(PlaySoundCour(info));
+    }
+    private IEnumerator PlaySoundCour(ClipInfo info)
+    {
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+
+        source.clip = info.Clip;
+        source.spatialBlend = 1f;
+        source.rolloffMode = AudioRolloffMode.Linear;
+        source.maxDistance = 25f;
+        source.volume = info.Volume * GameData.EffectVol;
+        source.pitch = Random.Range(0.9f, 1.1f);
+        source.Play();
+        while(source.isPlaying)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        Destroy(source);
+
+        yield break;
+    }
+    #endregion
+    #region GetHit
+    public void GetPunched(Man Enemy, bool Up)
+    {
+        if (Up)
+        {
+            Punched = true;
+            StartCoroutine(WaitGround(Enemy));
+            StartCoroutine(GetPunchedCour());
+            if (weapon != null && weapon.WeaponType == Weapon.Type.Gun)
+            {
+                ThrowOutWeapon();
+            }
+        }
+    }
+    public virtual IEnumerator GetPunchedCour()
+    {
+        NoGetPunch = true;
+        yield return new WaitForSeconds(1f);
+        NoGetPunch = false;
+        yield break;
+    }
+
+    protected void DelayAttack(float Delay)
+    {
+        if (DelayAttackCoroutine == null)
+        {
+            DelayAttackCoroutine = StartCoroutine(NoAttackCour(Delay));
+        }
+    }
+    private IEnumerator NoAttackCour(float Delay)
+    {
+        NoAttack = true;
+        yield return new WaitForSeconds(Delay);
+        NoAttack = false;
+        DelayAttackCoroutine = null;
+        yield break;
+    }
+
+    public abstract void GetHit(int Damage, Man Enemy, HitType type, EffectType effect);
+
+    public abstract void Die(Man Enemy, HitType type);
+
+    public virtual void GetEnemy(Man Enemy)
     {
 
     }
+    public virtual void TryGetEnemy(Man Enemy)
+    {
+
+    }
+
+    public virtual void GetImpulse(Vector2 Impulse)
+    {
+        Vector2 CurrantImpulse = (OnGround || Landing) ? Impulse : Impulse * 0.5f;
+
+        if (Impulse.magnitude / Mathf.Sqrt(Size) < MaxImpulse)
+        {
+            Rig.velocity = CurrantImpulse / Mathf.Sqrt(Size);
+        }
+        else
+        {
+            Rig.velocity = CurrantImpulse.normalized / Mathf.Sqrt(Size) * MaxImpulse;
+        }
+
+    }
+
+    private void LavaHit()
+    {
+        if(LavaHitCoroutine == null)
+        {
+            LavaHitCoroutine = StartCoroutine(LavaHitCour());
+        }
+    }
+    private IEnumerator LavaHitCour()
+    {
+        GetHit(5, null, HitType.Lava, EffectType.Fire);
+        yield return new WaitForSeconds(1f);
+        LavaHitCoroutine = null;
+        yield break;
+    }
+    #endregion
+    #region Buffs
+    public void GetBuff(Buff.Type type, float time)
+    {
+        if (BuffCoroutine.ContainsKey(type))
+        {
+            if (BuffCoroutine[type] != null)
+                StopCoroutine(BuffCoroutine[type]);
+            BuffCoroutine[type] = StartCoroutine(BuffCour(type, time));
+        }
+        else
+        {
+            BuffCoroutine.Add(type, StartCoroutine(BuffCour(type, time)));
+        }
+        PlaySound("PowerUp");
+    }
+    private IEnumerator BuffCour(Buff.Type type, float time)
+    {
+        switch (type)
+        {
+            case Buff.Type.Hp:
+                Hp += Buff.HpBuff;
+
+                break;
+            case Buff.Type.Power:
+                Power = StartPower * Buff.PowerBuff;
+                if (weapon != null)
+                {
+                    weapon.GetBuff();
+                }
+                yield return new WaitForSeconds(time);
+                Power = StartPower;
+                break;
+            case Buff.Type.Size:
+                Size = StartSize * Buff.SizeBuff;
+                yield return new WaitForSeconds(time);
+                Size = StartSize;
+                break;
+            case Buff.Type.Speed:
+                Speed = StartSpeed * Buff.SpeedBuff;
+                JumpForce = StartJump * Buff.JumpBuff;
+                yield return new WaitForSeconds(time);
+                Speed = StartSpeed;
+                JumpForce = StartJump;
+                break;
+        }
+        BuffCoroutine.Remove(type);
+        yield break;
+    }
+    public void StopAllBuff()
+    {
+        if (BuffCoroutine.ContainsKey(Buff.Type.Hp))
+        {
+            StopCoroutine(BuffCoroutine[Buff.Type.Hp]);
+        }
+        if (BuffCoroutine.ContainsKey(Buff.Type.Power))
+        {
+            StopCoroutine(BuffCoroutine[Buff.Type.Power]);
+        }
+        if (BuffCoroutine.ContainsKey(Buff.Type.Size))
+        {
+            StopCoroutine(BuffCoroutine[Buff.Type.Size]);
+        }
+        if (BuffCoroutine.ContainsKey(Buff.Type.Speed))
+        {
+            StopCoroutine(BuffCoroutine[Buff.Type.Speed]);
+        }
+        BuffCoroutine.Clear();
+    }
+
+    public void GetEffect(Man man, EffectType effect)
+    {
+        switch (effect)
+        {
+            case EffectType.Fire:
+                if (FireEffectCoroutine == null)
+                {
+                    FireEffectCoroutine = StartCoroutine(FireEffectCour(man));
+                }
+                break;
+        }
+    }
+    private IEnumerator FireEffectCour(Man man)
+    {
+        ParticleSystem fire = Instantiate(GameData.active.GetEffect("ManFired"), Body.position, Body.rotation, transform).GetComponent<ParticleSystem>();
+        var Shape = fire.shape;
+        Shape.scale = Vector3.one * Size;
+        var Emmision = fire.emission;
+        Emmision.rateOverTime = 100 * Size;
+
+        float time = 5;
+        for (int i = 0; i < time; i++)
+        {
+            GetHit(1, man, HitType.HitFire, EffectType.Null);
+            yield return new WaitForSeconds(1);
+        }
+
+        Destroy(fire.gameObject);
+        FireEffectCoroutine = null;
+        yield break;
+    }
+
+    #endregion
+
 
     private void FixedUpdate()
     {
@@ -732,17 +796,13 @@ public abstract class Man : MonoBehaviour
 
             IgnoreObject(true, collision);
         }
-        else if(collision.tag == "Horse")
-        {
-            OnHorseEnter(collision.GetComponent<Horse>());
-        }
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.tag == "Player" && !PassedMan.Exists(item => item == collision))
         {
             Man man = collision.GetComponent<Man>();
-            if (!SideOwn.isEnemy(man, this))
+            if (!SideOwn.isEnemy(man, this) || OnTackle || Dead)
             {
                 Pass(man, collision);
             }
@@ -757,7 +817,7 @@ public abstract class Man : MonoBehaviour
         }
         if(collision.tag == "Death")
         {
-            GetHit(1, null, HitType.Lava, EffectType.Fire);
+            LavaHit();
         }
     }
     private void OnTriggerExit2D(Collider2D collision)

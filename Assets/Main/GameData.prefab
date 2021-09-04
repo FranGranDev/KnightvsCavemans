@@ -849,17 +849,17 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 668eab4c2c409f54ca2e9dc8aa36d962, type: 3}
     - {fileID: 8300000, guid: 1a9e1220b075bd94db46ced0037d4fab, type: 3}
     - {fileID: 8300000, guid: 2319c5ae09c19aa4f92e4c5e5abe24b7, type: 3}
-    Volume: 0.5
+    Volume: 0.33
   - Name: Click
     Clip:
     - {fileID: 8300000, guid: 6c550ecf1bf75c544be6ca3ef608b6e8, type: 3}
     - {fileID: 8300000, guid: 28eca4d3a25f3b4479e6b4d351474ce0, type: 3}
     - {fileID: 8300000, guid: 720cb34f6a3e3d34a830adf80a1c1018, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: CantBuy
     Clip:
     - {fileID: 8300000, guid: 9f74b24b7cf2fbc4d8b8d8efac19291a, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: TakeCoin
     Clip:
     - {fileID: 8300000, guid: cf3416b8a1f9e554793ff717e77b4b93, type: 3}
@@ -868,7 +868,9 @@ MonoBehaviour:
   - Name: TakeExp
     Clip:
     - {fileID: 8300000, guid: 638c3a771b9bb954c838b89f9ffb5202, type: 3}
-    Volume: 0.5
+    - {fileID: 8300000, guid: f9c51fff2f912a744b60ca0d63abf58f, type: 3}
+    - {fileID: 8300000, guid: 88305ecfa4d8cc5469c46bb12b6919b4, type: 3}
+    Volume: 0.33
   - Name: Hit
     Clip:
     - {fileID: 8300000, guid: 27ed9a3328b0b5d4ebee2d57cec50043, type: 3}
@@ -876,7 +878,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e255fce5a7b24d24d8849d941915ba58, type: 3}
     - {fileID: 8300000, guid: 73578f507cab4ca48bc1969747e9a6b6, type: 3}
     - {fileID: 8300000, guid: 6909a311018324441ad062315c2def1a, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: Jump
     Clip:
     - {fileID: 8300000, guid: e1d5a4ad2bef3c74492e116ff9b35971, type: 3}
@@ -888,17 +890,17 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 67444d84639ccc24f918d57f3f461643, type: 3}
     - {fileID: 8300000, guid: 5dfda78aa4e78084e82f46815ef5b47c, type: 3}
     - {fileID: 8300000, guid: 197a86bcba6060d45bcc26f977d55d7a, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: LevelFailed
     Clip:
     - {fileID: 8300000, guid: 0a8b8113e16847c43a48086a04b90a71, type: 3}
     - {fileID: 8300000, guid: 19f1f83c1d5cc574fa30cbbdcd47ed3c, type: 3}
     - {fileID: 8300000, guid: c12f1b3c79eff3249bc091c692b22261, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: LevelUp
     Clip:
     - {fileID: 8300000, guid: f7630ec92ce0cfe4492fe4b9ffc9a563, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: PowerUp
     Clip:
     - {fileID: 8300000, guid: e1424ec67b27c364fb749679aa5f814a, type: 3}
@@ -906,20 +908,41 @@ MonoBehaviour:
   - Name: Punch
     Clip:
     - {fileID: 8300000, guid: 2cff4651c3c457a4c858ec464b1f20e0, type: 3}
-    - {fileID: 8300000, guid: 99c0c8ce5e5cb5f4ca620b0a9668224a, type: 3}
-    - {fileID: 8300000, guid: d966571dffd426948b4a8f2048b06d9d, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: Shoot
     Clip:
     - {fileID: 8300000, guid: e7e71d13f97441443b4888ce5919cf0e, type: 3}
     - {fileID: 8300000, guid: a483e3d364e1c464ab8dec7e15fe5eff, type: 3}
     - {fileID: 8300000, guid: 5dc37f2495ccea948ab19ab7c4df92c8, type: 3}
-    Volume: 0.5
+    Volume: 1
   - Name: Throw
     Clip:
     - {fileID: 8300000, guid: 4f4119ab1e6e0c648a5c9b7c438fb248, type: 3}
     - {fileID: 8300000, guid: 057a6738dfa5b56439ed7b14d03f9ebf, type: 3}
+    Volume: 1
+  - Name: Tackle
+    Clip:
+    - {fileID: 8300000, guid: a514ce470bc6c2545a494c9798c3f3d4, type: 3}
+    - {fileID: 8300000, guid: 98750c0cb4617b84aaa6fab832a43d67, type: 3}
+    - {fileID: 8300000, guid: 188e96d8f5eb4544b96a7d31eaa86ffd, type: 3}
     Volume: 0.5
+  - Name: Step
+    Clip:
+    - {fileID: 8300000, guid: e21e30467c6238645acfb8191d39db25, type: 3}
+    - {fileID: 8300000, guid: 4801081c5c536bf499d6c33020634fb7, type: 3}
+    - {fileID: 8300000, guid: b779213350f9a4043af605e74253d59f, type: 3}
+    - {fileID: 8300000, guid: e06f988cbdf59e64db0a8a9f70f97b6a, type: 3}
+    Volume: 1
+  - Name: Land
+    Clip:
+    - {fileID: 8300000, guid: edd0ff0fbd0c331449b2405658d4b19a, type: 3}
+    Volume: 1
+  - Name: Die
+    Clip:
+    - {fileID: 8300000, guid: 1dac8b241b7fd034a8b49a79cbc0955a, type: 3}
+    - {fileID: 8300000, guid: 0aa94c2dc1ff18145866b886cf85e2a3, type: 3}
+    - {fileID: 8300000, guid: 5363a832304fcae4783398f65d5fa00c, type: 3}
+    Volume: 1
   musicInfo:
   - Name: 0
     Clip:

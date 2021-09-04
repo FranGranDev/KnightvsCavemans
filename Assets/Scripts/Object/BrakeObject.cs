@@ -18,7 +18,6 @@ public class BrakeObject : SceneObject
         {
             Hit();
         }
-        
     }
 
     private void ThrowItem()

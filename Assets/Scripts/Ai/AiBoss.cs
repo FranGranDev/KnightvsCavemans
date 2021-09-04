@@ -71,7 +71,7 @@ public class AiBoss : Man
         {
             PrevDir = Dir;
         }
-        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.25f * Hard() / Mathf.Sqrt(Size * WeaponWeight()));
+        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.35f * Hard() / Mathf.Sqrt(WeaponWeight()));
     }
 
     public override void Jump()
@@ -184,6 +184,7 @@ public class AiBoss : Man
         StartCoroutine(TakeDelay());
         if (type != HitType.Throw)
             Control.GetEnemy(Enemy);
+        PlaySound("Hit");
     }
 
     public override void GetEnemy(Man Enemy)

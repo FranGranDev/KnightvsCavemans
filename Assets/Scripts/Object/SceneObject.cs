@@ -62,11 +62,13 @@ public abstract class SceneObject : MonoBehaviour
     {
         GameObject ThisEffect = Instantiate(Effect, transform.position, transform.rotation, null);
         ThisEffect.transform.localScale = Vector3.one * 0.75f;
+        PlaySound("Hit");
     }
 
     protected void DestroyObj()
     {
         StartCoroutine(DestroyCour());
+        PlaySound("Hit");
     }
     private IEnumerator DestroyCour()
     {
@@ -80,6 +82,32 @@ public abstract class SceneObject : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
         Destroy(gameObject);
+        yield break;
+    }
+
+    public void PlaySound(string name)
+    {
+        ClipInfo info = GameData.active.GetSoundRand(name);
+        StartCoroutine(PlaySoundCour(info));
+    }
+    private IEnumerator PlaySoundCour(ClipInfo info)
+    {
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+
+        source.clip = info.Clip;
+        source.spatialBlend = 1f;
+        source.rolloffMode = AudioRolloffMode.Linear;
+        source.maxDistance = 25f;
+        source.volume = info.Volume * GameData.EffectVol;
+        source.pitch = Random.Range(0.9f, 1.1f);
+        source.Play();
+        while (source.isPlaying)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        Destroy(source);
+
         yield break;
     }
 

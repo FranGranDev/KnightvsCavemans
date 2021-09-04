@@ -33,6 +33,7 @@ public class Coin : MonoBehaviour
 
     private void OnPlayerEnter()
     {
+        Player.active.PlaySound("TakeCoin");
         Taken = true;
         Level.active.UpdateMoney(Cost);
         StartCoroutine(DestroyCour());

@@ -33,6 +33,7 @@ public class Experience : MonoBehaviour
 
     private void OnPlayerEnter()
     {
+        Player.active.PlaySound("TakeExp");
         Taken = true;
         Level.active.UpdatePlayerExperience(Exp);
         StartCoroutine(DestroyCour());

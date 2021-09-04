@@ -93,6 +93,11 @@ public class Game_Knights : GameState
         {
             level.BattleEnemy[i].GetEnemy(level.MainPlayer);
         }
+
+        if (level.LastOfMan != null)
+        {
+            level.LastOfMan.SetStatic(false);
+        }
     }
 
     public override void Action()
@@ -183,10 +188,7 @@ public class Game_Knights : GameState
     private void LevelFailed()
     {
         GameData.NowStage = 0;
-        GameData.active.IncreaseAttempt();
-        level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
-        level.cameraMove.TurnFailedShow();
-        level.PlayMenu(4);
+        level.OnLevelFailed(Level.LevelTypes.KnightBattle);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)
         {

@@ -27,13 +27,15 @@ MonoBehaviour:
     Delay: 2
     StartText: Movement is life - Move
     DoneText: Nice moving!
-  - Name: Try to jump, that fun
+  - Name: "Try to jump, that fun(\u0421\u0432\u0430\u0439\u043F\u043D\u0438 \u0441\u043D\u0438\u0437\u0443
+      \u0432\u0432\u0435\u0440\u0445)"
     Type: 2
     AnimPlay: Learn_Jump
     Delay: 2
     StartText: Try to jump, that fun
     DoneText: Nice jump!
-  - Name: Try to tackle, that will confuse enemy
+  - Name: "Try to tackle, that will confuse enemy(\u0421\u0432\u0430\u0439\u043F\u043D\u0438
+      \u0441\u0432\u0435\u0440\u0445\u0443 \u0432\u0432\u0438\u0437)"
     Type: 5
     AnimPlay: Learn_Tackle
     Delay: 2
@@ -45,7 +47,8 @@ MonoBehaviour:
     Delay: 2
     StartText: Without a weapon you have little chance of winning - take Weapon
     DoneText: Nice!
-  - Name: Throw weapon - that cool!
+  - Name: "Throw weapon - that cool!(\u0421\u0432\u0430\u0439\u043F\u043D\u0438 \u0432
+      \u0432\u0435\u0440\u0445\u043D\u0435\u0439 \u0447\u0430\u0441\u0442\u0438 \u044D\u043A\u0440\u0430\u043D\u0430))"
     Type: 4
     AnimPlay: Learn_Throw
     Delay: 2

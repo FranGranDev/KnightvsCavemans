@@ -26,9 +26,9 @@ public class Level : MonoBehaviour
     {
         return Ui_Game.activeSelf && !Ui_Pause.activeSelf;
     }
-    public bool CanSwipe()
+    public bool CanSwipe(Vector2 Pos)
     {
-        return !Ui_Game.activeSelf && !Ui_Amunition.activeSelf && !Ui_Settings.activeSelf && !Ui_Store.activeSelf;
+        return Pos.y > 300 && !Ui_Game.activeSelf && !Ui_Amunition.activeSelf && !Ui_Settings.activeSelf && !Ui_Store.activeSelf && !Ui_LevelUp.activeSelf;
     }
 
     [Header("Enemys")]
@@ -90,6 +90,7 @@ public class Level : MonoBehaviour
     private Coroutine NoMoneyCoroutine;
     private Coroutine HitInRowCoroutine;
     private Coroutine TimeStopCoroutine;
+    private Coroutine MaskCoroutine;
     [Header("UI Game")]
     public GameObject Ui_Game;
     public Image Ui_Game_BackGround;
@@ -247,46 +248,6 @@ public class Level : MonoBehaviour
     public void OnLevelUp()
     {
 
-    }
-
-    private IEnumerator LevelUpCour()
-    {
-        Ui_LevelUp.SetActive(true);
-        Ui_LevelUp_Close.SetActive(false);
-        Ui_LevelUp_WeaponUnlock.SetActive(false);
-        Ui_LevelUp_From.text = GameData.PrevPlayerLevel.ToString();
-        Ui_LevelUp_To.text = GameData.PlayerLevel.ToString();
-        Ui_LevelUp_Text.text = "Level Up!";
-        int Money = 0;
-        for(int i = GameData.PrevPlayerLevel; i < GameData.PlayerLevel; i++)
-        {
-            Money += GameData.MoneyPerPlayerLevel(i);
-        }
-        UpdateMoney(Money);
-        Ui_LevelUp_Money.text = "+" + Money.ToString();
-        for(int i = 1; i < Ui_LevelUp_WeaponUnlockContent.transform.childCount; i++)
-        {
-            Destroy(Ui_LevelUp_WeaponUnlockContent.transform.GetChild(i).gameObject);
-        }
-        List<WeaponInfo> info = GameData.active.GetOpenedByLevelUp(GameData.PrevPlayerLevel, GameData.PlayerLevel, 0);
-        Ui_LevelUp_WeaponIcons = new WeaponIcon[info.Count];
-        Ui_LevelUp_WeaponUnlock.SetActive(info.Count > 0);
-        for (int i = 0; i < info.Count; i++)
-        {
-            Ui_LevelUp_WeaponIcons[i] = Instantiate(GameData.active.IconPrefab, Ui_LevelUp_WeaponUnlockContent.transform);
-            Ui_LevelUp_WeaponIcons[i].SetIconLevelUp(info[i]);
-        }
-        GameData.PrevPlayerLevel = GameData.PlayerLevel;
-        GameData.Save();
-
-        yield return new WaitForSeconds(2f);
-        Ui_LevelUp_Close.SetActive(true);
-        Ui_LevelUp_Text.text = "Close";
-        yield break;
-    }
-    public void CloseLevelUp()
-    {
-        Ui_LevelUp.SetActive(false);
     }
 
     public void UpdateMoney(int Up)
@@ -779,10 +740,18 @@ public class Level : MonoBehaviour
         }
     }
 
+
+    public void OnLevelStart()
+    {
+        Controller.active.enabled = InGame();
+
+        anim.Play("MaskIdle");
+    }
     public void OnLevelDone(LevelTypes type)
     {
         int exp = 0;
-        switch(type)
+        string text = "Красава, всех раскидал";
+        switch (type)
         {
             case LevelTypes.Boss:
                 exp = 10;
@@ -798,7 +767,40 @@ public class Level : MonoBehaviour
                 break;
         }
         CreateExperience(exp);
+
+
+        GameData.active.DecreaseAttempt();
+        cameraMove.TurnAiFollow(LastOfMan, true);
+        GameData.IncreaseNowLevel();
+        PlayMask(GameData.LevelDelay);
+        PrintText(text, 1.5f);
+        GameData.Save();
+
+        PlaySound("LevelDone", 2f);
     }
+    public void OnLevelFailed(LevelTypes type)
+    {
+        GameData.active.IncreaseAttempt();
+        string text = "Ребята не бейте, бабло под тахтой((";
+        switch (type)
+        {
+            case LevelTypes.Boss:
+                break;
+            case LevelTypes.Duel:
+                break;
+            case LevelTypes.Levels:
+                break;
+            case LevelTypes.Nude:
+                break;
+        }
+        PrintText(text, 1.5f);
+        cameraMove.TurnFailedShow();
+        PlayMenu(4);
+        PlayMask(4);
+
+        PlaySound("LevelFailed", 1f);
+    }
+
     public void OnEnemyDie(Man man, Man Enemy, Man.HitType type)
     {
         string DieName = Enemy != null ? (Enemy.name + " " + type.ToString() + " him.") : type.ToString();
@@ -944,9 +946,9 @@ public class Level : MonoBehaviour
         SetHitinRow(0);
     }
 
-    public void OnSwipe(Vector2 Dir)
+    public void OnSwipe(Vector2 Dir, Vector2 Pos)
     {
-        if(CanSwipe())
+        if(CanSwipe(Pos))
         {
             if(Mathf.Abs(Dir.x) > Mathf.Abs(Dir.y * 2))
             {
@@ -1180,6 +1182,17 @@ public class Level : MonoBehaviour
         yield break;
     }
 
+    public void PlayMask(float time)
+    {
+        anim.ResetTrigger("MaskOn");
+        StartCoroutine(PlayMaskCour(time));
+    }
+    private IEnumerator PlayMaskCour(float time)
+    {
+        yield return new WaitForSeconds(time * 0.5f);
+        anim.SetTrigger("MaskOn");
+        yield break;
+    }
 
     public void SetPlayerGame()
     {
@@ -1207,14 +1220,15 @@ public class Level : MonoBehaviour
     }
     public void SetPlayerLearn()
     {
-        MainPlayer.gameObject.SetActive(true);
-        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
-        MainPlayer.transform.position = Vector3.zero;
-        if(MainPlayer.weapon != null)
+        if (MainPlayer.weapon != null)
         {
             Destroy(MainPlayer.weapon.gameObject);
             MainPlayer.weapon = null;
         }
+
+        MainPlayer.gameObject.SetActive(true);
+        MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.SetArmorInfo());
+        MainPlayer.transform.position = Vector3.zero;
         MainPlayer.NoThrowOut = false;
     }
     public void SetPlayerEasy()
@@ -1283,6 +1297,7 @@ public class Level : MonoBehaviour
         NowArmor = GameData.NowArmor;
         SwipeManager.OnSwipeEvent += OnSwipe;
         PlayMusic();
+        StartCoroutine(MusicCheckCour());
     }
 
     #endregion
@@ -1779,15 +1794,51 @@ public class Level : MonoBehaviour
     #region Sound
     public void PlaySound(string name)
     {
+        ClipInfo info = GameData.active.GetSoundRand(name);
+        StartCoroutine(PlaySoundCour(info, 0f));
+    }
+    public void PlaySound(string name, float delay)
+    {
+        ClipInfo info = GameData.active.GetSoundRand(name);
+        StartCoroutine(PlaySoundCour(info, delay));
+    }
+    private IEnumerator PlaySoundCour(ClipInfo info, float Delay)
+    {
+        yield return new WaitForSeconds(Delay);
+        AudioSource source = gameObject.AddComponent<AudioSource>();
 
+        source.clip = info.Clip;
+        source.spatialBlend = 0f;
+        source.volume = info.Volume * GameData.EffectVol;
+        source.Play();
+        while (source.isPlaying)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        Destroy(source);
+
+        yield break;
     }
 
     public void PlayMusic()
     {
         ClipInfo info = GameData.active.GetMusicRand();
         musicSource.clip = info.Clip;
-        musicSource.volume = info.Volume * GameData.MusicVol;
+        musicSource.volume = GameData.MusicVol * 0.5f;
         musicSource.Play();
+    }
+    private IEnumerator MusicCheckCour()
+    {
+        while(true)
+        {
+            while(musicSource.isPlaying)
+            {
+                yield return new WaitForFixedUpdate();
+            }
+            PlayMusic();
+            yield return new WaitForFixedUpdate();
+        }
     }
     #endregion
     #region KnightBattle
@@ -1872,11 +1923,47 @@ public class Level : MonoBehaviour
             StartCoroutine(LevelUpCour());
         }
     }
-
-    public void OnLevelStart()
+    private IEnumerator LevelUpCour()
     {
-        Controller.active.enabled = InGame();
+        Ui_LevelUp.SetActive(true);
+        Ui_LevelUp_Close.SetActive(false);
+        Ui_LevelUp_WeaponUnlock.SetActive(false);
+        Ui_LevelUp_From.text = GameData.PrevPlayerLevel.ToString();
+        Ui_LevelUp_To.text = GameData.PlayerLevel.ToString();
+        Ui_LevelUp_Text.text = "Level Up!";
+        int Money = 0;
+        for (int i = GameData.PrevPlayerLevel; i < GameData.PlayerLevel; i++)
+        {
+            Money += GameData.MoneyPerPlayerLevel(i);
+        }
+        UpdateMoney(Money);
+        Ui_LevelUp_Money.text = "+" + Money.ToString();
+        for (int i = 1; i < Ui_LevelUp_WeaponUnlockContent.transform.childCount; i++)
+        {
+            Destroy(Ui_LevelUp_WeaponUnlockContent.transform.GetChild(i).gameObject);
+        }
+        List<WeaponInfo> info = GameData.active.GetOpenedByLevelUp(GameData.PrevPlayerLevel, GameData.PlayerLevel, 0);
+        Ui_LevelUp_WeaponIcons = new WeaponIcon[info.Count];
+        Ui_LevelUp_WeaponUnlock.SetActive(info.Count > 0);
+        for (int i = 0; i < info.Count; i++)
+        {
+            Ui_LevelUp_WeaponIcons[i] = Instantiate(GameData.active.IconPrefab, Ui_LevelUp_WeaponUnlockContent.transform);
+            Ui_LevelUp_WeaponIcons[i].SetIconLevelUp(info[i]);
+        }
+        GameData.PrevPlayerLevel = GameData.PlayerLevel;
+        GameData.Save();
+        PlaySound("LevelUp", 0.25f);
+
+        yield return new WaitForSeconds(2f);
+        Ui_LevelUp_Close.SetActive(true);
+        Ui_LevelUp_Text.text = "Close";
+        yield break;
     }
+    public void CloseLevelUp()
+    {
+        Ui_LevelUp.SetActive(false);
+    }
+
 
     public void PlayFastFade()
     {
@@ -2144,6 +2231,7 @@ public class Level : MonoBehaviour
     public void SetMusicVolumeFromPause()
     {
         GameData.MusicVol = Ui_Pause_Music.value;
+        musicSource.volume = GameData.MusicVol * 0.5f;
     }
 
     public void SettingsOn()
@@ -2170,7 +2258,7 @@ public class Level : MonoBehaviour
     public void SetMusicVolume()
     {
         GameData.MusicVol = Ui_Settings_Music.value;
-        musicSource.volume = GameData.MusicVol;
+        musicSource.volume = GameData.MusicVol * 0.5f;
     }
     #endregion
     #region PremiumStore

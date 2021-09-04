@@ -67,39 +67,34 @@ public class Player : Man
     {
         if (Dead)
             return;
-        if (!OnHouse)
-        {
+        /*
             if (Velocity > 0.75f && OnGround && Vector2.Dot(Rig.velocity.normalized, Dir) < -0.9f)
             {
                 FlipVelocity();
             }
-            Vector2 SetVelocity = new Vector2(Speed * Dir.x, Rig.velocity.y) * GroundSpeed();
-            if (OnTackle)
-            {
-                Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.01f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
-            }
-            else if (Landing)
-            {
-                Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.07f * GroundAcceleration());
-            }
-            else if (Mathf.Abs(SetVelocity.x) > 0.5f)
-            {
-                Rig.velocity = Vector2.Lerp(Rig.velocity, SetVelocity, 0.07f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
-            }
-            else
-            {
-                Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.03f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
-            }
-            if (!OnGround && !Landing)
-            {
-                transform.up = Vector2.Lerp(transform.up, PrevDir, 0.025f);
-            }
-            BodyY = Dir.y;
+            */
+        Vector2 SetVelocity = new Vector2(Speed * Dir.x, Rig.velocity.y) * GroundSpeed();
+        if (OnTackle)
+        {
+            Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.01f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
+        }
+        else if (Landing)
+        {
+            Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.07f * GroundAcceleration());
+        }
+        else if (Mathf.Abs(SetVelocity.x) > 0.5f)
+        {
+            Rig.velocity = Vector2.Lerp(Rig.velocity, SetVelocity, 0.07f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
         }
         else
         {
-            NowHorse.Movement(Dir);
+            Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.03f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
         }
+        if (!OnGround && !Landing)
+        {
+            transform.up = Vector2.Lerp(transform.up, PrevDir, 0.025f);
+        }
+        BodyY = Dir.y;
         Level.active.OnPlayerMove(Dir);
     }
     private void FlipVelocity()
@@ -135,20 +130,20 @@ public class Player : Man
         {
             NowHorse.Jump();
         }
-    }
+    } //No more use
     public override void JumpDir(Vector2 Dir)
     {
         if (OnGround && !Jumped)
         {
             float TackleRatio = OnTackle ? 1.5f : 1;
-            Dir.y *= 1 + Mathf.Abs(Dir.x) * 0.5f;
-            Rig.velocity = new Vector2(Rig.velocity.x * 0.75f, 0);
-            Rig.velocity += Dir * JumpForce * TackleRatio;
+            Dir.y *= 1 + Mathf.Abs(Dir.x) * 0.25f;
+            Rig.velocity = Dir * JumpForce * TackleRatio;
             StartCoroutine(JumpDelay());
             if (Dir != Vector2.zero)
             {
                 PrevDir = Dir;
             }
+            PlaySound("Jump");
             Level.active.OnPlayerJump();
         }
     }
@@ -170,21 +165,14 @@ public class Player : Man
                 Level.active.OnPlayerTackle();
             }
         }
-    }
+    } //No more use
     public override void TackleDir(Vector2 Dir)
     {
-        if (!OnHouse)
+        if (TackleCoroutine == null && OnGround)
         {
-            if(TackleCoroutine != null)
-            {
-                StopCoroutine(TackleCoroutine);
-                TackleCoroutine = null;
-            }
-            if (OnGround)
-            {
-                TackleCoroutine = StartCoroutine(TackleDirCour(Dir));
-                Level.active.OnPlayerTackle();
-            }
+            TackleCoroutine = StartCoroutine(TackleDirCour(Dir));
+            PlaySound("Tackle");
+            Level.active.OnPlayerTackle();
         }
     }
     private IEnumerator TackleDirCour(Vector2 Dir)
@@ -195,10 +183,14 @@ public class Player : Man
         PrevDir = Dir;
         Rig.velocity = (Dir.x > 0 ? Vector2.right : Vector2.left) * Speed;
         yield return new WaitForFixedUpdate();
-        while (PrevDir.y < -0.5f && Velocity > 0.4f && OnGround && !Punched)
+        while (PrevDir.y < 0.25f && Velocity > 0.75f && OnGround && !Punched)
         {
             transform.up = Vector2.Lerp(transform.up, (Vector2.left * Right + Vector2.up * 0.2f).normalized, 0.1f);
-
+            if(Rig.velocity.magnitude > Speed)
+            {
+                Rig.velocity = Rig.velocity.normalized * Speed;
+                break;
+            }
             yield return new WaitForFixedUpdate();
         }
         anim.SetBool("Tackle", false);
@@ -233,8 +225,9 @@ public class Player : Man
         weapon.Throw(PrevDir);
         weapon = null;
         StartCoroutine(TakeDelay());
+        PlaySound("Throw");
         Level.active.OnPlayerThrow();
-    }
+    } //No more use
     public override void ThrowForce(Vector2 Dir)
     {
         if(!Throwing)
@@ -279,19 +272,21 @@ public class Player : Man
             Vector2 Up = Velocity > 0.25f ? Vector2.up : Vector2.zero;
             Enemy.GetImpulse((Rig.velocity.normalized * 0.5f + Up).normalized * Rig.velocity.magnitude * Size * 2);
             Enemy.GetPunched(this, Velocity > 0.25f);
+            Enemy.GetHit(Mathf.CeilToInt(Velocity), this, HitType.Punch, EffectType.Null);
             OnAttack(Enemy, Velocity, HitType.Tackle);
             Rig.velocity *= 1.025f;
             if (Velocity > 0.75f && Random.Range(0, 3) == 0)
             {
                 Enemy.ThrowOutWeapon();
             }
+            PlaySound("Punch");
         }
         else if (Rig.velocity.magnitude * Size > Enemy.Rig.velocity.magnitude * Enemy.Size * 0.75f && !NoPunch && !Punched)
         {
             Vector2 Dir = (Enemy.transform.position - transform.position).normalized;
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))
             {
-                Enemy.GetHit(Mathf.RoundToInt(Velocity * 5), Enemy, HitType.Fall, EffectType.Null);
+                Enemy.GetHit(Mathf.RoundToInt(Size * 3), Enemy, HitType.Punch, EffectType.Null);
                 Enemy.GetImpulse(new Vector2(Mathf.CeilToInt(Dir.x), Dir.y * 0.25f).normalized * Rig.velocity.magnitude);
                 Enemy.GetPunched(this, true);
                 Rig.velocity *= 1f;
@@ -300,6 +295,7 @@ public class Player : Man
             else
             {
                 Vector2 Up = Velocity > 0.5f ? Vector2.up : Vector2.zero;
+                Enemy.GetHit(Mathf.CeilToInt(Velocity * 2), this, HitType.Punch, EffectType.Null);
                 Enemy.GetImpulse((Rig.velocity.normalized + Up).normalized * Rig.velocity.magnitude * Size * 1.25f);
                 Enemy.GetPunched(this, Velocity * Size > 0.25f);
                 Rig.velocity *= 0.5f * Size;
@@ -307,6 +303,7 @@ public class Player : Man
             }
 
             PunchDelay();
+            PlaySound("Punch");
         }
 
     }
@@ -363,11 +360,11 @@ public class Player : Man
         {
             Die(Enemy, type);
         }
+        GetEffect(Enemy, effect);
+        PlaySound("Hit");
+
         Level.active.PrintDamageText();
         Level.active.OnPlayerGetDamage(Enemy, type, effect);
-            
-
-        GetEffect(Enemy, effect);
     }
 
     public override void ThrowOutWeapon()
@@ -389,6 +386,7 @@ public class Player : Man
         ThrowOutWeapon();
 
         Level.active.OnPlayerDie(this, Enemy, type);
+        PlaySound("Die");
     }
 
     private IEnumerator HitEffect()
@@ -422,31 +420,6 @@ public class Player : Man
         yield break;
     }
 
-    public override void OnHorseEnter(Horse horse)
-    {
-        SetOnHorse(horse);
-    }
-    private void SetOnHorse(Horse horse)
-    {
-        OnHouse = true;
-        NowHorse = horse;
-        OnGround = true;
-        anim.SetBool("OnGround", true);
-        IgnoreObject(true, horse.Col);
-
-        transform.parent = horse.Body;
-        Rig.bodyType = RigidbodyType2D.Kinematic;
-        Rig.velocity = Vector2.zero;
-        Rig.angularVelocity = 0;
-        transform.position = horse.Body.position;
-    }
-    private void ExitHorse(Horse horse)
-    {
-        OnHouse = false;
-        NowHorse = null;
-        Rig.bodyType = RigidbodyType2D.Dynamic;
-        transform.parent = null;
-    }
 
 
     public void Awake()

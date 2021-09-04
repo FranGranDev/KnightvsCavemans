@@ -15,7 +15,12 @@ public class CameraMove : MonoBehaviour
     public static CameraMove active;
     public Man Main;
     public Transform[] Target;
+    public Man ManTarget;
     public Vector3 Offset;
+    private Vector3 SimpleOffset()
+    {
+        return Vector3.back * 10; 
+    }
     public float Size;
     [Range(0, 0.1f)]
     public float Speed;
@@ -58,13 +63,13 @@ public class CameraMove : MonoBehaviour
     }
     private void AiFollow()
     {
-        transform.position = Vector3.Lerp(transform.position, Target[0].position + Offset, CurrantSpeed);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size, CurrantSpeed);
+        transform.position = Vector3.Lerp(transform.position, ManTarget.Body.transform.position + SimpleOffset(), CurrantSpeed * 10);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * ManTarget.Size, CurrantSpeed + 0.01f);
     }
     private void FailedFollow()
     {
-        transform.position = Vector3.Lerp(transform.position, Main.transform.position + Offset, CurrantSpeed + 0.01f);
-        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * 0.5f, CurrantSpeed);
+        transform.position = Vector3.Lerp(transform.position, Main.Body.transform.position + SimpleOffset(), CurrantSpeed * 10);
+        Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size * Main.Size, CurrantSpeed + 0.01f);
     }
     public void BetsFollow(List<Man> Enemy)
     {
@@ -155,7 +160,7 @@ public class CameraMove : MonoBehaviour
         {
             PrevShowType = ShowTypes.Ai;
             ShowType = ShowTypes.Ai;
-            Target = new Transform[1] { man.transform };
+            ManTarget = man;
         }
         else
         {

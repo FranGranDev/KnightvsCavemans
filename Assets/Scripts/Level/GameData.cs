@@ -207,7 +207,7 @@ public class GameData : MonoBehaviour
     public static int PlayerExperience;
     public static int NextLevelExperience()
     {
-        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.75f) * 20);
+        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.75f) * 25);
     }
     public static int PlayerLevel;
     public static int PrevPlayerLevel;

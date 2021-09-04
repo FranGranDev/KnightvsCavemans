@@ -96,6 +96,11 @@ public class Game_Easy : GameState
         {
             level.BattleEnemy[i].GetEnemy(level.MainPlayer);
         }
+
+        if (level.LastOfMan != null)
+        {
+            level.LastOfMan.SetStatic(false);
+        }
     }
     private void CheckForEnd()
     {
@@ -114,20 +119,12 @@ public class Game_Easy : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        GameData.active.DecreaseAttempt();
-        level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Nude);
-        GameData.IncreaseNowLevel();
         isEnd = true;
-        level.PrintText("Красава, всех раскидал", 1.5f);
-        GameData.Save();
     }
     private void LevelFailed()
     {
-        GameData.active.IncreaseAttempt();
-        level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
-        level.cameraMove.TurnFailedShow();
-        level.PlayMenu(4);
+        level.OnLevelFailed(Level.LevelTypes.Nude);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)
         {

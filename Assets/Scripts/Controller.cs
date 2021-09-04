@@ -10,47 +10,53 @@ public class Controller : MonoBehaviour
     public float DeadZoneX;
     private float x;
     private float y;
-    private bool JoystickActive;
-    private bool isJoystickActive()
+    private Vector2 Dir()
     {
-        return joystick.transform.GetChild(0).gameObject.activeSelf;
+        return new Vector2(x, y);
     }
-    public delegate void OnJoystickActive();
-    public event OnJoystickActive JoystickClick;
+    private Vector2 PrevDir;
+    private float RotationSpeed;
+
+    private Coroutine ClickCoroutine;
 
     private void Awake()
     {
         active = this;
 
-        SwipeManager.OnSwipeEvent += OnSwipe;
+        SwipeManager.OnFastSwipeEvent += OnSwipe;
+        SwipeManager.OnSwipeEvent += OnLongSwipe;
     }
     private void Start()
     {
         
     }
-    public void Subscribe(OnJoystickActive SomeVoid)
-    {
-        JoystickClick += SomeVoid;
-    }
 
-    public void OnSwipe(Vector2 Dir)
+
+    public void OnSwipe(Vector2 SwipeDir, Vector2 Pos)
     {
         if (!Level.active.InGame())
             return;
-        if (!isJoystickActive())
+        if (RotationSpeed > 1)
+            return;
+        if (Dir() != Vector2.zero)
         {
-            if(Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x) * 0.25f)
+            if (SwipeDir.y > 0.25f)
             {
-                if(Dir.y > 0)
-                {
-                    JumpForce(Dir);
-                }
-                else
-                {
-                    TackleForce(Dir);
-                }
+                JumpForce(Dir());
             }
-            
+            else if(SwipeDir.y < 0f)
+            {
+                TackleForce(Dir());
+            }
+        }
+    }
+    public void OnLongSwipe(Vector2 SwipeDir, Vector2 Start)
+    {
+        if (!Level.active.InGame())
+            return;
+        if (Dir() == Vector2.zero)
+        {
+            ThrowForce(SwipeDir);
         }
     }
 
@@ -60,25 +66,20 @@ public class Controller : MonoBehaviour
             return;
         x = Mathf.Abs(joystick.Direction.x) > DeadZoneX ? joystick.Direction.x : 0;
         y = joystick.Direction.y;
-        if(joystick.transform.GetChild(0).gameObject.activeSelf && !JoystickActive)
+    }
+    private void CalculateSpeed()
+    {
+        if(Dir() == Vector2.zero)
         {
-            StartCoroutine(OnJoystickClick());
-            JoystickActive = true;
-            JoystickClick?.Invoke();
+            RotationSpeed = 0;
         }
-        if(!joystick.transform.GetChild(0).gameObject.activeSelf)
+        else
         {
-            JoystickActive = false;
-        }
-        else if (y > 0.8f)
-        {
-            Jump();
-        }
-        else if(y < -0.8f)
-        {
-            Tackle();
+            RotationSpeed = (1 - Vector2.Dot(PrevDir, Dir())) / Time.fixedDeltaTime;
+            PrevDir = Dir();
         }
     }
+
     public void Movement()
     {
         Target.Movement(new Vector2(x, y));
@@ -111,23 +112,6 @@ public class Controller : MonoBehaviour
     {
         Target.TackleDir(Dir);
     }
-    private IEnumerator OnJoystickClick()
-    {
-        float time = Time.time;
-        while(joystick.transform.GetChild(0).gameObject.activeSelf)
-        {
-            if(joystick.Direction.magnitude > 0.5f)
-            {
-                yield break;
-            }
-            yield return new WaitForFixedUpdate();
-        }
-        if(Time.time - time < 0.5f)
-        {
-            Throw();
-        }
-        yield break;
-    }
 
     public void Update()
     {
@@ -137,12 +121,7 @@ public class Controller : MonoBehaviour
     {
         Movement();
         MoveArm();
-    }
-}
 
-public interface IController
-{
-    void Movement();
-    void Throw();
-    void Jump();
+        CalculateSpeed();
+    }
 }

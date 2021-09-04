@@ -21,7 +21,7 @@ public abstract class Weapon : MonoBehaviour
     }
     public bool CanAttack(Man man)
     {
-        return man != null && Owner != null && SideOwn.isEnemy(man, Owner) && PrevAttack != null && !PrevAttack.Exists(item => item == man) && !Owner.NoAttack && !man.OnTackle;
+        return man != null && Owner != null && SideOwn.isEnemy(man, Owner) && PrevAttack != null && !PrevAttack.Exists(item => item == man) && !Owner.Punched && !man.OnTackle;
     }
     protected List<Man> PrevAttack;
 
@@ -109,7 +109,17 @@ public abstract class Weapon : MonoBehaviour
         }
         FireEffectCoroutine = StartCoroutine(FireEffectCour());
     }
-    protected IEnumerator FireEffectCour()
+    private void StopFireEffect()
+    {
+        if (FireEffectCoroutine != null)
+        {
+            Destroy(FireEffect);
+            StopCoroutine(FireEffectCoroutine);
+            FireEffectCoroutine = null;
+            NowEffect = PrevEffect;
+        }
+    }
+    private IEnumerator FireEffectCour()
     {
         PrevEffect = NowEffect;
         NowEffect = Man.EffectType.Fire;
@@ -127,6 +137,10 @@ public abstract class Weapon : MonoBehaviour
         yield break;
     }
 
+    protected void OnAttack()
+    {
+        StopFireEffect();
+    }
 
     protected void CreateSparks(Man man)
     {

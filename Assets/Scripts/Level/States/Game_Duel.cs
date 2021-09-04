@@ -64,6 +64,11 @@ public class Game_Duel : GameState
         {
             level.AliveEnemy[i].GetEnemy(level.MainPlayer);
         }
+
+        if (level.LastOfMan != null)
+        {
+            level.LastOfMan.SetStatic(false);
+        }
     }
     private void CheckForEnd()
     {
@@ -77,20 +82,12 @@ public class Game_Duel : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        GameData.active.DecreaseAttempt();
-        level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Duel);
-        GameData.IncreaseNowLevel();
         isEnd = true;
-        level.PrintText("Красава, победил турнир епта", 1.5f);
-        GameData.Save();
     }
     private void LevelFailed()
     {
-        GameData.active.IncreaseAttempt();
-        level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
-        level.cameraMove.TurnFailedShow();
-        level.PlayMenu(4);
+        level.OnLevelFailed(Level.LevelTypes.Duel);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)
         {

@@ -37,7 +37,7 @@ public class Game_Battle : GameState
     private void CreateBattle()
     {
         int FriendCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f)) + Random.Range(0, 2);
-        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) * 2) + Random.Range(0, 4);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) * 2);
 
         level.AllFriends = level.CreateEnemy(Level.EnemyCreateType.Friend, FriendCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveFriends = level.AllFriends;
@@ -139,6 +139,11 @@ public class Game_Battle : GameState
         {
             level.DefeatedFriends[i].SetStatic(level.DefeatedFriends[i].DistX(level.MainPlayer) > 15f);
         }
+
+        if (level.LastOfMan != null)
+        {
+            level.LastOfMan.SetStatic(false);
+        }
     }
     private void CheckForEnd()
     {
@@ -157,13 +162,8 @@ public class Game_Battle : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        GameData.active.DecreaseAttempt();
-        level.cameraMove.TurnAiFollow(level.LastOfMan, true);
         level.OnLevelDone(Level.LevelTypes.Levels);
-        GameData.IncreaseNowLevel();
         isEnd = true;
-        level.PrintText("Красава, всех раскидали", 1.5f);
-        GameData.Save();
 
         for (int i = 0; i < level.AliveFriends.Count; i++)
         {
@@ -172,10 +172,7 @@ public class Game_Battle : GameState
     }
     private void LevelFailed()
     {
-        GameData.active.IncreaseAttempt();
-        level.PrintText("Ребята не бейте, бабло под тахтой((", 1.5f);
-        level.cameraMove.TurnFailedShow();
-        level.PlayMenu(4);
+        level.OnLevelFailed(Level.LevelTypes.Levels);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)
         {
