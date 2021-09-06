@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9768bf19baab474e9329de429c46315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 20
+  Damage: 25
   Effect: 1
   FireEffect: {fileID: 4533906633318402468}
   Trail: {fileID: 2007801441401429466}

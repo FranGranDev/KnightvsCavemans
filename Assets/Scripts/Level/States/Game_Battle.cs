@@ -118,7 +118,7 @@ public class Game_Battle : GameState
         }
         for (int i = 0; i < level.AliveFriends.Count; i++)
         {
-            if (i < MaxBattleEnemy)
+            if (i < MaxBattleEnemy * 2)
             {
                 if (!level.BattleFriends.Exists(item => item == level.AliveFriends[i]))
                 {

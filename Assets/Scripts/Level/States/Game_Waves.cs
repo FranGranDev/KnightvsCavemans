@@ -32,7 +32,7 @@ public class Game_Waves : GameState
 
     private void CreateEnemys()
     {
-        int count = Mathf.RoundToInt(Mathf.Pow(GameData.NowWave + 1, 0.75f) * 2);
+        int count = Mathf.CeilToInt(Mathf.Pow(GameData.NowWave + 1, 0.5f) * 2);
         level.AliveEnemy = level.CreateEnemy(Level.EnemyCreateType.Waves, count, level.sceneMaker.GetLongEnemyPos(), 5);
         level.DefeatedEnemy = new List<Man>();
         level.BattleEnemy = new List<Man>();
@@ -119,7 +119,6 @@ public class Game_Waves : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        level.OnLevelDone(Level.LevelTypes.Waves);
         GameData.active.DecreaseAttempt();
         level.PrintText("Волна " + (GameData.NowWave + 1).ToString() + " Пройдена", 2f);
         GameData.NowWave++;

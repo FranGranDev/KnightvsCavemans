@@ -253,9 +253,9 @@ public class AiController : MonoBehaviour
             Movement(Dir * 1.25f);
             yield return new WaitForFixedUpdate();
         }
-        while (ThisPlayer.DotArm(FrwDir) < 0.9f)
+        while (ThisPlayer.DotArm(FrwDir) < 0.95f)
         {
-            NowDir = Vector2.Lerp(NowDir, FrwDir, 0.25f);
+            NowDir = FrwDir;
             MoveArm(NowDir);
             Movement(Dir * 1.5f);
             yield return new WaitForFixedUpdate();

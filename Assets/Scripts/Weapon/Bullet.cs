@@ -34,18 +34,29 @@ public class Bullet : MonoBehaviour
     {
         if (man != hitInfo.Owner && SideOwn.isEnemy(man, hitInfo.Owner))
         {
-            if(FireEffect != null)
-                FireEffect.gameObject.SetActive(false);
-            man.GetHit(Damage, hitInfo.Owner, Man.HitType.Bullet, Effect);
-            man.GetImpulse((Rig.velocity.normalized + Vector2.up).normalized * Mathf.Sqrt(Damage) * 2);
-            man.GetPunched(hitInfo.Owner, true);
+            if(Vector2.Dot(man.BodyDirection(hitInfo.Owner), man.WeaponDir()) > 0.9f)
+            {
+                CreateSparks(man);
 
-            Fly = false;
-            Rig.bodyType = RigidbodyType2D.Kinematic;
-            Rig.velocity = Vector2.zero;
-            Rig.angularVelocity = 0;
-            transform.parent = man.transform;
-            Trail.SetActive(false);
+                man.OnBlock(hitInfo.Owner, 1);
+                man.PlaySound("Block");
+            }
+            else
+            {
+                if (FireEffect != null)
+                    FireEffect.gameObject.SetActive(false);
+                man.GetHit(Damage, hitInfo.Owner, Man.HitType.Bullet, Effect);
+                man.GetImpulse((Rig.velocity.normalized + Vector2.up).normalized * Mathf.Sqrt(Damage) * 2);
+                man.GetPunched(hitInfo.Owner, true);
+
+                Fly = false;
+                Rig.bodyType = RigidbodyType2D.Kinematic;
+                Rig.velocity = Vector2.zero;
+                Rig.angularVelocity = 0;
+                transform.parent = man.transform;
+                Trail.SetActive(false);
+            }
+
         }
     }
     private void OnGroundEnter()
@@ -58,6 +69,15 @@ public class Bullet : MonoBehaviour
             FireEffect.gameObject.SetActive(false);
         Trail.SetActive(false);
     }
+
+    protected void CreateSparks(Man man)
+    {
+        if (man.weapon == null)
+            return;
+        GameObject Sparks = Instantiate(GameData.active.GetEffect("Sparks"), transform.position, transform.rotation, null);
+        Sparks.transform.localScale = transform.localScale;
+    }
+
 
     public void OnTriggerEnter2D(Collider2D collision)
     {

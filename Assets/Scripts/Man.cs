@@ -152,6 +152,7 @@ public abstract class Man : MonoBehaviour
     {
         Dead = false;
         anim.SetBool("Dead", false);
+        gameObject.layer = 8;
         Hp = MaxHp;
         transform.localScale = Vector3.one * Size;
         Rig.mass *= Size * Size;
@@ -471,6 +472,10 @@ public abstract class Man : MonoBehaviour
     }
 
     public abstract void OnAttack(Man Enemy, float Power, HitType Type);
+    public virtual void OnBlock(Man Enemy, float Power)
+    {
+
+    }
     #endregion
     #region Landing
     private void Land()

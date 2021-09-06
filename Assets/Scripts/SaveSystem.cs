@@ -48,9 +48,14 @@ public class SaveData
     public int MaxStage;
     public int NowStage;
 
+    public int Language;
+    public float ExpRatio;
     public bool PremiumOn;
 
     public PlayerInfo PlayerData;
+
+    public System.DateTime PresentTime;
+
 
     public int level;
     public bool LearningEnded;
@@ -80,7 +85,9 @@ public class SaveData
         GameHard = data.GameHard;
         GameGlobalHard = GameData.GameGlobalHard;
 
+        Language = GameData.Language;
         PremiumOn = GameData.PremiumOn;
+        ExpRatio = GameData.ExpRatio;
 
         NowWave = GameData.NowWave;
         MaxWave = GameData.MaxWave;
@@ -99,6 +106,8 @@ public class SaveData
         Vibration = GameData.Vibration;
         MusicVol = GameData.MusicVol;
         EffectVol = GameData.EffectVol;
+
+        PresentTime = GameData.PresentTime;
 
         WeaponOpened = new bool[data.weapon.Length];
         for(int i = 0; i < WeaponOpened.Length; i++)

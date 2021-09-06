@@ -62,6 +62,9 @@ TextureImporter:
   - first:
       213: -2925288176213767688
     second: Objects_19
+  - first:
+      213: -3803466081661082397
+    second: Objects_20
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -602,6 +605,27 @@ TextureImporter:
       bones: []
       spriteID: 8f9c02f07e94767d0800000000000000
       internalID: -2925288176213767688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Objects_20
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 61
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3e4285710cf573bc0800000000000000
+      internalID: -3803466081661082397
       vertices: []
       indices: 
       edges: []

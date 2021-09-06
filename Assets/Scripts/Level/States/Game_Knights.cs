@@ -170,7 +170,6 @@ public class Game_Knights : GameState
     {
         if (level.MainPlayer.Dead)
             return;
-        level.OnLevelDone(Level.LevelTypes.KnightBattle);
         GameData.active.DecreaseAttempt();
         GameData.NowStage++;
         GameData.IncreaseMaxStage();

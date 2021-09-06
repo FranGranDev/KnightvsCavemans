@@ -54,8 +54,24 @@ public class GameData : MonoBehaviour
     {
         DeathNum++;
     }
+
+    public static int Language;
+
+    //----------------Time-----------------------
+    public static System.DateTime PresentTime;
+    public static void SetPresentTime(float Hours)
+    {
+        System.DateTime nowtime = System.DateTime.Now;
+        PresentTime = nowtime.AddSeconds(Hours * 60 * 60);
+    }
+    public static float GetTimeToPresent() //In seconds
+    {
+        System.TimeSpan time = PresentTime - System.DateTime.Now;
+        return time.Hours * 60 * 60 + time.Minutes * 60 + time.Seconds;
+    }
     //-------------Settings--------------
     public static bool PremiumOn;
+    public static float ExpRatio;
     public static float EffectVol;
     public static float MusicVol;
     public static bool Vibration;
@@ -117,7 +133,7 @@ public class GameData : MonoBehaviour
     }
     public int UpdateCost(int level)
     {
-        return Mathf.RoundToInt(Mathf.Sqrt(level + 1) * 100);
+        return Mathf.RoundToInt(Mathf.Pow(level + 1, 0.75f) * 100);
     }
 
     public void UpdateHp()
@@ -196,7 +212,7 @@ public class GameData : MonoBehaviour
     }
     public float PowerProcent()
     {
-        return playerInfo.Size / upInfo.MaxSize * 0.65f;
+        return playerInfo.Power / upInfo.MaxPower * 0.65f;
     }
     public float PowerSecondProcent()
     {
@@ -231,6 +247,8 @@ public class GameData : MonoBehaviour
         return Mathf.RoundToInt(Mathf.Sqrt(level + 1) * 150);
     }
     public static int Money;
+    [Header("Game Info")]
+    public int MonetForPresent;
     [Header("Man's")]
     public EnemyInfo[] Enemy;
     public EnemyInfo[] Friend;
@@ -470,9 +488,12 @@ public class GameData : MonoBehaviour
             MusicVol = 1f;
             EffectVol = 1f;
             GameGlobalHard = 0.5f;
+            PresentTime = System.DateTime.Now;
         }
         else
         {
+            Language = data.Language;
+            ExpRatio = data.ExpRatio;
             NowWave = data.NowWave;
             MaxWave = data.MaxWave;
             NowStage = data.NowStage;
@@ -491,7 +512,10 @@ public class GameData : MonoBehaviour
             Vibration = data.Vibration;
             MusicVol = data.MusicVol;
             EffectVol = data.EffectVol;
-            
+
+
+            PresentTime = data.PresentTime;
+
             DeathNum = data.DeathNum;
             MansKilled = data.MansKilled;
             Money = data.Money;

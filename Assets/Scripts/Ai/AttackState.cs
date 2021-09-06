@@ -12,7 +12,7 @@ public class AttackState : State
         Man Enemy = aiController.Enemy;
         Man Me = aiController.ThisPlayer;
 
-        if (Enemy == null || Enemy.Dead || Me.Dead)
+        if (Enemy == null || Enemy.Dead || Me.Dead || Level.active.NextLava(Enemy))
         {
             Enemy = null;
             isFinished = true;

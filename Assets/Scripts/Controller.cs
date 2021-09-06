@@ -40,7 +40,7 @@ public class Controller : MonoBehaviour
             return;
         if (Dir() != Vector2.zero)
         {
-            if (SwipeDir.y > 0.25f)
+            if (SwipeDir.y > 0.15f)
             {
                 JumpForce(Dir());
             }

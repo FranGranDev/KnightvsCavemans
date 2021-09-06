@@ -222,10 +222,13 @@ public class GunWeapon : Weapon
     }
     public void Fire()
     {
-        if(Owner != null)
+        if (Owner == null)
         {
-            Owner.OnAttack(null, 0, Man.HitType.Bullet);
+            anim.Play("LoadIdle");
+            return;
         }
+            
+        Owner.OnAttack(null, 0, Man.HitType.Bullet);
         Reloaded = false;
         if (StartFireEffect != null)
         {
@@ -235,6 +238,7 @@ public class GunWeapon : Weapon
         NowBullet.Fire(new HitInfo(Owner, Damage, Velocity));
 
         NowAmmo--;
+        Owner.PlaySound("Shoot");
     }
     private IEnumerator StartFireEffectCour()
     {

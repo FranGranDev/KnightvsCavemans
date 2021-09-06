@@ -13,7 +13,9 @@ public class Level : MonoBehaviour
     private int NowArmor;
     private int TempWeapon;
     public enum GameType { Levels, Bets, Waves, Knights}
-
+    private bool Loaded;
+    private bool SaveLifeUsed;
+    private Man.HitType PlayerDeath;
 
     public static bool OnPause;
 
@@ -76,6 +78,7 @@ public class Level : MonoBehaviour
     public AudioSource musicSource;
     public AudioSource effectSource;
     //--------Coroutines----------
+    private Coroutine LevelFailedCoroutine;
     private Coroutine SelectStateCoroutine;
     private Coroutine DelayGameCoroutine;
     private Coroutine BoxSpawnCoroutine;
@@ -120,6 +123,11 @@ public class Level : MonoBehaviour
     [Header("UI Menu")]
     public GameObject Ui_Menu;
     public TextMeshProUGUI Ui_Menu_PlayText;
+    public GameObject Ui_Menu_Present;
+    public TextMeshProUGUI Ui_Menu_Timer;
+    public GameObject Ui_Menu_PresentTake;
+    public TextMeshProUGUI Ui_Menu_PresentText;
+    public TextMeshProUGUI Ui_Menu_PresentMoneyText;
 
     [Header("UI Bets")]
     public GameObject Ui_Bets;
@@ -159,7 +167,6 @@ public class Level : MonoBehaviour
 
     [Header("UI Amunition")]
     public GameObject Ui_Amunition;
-    public RectTransform Ui_Amun_Weapon;
     public RectTransform Ui_Anum_ScrollWeapon;
 
     private WeaponIcon[] Ui_Anum_WeaponIcons;
@@ -282,7 +289,7 @@ public class Level : MonoBehaviour
         Ui_Game_Money.text = GameData.Money.ToString();
     }
     #endregion
-    #region UI
+    #region UI in Game
     //--------------------------------UI------------------------------------------
     public void PrintText(string text)
     {
@@ -361,7 +368,7 @@ public class Level : MonoBehaviour
             anim.Play("ComboIdle", 3);
             Ui_Game_HitRow.gameObject.SetActive(false);
         }
-        else if(NumForMega >= 7)
+        else if(num >= NumForMega)
         {
             anim.Play("ComboMega", 3);
             Ui_Game_HitRow.gameObject.SetActive(true);
@@ -477,11 +484,11 @@ public class Level : MonoBehaviour
                     break;
                 case EnemyCreateType.Friend:
                     Position = Pos[0] + new Vector2(Random.Range(-5f, 5f), -0.5f);
-                    Enemys.Add(CreateFriend(Position, Random.Range(0.75f, 1.25f)));
+                    Enemys.Add(CreateFriend(Position, Random.Range(0.9f, 1.1f)));
                     break;
                 case EnemyCreateType.SimilarFriend:
                     Position = Pos[0] + new Vector2(Random.Range(-5f, 5f), -0.5f);
-                    Enemys.Add(CreateSimilarFriend(Position, Random.Range(0.75f, 1.25f)));
+                    Enemys.Add(CreateSimilarFriend(Position, Random.Range(0.9f, 1.1f)));
                     break;
                 case EnemyCreateType.BattleEnemy:
                     Position = Pos[1] + new Vector2(Random.Range(-5f, 5f), -0.5f);
@@ -600,7 +607,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Enemy;
         man.Experience = 0;
         man.Money = 40;
-        man.Power = Power;
+        man.Power = Power * 0.75f;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -635,12 +642,12 @@ public class Level : MonoBehaviour
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
         man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
-        man.Size = MainPlayer.Size * Random.Range(1, 1.25f);
+        man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
         man.name = "Knight Friend";
         man.Speed = MainPlayer.Speed * Power;
         man.Type = Man.ManType.Player;
         man.Experience = 0;
-        man.Power = Random.Range(1, 2);
+        man.Power = MainPlayer.Power * Power;
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -655,7 +662,7 @@ public class Level : MonoBehaviour
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
         man.SetParams(GameData.active.playerInfo, GameData.active.armorInfo);
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
-        man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
+        man.Size = MainPlayer.Size * Random.Range(0.9f, 1.1f);
         man.name = "Knight Friend";
         man.Speed = MainPlayer.Speed * Power;
         man.Type = Man.ManType.Player;
@@ -712,14 +719,14 @@ public class Level : MonoBehaviour
 
     public void CreateExperience(Man man, float ExpRatio)
     {
-        for (int i = 0; i < Mathf.RoundToInt(man.Experience * ExpRatio); i++)
+        for (int i = 0; i < Mathf.RoundToInt(man.Experience * ExpRatio * (GameData.ExpRatio + 1)); i++)
         {
             Experience.CreateExp(man.transform.position, 1);
         }
     }
     public void CreateExperience(int exp)
     {
-        for (int i = 0; i < exp; i++)
+        for (int i = 0; i < exp * (GameData.ExpRatio + 1); i++)
         {
             Vector2 Pos = MainPlayer.transform.position + new Vector3(Random.Range(-5, 5), Random.Range(0, 5), 0);
             Experience.CreateExp(Pos, 1);
@@ -776,11 +783,20 @@ public class Level : MonoBehaviour
         PrintText(text, 1.5f);
         GameData.Save();
 
-        PlaySound("LevelDone", 2f);
+        PlaySound("LevelDone", GameData.LevelDelay);
+        Vibration.WinVibrate(GameData.LevelDelay * 0.75f);
     }
     public void OnLevelFailed(LevelTypes type)
     {
-        GameData.active.IncreaseAttempt();
+        if(LevelFailedCoroutine != null)
+        {
+            StopCoroutine(LevelFailedCoroutine);
+            LevelFailedCoroutine = null;
+        }
+        LevelFailedCoroutine = StartCoroutine(OnLevelFailedCour(type));
+    }
+    private IEnumerator OnLevelFailedCour(LevelTypes type)
+    {
         string text = "Ребята не бейте, бабло под тахтой((";
         switch (type)
         {
@@ -793,12 +809,67 @@ public class Level : MonoBehaviour
             case LevelTypes.Nude:
                 break;
         }
-        PrintText(text, 1.5f);
+        PrintText(text, 3f);
         cameraMove.TurnFailedShow();
-        PlayMenu(4);
-        PlayMask(4);
+        if (!SaveLifeUsed)
+        {
+            yield return new WaitForSeconds(1f);
+            TurnSaveLife();
+        }
+        yield return new WaitForSeconds(3);
 
-        PlaySound("LevelFailed", 1f);
+        LevelFailed();
+
+        LevelFailedCoroutine = null;
+        yield break;
+    }
+    private void LevelFailed()
+    {
+        PlaySound("LevelFailed", 0f);
+        Vibration.LoseVibrate(0f);
+        GameData.active.IncreaseAttempt();
+        PlayMenu(2);
+        PlayMask(0);
+    }
+
+    public void TurnSaveLife()
+    {
+        anim.Play("SaveLife");
+    }
+    public void SaveLife()
+    {
+        anim.Play("SaveLifeClick");
+        if (LevelFailedCoroutine != null)
+        {
+            StopCoroutine(LevelFailedCoroutine);
+            LevelFailedCoroutine = null;
+        }
+        for(int i = 0; i < AliveEnemy.Count; i++)
+        {
+            AliveEnemy[i].StopFun();
+        }
+        cameraMove.TurnPlayerFollow();
+        MainPlayer.SetParams();
+        MainPlayer.Hp = Mathf.RoundToInt(MainPlayer.MaxHp / 2);
+        SetPlayerRandomOpenedWeapon();
+        if(NextLava(MainPlayer))
+        {
+            MainPlayer.transform.position = Vector3.zero;
+        }
+        MainPlayer.transform.position += new Vector3(0, 50, 0);
+
+        SaveLifeUsed = true;
+    }
+    public void SkipSaveLife()
+    {
+        anim.Play("SaveLifeSkip");
+        if (LevelFailedCoroutine != null)
+        {
+            StopCoroutine(LevelFailedCoroutine);
+            LevelFailedCoroutine = null;
+        }
+
+        LevelFailed();
     }
 
     public void OnEnemyDie(Man man, Man Enemy, Man.HitType type)
@@ -847,6 +918,11 @@ public class Level : MonoBehaviour
         {
             GameData.IncreaseManKilled(type);
         }
+
+        if(Enemy == MainPlayer)
+        {
+            Vibration.Vibrate(0.5f);
+        }
     }
     public void OnFriendDie(Man man, Man Enemy, Man.HitType type)
     {
@@ -860,11 +936,16 @@ public class Level : MonoBehaviour
         Debug.Log(man.name + " Defeated, cause of " + DieName);
         CurrantState.OnPlayerDie(man, Enemy, type);
         GameData.IncreaseDeath();
-
+        PlayerDeath = type;
     }
     public void OnObjectDestroyed(SceneObject Obj)
     {
 
+    }
+
+    private void OnGamePlayed()
+    {
+        SaveLifeUsed = false;
     }
 
     public void OnPlayerUpdateHp()
@@ -939,12 +1020,47 @@ public class Level : MonoBehaviour
                 StopCoroutine(HitInRowCoroutine);
             }
             HitInRowCoroutine = StartCoroutine(RemoveHitInRow());
+            Vibration.Vibrate(Type);
+        }
+    }
+    public void OnPlayerBlock(Man Enemy)
+    {
+        if (Enemy != null)
+        {
+            Vibration.Vibrate(0.35f);
         }
     }
     public void OnPlayerGetDamage(Man Enemy, Man.HitType type, Man.EffectType effect)
     {
         SetHitinRow(0);
+        float Power = 0.5f;
+        switch(type)
+        {
+            case Man.HitType.Fall:
+                Power = 0.25f;
+                break;
+            case Man.HitType.Hit:
+                Power = 0.3f;
+                break;
+            case Man.HitType.HitFire:
+                Power = 0.25f;
+                break;
+            case Man.HitType.Lava:
+                Power = 0.5f;
+                break;
+            case Man.HitType.Punch:
+                Power = 0.33f;
+                break;
+            case Man.HitType.Throw:
+                Power = 0.33f;
+                break;
+            case Man.HitType.Object:
+                Power = 0.5f;
+                break;
+        }
+        Vibration.Vibrate(Power);
     }
+
 
     public void OnSwipe(Vector2 Dir, Vector2 Pos)
     {
@@ -993,7 +1109,7 @@ public class Level : MonoBehaviour
         GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
         for (int i = 0; i < Bullets.Length; i++)
         {
-            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.tag != "Weapon")
+            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.root.tag != "Weapon")
             {
                 Destroy(Bullets[i]);
             }
@@ -1119,7 +1235,7 @@ public class Level : MonoBehaviour
         GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
         for (int i = 0; i < Bullets.Length; i++)
         {
-            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.tag != "Weapon")
+            if (Bullets[i].transform.parent == null || Bullets[i].transform.parent.root.tag != "Weapon")
             {
                 Destroy(Bullets[i]);
             }
@@ -1280,7 +1396,11 @@ public class Level : MonoBehaviour
         Weapon weapon = Instantiate(GameData.active.GetRandomWeapon());
         MainPlayer.TakeWeapon(weapon);
     }
-
+    public void SetPlayerRandomOpenedWeapon()
+    {
+        Weapon weapon = Instantiate(GameData.active.GetRandomOpened());
+        MainPlayer.TakeWeapon(weapon);
+    }
     #endregion
     #region GameInit
     //-------------------------------Game Init-----------------------------------
@@ -1291,6 +1411,7 @@ public class Level : MonoBehaviour
     }
     private void LateInit()
     {
+        LoadLanguage();
         SetPlayerWeapon();
         UpdatePlayerStatsUI();
         anim.Play("StartFade");
@@ -1298,8 +1419,44 @@ public class Level : MonoBehaviour
         SwipeManager.OnSwipeEvent += OnSwipe;
         PlayMusic();
         StartCoroutine(MusicCheckCour());
+        StartCoroutine(PresentTimeCour());
+        UpdateLanguage();
+        Loaded = true;
     }
+    private IEnumerator PresentTimeCour()
+    {
+        Ui_Menu_Present.SetActive(true);
+        while (true)
+        {
+            float time = GameData.GetTimeToPresent();
+            if(time > 3600)
+            {
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 3600).ToString() + " Hours";
+            }
+            else if(time > 60)
+            {
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 60).ToString() + " Minutes";
+            }
+            else if(time > 0)
+            {
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time).ToString() + " Seconds";
+            }
+            else if(Ui_Menu_Present.activeSelf)
+            {
+                Ui_Menu_Present.SetActive(false);
+            }
 
+            yield return new WaitForSeconds(1f);
+        }
+    }
+    public void LoadLanguage()
+    {
+        //Language.active.LoadLanguage(GameData.Language);
+    }
+    public void UpdateLanguage()
+    {
+
+    }
     #endregion
     #region Anumition
     //-------------------------------Anumition States-----------------------------
@@ -1310,6 +1467,10 @@ public class Level : MonoBehaviour
             StopCoroutine(GoAmunitionCoroutine);
         }
         GoAmunitionCoroutine = StartCoroutine(GoAmunitionCour());
+        SetAmunition();
+
+
+        OnButtonClick();
     }
     private IEnumerator GoAmunitionCour()
     {
@@ -1325,7 +1486,6 @@ public class Level : MonoBehaviour
             if(!Ui_Amunition.activeSelf && (transform.position - CameraMenuPos.position).magnitude < 5f)
             {
                 Ui_Amunition.SetActive(true);
-                SetAmunition();
             }
             yield return new WaitForFixedUpdate();
         }
@@ -1336,15 +1496,17 @@ public class Level : MonoBehaviour
     }
     private void SetAmunition()
     {
+        Ui_Amunition.SetActive(true);
         for (int i = 1; i < Ui_Anum_ScrollWeapon.transform.childCount; i++)
         {
+
             Destroy(Ui_Anum_ScrollWeapon.transform.GetChild(i).gameObject);
         }
         WeaponInfo[] info = GameData.active.GetWeaponSortedByLevel();
         Ui_Anum_WeaponIcons = new WeaponIcon[info.Length];
         for (int i = 0; i < Ui_Anum_WeaponIcons.Length; i++)
         {
-            Ui_Anum_WeaponIcons[i] = Instantiate(GameData.active.IconPrefab, Ui_Amun_Weapon.transform);
+            Ui_Anum_WeaponIcons[i] = Instantiate(GameData.active.IconPrefab, Ui_Anum_ScrollWeapon.transform);
             Ui_Anum_WeaponIcons[i].SetIcon(info[i], i);
         }
 
@@ -1355,7 +1517,7 @@ public class Level : MonoBehaviour
         }
 
         Ui_Anum_WeaponIcons[GameData.NowWeaponPlace].SetSelected(true);
-        Ui_Amun_Weapon.anchoredPosition = new Vector2(Ui_Anum_WeaponIcons.Length * 120, 0);
+        Ui_Anum_ScrollWeapon.anchoredPosition = new Vector2(Ui_Anum_WeaponIcons.Length * 120, 0);
         SetPlayerWeapon(info[GameData.NowWeaponPlace].weapon);
 
 
@@ -1403,6 +1565,7 @@ public class Level : MonoBehaviour
             Ui_Anum_PowerCost.text = "Nice";
 
         }
+        Ui_Amunition.SetActive(false);
     }
 
     public void BackAmunition()
@@ -1413,6 +1576,8 @@ public class Level : MonoBehaviour
         }
         GoAmunitionCoroutine = StartCoroutine(BackAmunitionCour());
         GameData.Save();
+
+        OnButtonClick();
     }
     private IEnumerator BackAmunitionCour()
     {
@@ -1436,6 +1601,12 @@ public class Level : MonoBehaviour
                 GameData.active.playerInfo.HpNum++;
                 Ui_Anum_HpLevel.text = "Level " + GameData.active.playerInfo.HpNum.ToString();
                 Ui_Anum_HpCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.HpNum).ToString();
+                PlaySound("Buy");
+                Vibration.Vibrate(0.25f);
+            }
+            else
+            {
+                PlaySound("CantBuy");
             }
         }
         else
@@ -1456,8 +1627,13 @@ public class Level : MonoBehaviour
                 GameData.active.playerInfo.SpeedNum++;
                 Ui_Anum_SpeedLevel.text = "Level " + GameData.active.playerInfo.SpeedNum.ToString();
                 Ui_Anum_SpeedCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.SpeedNum).ToString();
+                PlaySound("Buy");
+                Vibration.Vibrate(0.25f);
             }
-
+            else
+            {
+                PlaySound("CantBuy");
+            }
         }
         else
         {
@@ -1478,6 +1654,12 @@ public class Level : MonoBehaviour
                 GameData.active.playerInfo.PowerNum++;
                 Ui_Anum_PowerLevel.text = "Level " + GameData.active.playerInfo.PowerNum.ToString();
                 Ui_Anum_PowerCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.PowerNum).ToString();
+                PlaySound("Buy");
+                Vibration.Vibrate(0.25f);
+            }
+            else
+            {
+                PlaySound("CantBuy");
             }
         }
         else
@@ -1487,9 +1669,6 @@ public class Level : MonoBehaviour
         }
 
         Ui_Anum_PowerBar.FillArea(GameData.active.PowerProcent(), GameData.active.PowerSecondProcent());
-        MainPlayer.SetSize(GameData.active.playerInfo.Size);
-        cameraMove.Cam.orthographicSize = 6 * GameData.active.playerInfo.Size;
-        transform.position = CameraMenuPos.position + new Vector3(0, (GameData.active.playerInfo.Size - 1) * 1.5f, 0);
     }
     public void UpdateSize(bool update)
     {
@@ -1539,6 +1718,7 @@ public class Level : MonoBehaviour
             StopCoroutine(NoLevelCoroutine);
             NoLevelCoroutine = null;
         }
+        OnButtonClick();
     }
     public void SetArmor()
     {
@@ -1591,6 +1771,9 @@ public class Level : MonoBehaviour
                 GameData.active.armor[NowArmor].Opened = true;
                 UpdateMoney(-GameData.active.armor[NowArmor].Cost);
                 SetArmor();
+
+                PlaySound("Buy");
+                Vibration.Vibrate(0.25f);
             }
             else
             {
@@ -1612,6 +1795,7 @@ public class Level : MonoBehaviour
     private IEnumerator NoLevelForArmor()
     {
         Ui_Anum_ArmorName.text = "Not enough level";
+        PlaySound("CantBuy");
         yield return new WaitForSeconds(1f);
         Ui_Anum_ArmorName.text = "Buy " + GameData.active.armor[NowArmor].Name;
         NoLevelCoroutine = null;
@@ -1620,6 +1804,7 @@ public class Level : MonoBehaviour
     private IEnumerator NoMoneyForArmor()
     {
         Ui_Anum_ArmorName.text = "No enough money";
+        PlaySound("CantBuy");
         yield return new WaitForSeconds(1f);
         Ui_Anum_ArmorName.text = "Buy " + GameData.active.armor[NowArmor].Name;
         NoMoneyCoroutine = null;
@@ -1658,10 +1843,13 @@ public class Level : MonoBehaviour
         {
             GameData.active.OpenWeapon(icon.Index);
             Ui_Anum_WeaponIcons[icon.Place].OnBought();
+            PlaySound("Buy");
+            Vibration.Vibrate(0.25f);
         }
         else
         {
             Ui_Anum_WeaponIcons[icon.Place].OnCantBuy();
+            PlaySound("CantBuy");
         }
         
     }
@@ -1687,6 +1875,9 @@ public class Level : MonoBehaviour
 
         CurrantState.Action();
         TurnBetUi(false);
+
+        PlaySound("Play");
+        Vibration.Vibrate(0.25f);
     }
     public void SetBetMoney()
     {
@@ -1740,11 +1931,15 @@ public class Level : MonoBehaviour
         UpdateMoney(BetMoney * 2);
         Ui_BetsWin.SetActive(true);
         Ui_BetsWin_Money.text = "+ " + (BetMoney * 2).ToString() + " coint";
+        PlaySound("OnBetWin");
+        Vibration.WinVibrate(0);
     }
     public void OnBetLose()
     {
         Ui_BetsLose.SetActive(true);
         Ui_BetsLose_Money.text = "- " + (BetMoney).ToString() + " coint";
+        PlaySound("OnBetLose");
+        Vibration.LoseVibrate(0);
     }
     public void CloseBetResult()
     {
@@ -1771,6 +1966,10 @@ public class Level : MonoBehaviour
     {
         GameData.PrevPlayerLevel = GameData.PlayerLevel;
         StartCoroutine(PlayWavesCour());
+
+        PlaySound("Play");
+        Vibration.Vibrate(0.25f);
+        OnGamePlayed();
     }
     private IEnumerator PlayWavesCour()
     {
@@ -1855,6 +2054,9 @@ public class Level : MonoBehaviour
             Ui_Knights.SetActive(false);
             Ui_Game.SetActive(true);
             CurrantState.Action();
+            PlaySound("Play");
+            Vibration.Vibrate(0.25f);
+            OnGamePlayed();
         }
         else if(GameData.active.GameType[NowGameType].Premium)
         {
@@ -1897,6 +2099,11 @@ public class Level : MonoBehaviour
         {
             PlayLearn();
         }
+
+        PlaySound("Play");
+        Vibration.Vibrate(0.25f);
+
+        OnGamePlayed();
     }
     public void PlayFree()
     {
@@ -1964,6 +2171,10 @@ public class Level : MonoBehaviour
         Ui_LevelUp.SetActive(false);
     }
 
+    public void OnButtonClick()
+    {
+        PlaySound("Click");
+    }
 
     public void PlayFastFade()
     {
@@ -2117,6 +2328,7 @@ public class Level : MonoBehaviour
         }
 
         SetGameType();
+        OnButtonClick();
     }
     private void SetGameType()
     {
@@ -2200,16 +2412,19 @@ public class Level : MonoBehaviour
 
         Ui_Pause_Music.value = GameData.MusicVol; 
         Ui_Pause_Volume.value = GameData.EffectVol;
+        OnButtonClick();
     }
     public void Resume()
     {
         OnPause = true;
         Time.timeScale = 1;
         Ui_Pause.SetActive(false);
+        OnButtonClick();
     }
     public void Restart()
     {
         StartCoroutine(RestartCour(0));
+        OnButtonClick();
     }
     public void GoMainMenu()
     {
@@ -2261,7 +2476,7 @@ public class Level : MonoBehaviour
         musicSource.volume = GameData.MusicVol * 0.5f;
     }
     #endregion
-    #region PremiumStore
+    #region PremiumStoreAndPresent
     public void StoreOn()
     {
         Ui_Store.SetActive(true);
@@ -2329,6 +2544,7 @@ public class Level : MonoBehaviour
             NowArmor = GameData.active.tempArmorInfo.Index;
             SetArmor();
         }
+        GameData.ExpRatio = 1;
 
         GameData.Save();
     }
@@ -2357,6 +2573,27 @@ public class Level : MonoBehaviour
             Ui_Anum_ArmorName.text = GameData.active.tempArmorInfo.Name;
             MainPlayer.SetParams(GameData.active.playerInfo, GameData.active.tempArmorInfo);
         }
+    }
+
+    public void TakePresent()
+    {
+        if (GameData.GetTimeToPresent() <= 0)
+        {
+            StartCoroutine(OnPresentTakenCour());
+        }
+    }
+    private IEnumerator OnPresentTakenCour()
+    {
+        GameData.SetPresentTime(2f);
+        Ui_Menu_Present.SetActive(true);
+        int Money = Random.Range(GameData.active.MonetForPresent - 100, GameData.active.MonetForPresent + 100);
+        UpdateMoney(Money);
+        Ui_Menu_Timer.text = Money.ToString();
+
+        PlaySound("TakeCoin");
+        anim.SetTrigger("Present");
+        Ui_Menu_PresentMoneyText.text = Money.ToString();
+        yield break;
     }
     #endregion
     #region Learning
@@ -2402,6 +2639,18 @@ public class Level : MonoBehaviour
         yield break;
     }
     #endregion
+
+    private void OnApplicationPause(bool pause)
+    {
+        if(pause && Loaded)
+        {
+            Pause();
+        }
+    }
+    private void OnApplicationQuit()
+    {
+        GameData.Save();
+    }
 
     public void Awake()
     {

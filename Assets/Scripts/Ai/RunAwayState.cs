@@ -9,7 +9,7 @@ public class RunAwayState : State
     {
         Man Enemy = aiController.Enemy;
         Man Me = aiController.ThisPlayer;
-        if (Me.DistX(Enemy) < 25)
+        if (Me.DistX(Enemy) < 30)
         {
             aiController.Movement(-Me.Direction(Enemy.transform));
         }

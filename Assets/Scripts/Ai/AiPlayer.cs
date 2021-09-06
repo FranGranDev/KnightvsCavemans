@@ -205,7 +205,7 @@ public class AiPlayer : Man
         anim.SetBool("Dead", true);
         Dead = true;
         ThrowOutWeapon();
-
+        gameObject.layer = 7;
         if (Type != ManType.Player)
         {
             Level.active.OnEnemyDie(this, Enemy, type);

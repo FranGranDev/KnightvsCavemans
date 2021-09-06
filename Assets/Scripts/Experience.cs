@@ -15,7 +15,7 @@ public class Experience : MonoBehaviour
     private bool Taken;
     private bool FlyTo()
     {
-        return (transform.position - Player.active.Body.position).magnitude < 10;
+        return (transform.position - Player.active.Body.position).magnitude < 25;
     }
     public Rigidbody2D Rig;
 

@@ -8,7 +8,7 @@ public class ColdWeapon : Weapon
     {
         if (!CanAttack(man))
             return;
-        if (Mathf.Abs(Rotation) >= 1f)
+        if (Mathf.Abs(Rotation) >= 0.75f)
         {
             if (Vector2.Dot(man.BodyDirection(Owner), man.WeaponDir()) > 0.75f && Power == 1)
             {

@@ -157,6 +157,7 @@ MonoBehaviour:
     MaxJump: 20
     JumpAdd: 0.25
     StandartJump: 16
+  MonetForPresent: 500
   Enemy:
   - Name: Cave Man
     Index: 0
@@ -853,9 +854,7 @@ MonoBehaviour:
   - Name: Click
     Clip:
     - {fileID: 8300000, guid: 6c550ecf1bf75c544be6ca3ef608b6e8, type: 3}
-    - {fileID: 8300000, guid: 28eca4d3a25f3b4479e6b4d351474ce0, type: 3}
-    - {fileID: 8300000, guid: 720cb34f6a3e3d34a830adf80a1c1018, type: 3}
-    Volume: 1
+    Volume: 0.5
   - Name: CantBuy
     Clip:
     - {fileID: 8300000, guid: 9f74b24b7cf2fbc4d8b8d8efac19291a, type: 3}
@@ -888,15 +887,11 @@ MonoBehaviour:
   - Name: LevelDone
     Clip:
     - {fileID: 8300000, guid: 67444d84639ccc24f918d57f3f461643, type: 3}
-    - {fileID: 8300000, guid: 5dfda78aa4e78084e82f46815ef5b47c, type: 3}
-    - {fileID: 8300000, guid: 197a86bcba6060d45bcc26f977d55d7a, type: 3}
-    Volume: 1
+    Volume: 0.35
   - Name: LevelFailed
     Clip:
     - {fileID: 8300000, guid: 0a8b8113e16847c43a48086a04b90a71, type: 3}
-    - {fileID: 8300000, guid: 19f1f83c1d5cc574fa30cbbdcd47ed3c, type: 3}
-    - {fileID: 8300000, guid: c12f1b3c79eff3249bc091c692b22261, type: 3}
-    Volume: 1
+    Volume: 0.35
   - Name: LevelUp
     Clip:
     - {fileID: 8300000, guid: f7630ec92ce0cfe4492fe4b9ffc9a563, type: 3}
@@ -942,6 +937,22 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 1dac8b241b7fd034a8b49a79cbc0955a, type: 3}
     - {fileID: 8300000, guid: 0aa94c2dc1ff18145866b886cf85e2a3, type: 3}
     - {fileID: 8300000, guid: 5363a832304fcae4783398f65d5fa00c, type: 3}
+    Volume: 1
+  - Name: Play
+    Clip:
+    - {fileID: 8300000, guid: e1ef0aa91f3fc0e45b28132562e1832c, type: 3}
+    Volume: 0.5
+  - Name: OnBetWin
+    Clip:
+    - {fileID: 8300000, guid: 1e208e17e644e764f8c31706cedf6850, type: 3}
+    Volume: 1
+  - Name: OnBetLose
+    Clip:
+    - {fileID: 8300000, guid: 70358319a8182464594f4d4b46d28e02, type: 3}
+    Volume: 1
+  - Name: Buy
+    Clip:
+    - {fileID: 8300000, guid: 87a8d442f77d45d4da62f592115696fe, type: 3}
     Volume: 1
   musicInfo:
   - Name: 0

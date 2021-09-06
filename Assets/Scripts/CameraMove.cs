@@ -219,7 +219,7 @@ public class CameraMove : MonoBehaviour
     {
         Man Enemy = man;
         ShowType = ShowTypes.Punch;
-        int time = Mathf.RoundToInt(1.5f * Power / Time.deltaTime);
+        int time = Mathf.RoundToInt(1f * Power / Time.deltaTime);
         for (int i = 0; i < time && ShowType == ShowTypes.Punch; i++)
         {
             if (Enemy == null)

@@ -66,7 +66,11 @@ public class Player : Man
     public override void Movement(Vector2 Dir)
     {
         if (Dead)
+        {
+            Rig.velocity = Vector2.Lerp(Rig.velocity, Physics2D.gravity, 0.05f * (OnGround ? 1 : 0.2f) * GroundAcceleration());
             return;
+        }
+            
         /*
             if (Velocity > 0.75f && OnGround && Vector2.Dot(Rig.velocity.normalized, Dir) < -0.9f)
             {
@@ -133,6 +137,8 @@ public class Player : Man
     } //No more use
     public override void JumpDir(Vector2 Dir)
     {
+        if (Dead)
+            return;
         if (OnGround && !Jumped)
         {
             float TackleRatio = OnTackle ? 1.5f : 1;
@@ -168,6 +174,8 @@ public class Player : Man
     } //No more use
     public override void TackleDir(Vector2 Dir)
     {
+        if (Dead)
+            return;
         if (TackleCoroutine == null && OnGround)
         {
             TackleCoroutine = StartCoroutine(TackleDirCour(Dir));
@@ -230,7 +238,9 @@ public class Player : Man
     } //No more use
     public override void ThrowForce(Vector2 Dir)
     {
-        if(!Throwing)
+        if (Dead)
+            return;
+        if (!Throwing)
         {
             StartCoroutine(ThrowForceCour(Dir));
         }
@@ -263,6 +273,10 @@ public class Player : Man
         }
 
         Level.active.OnPlayerAttack(Enemy, Type);
+    }
+    public override void OnBlock(Man Enemy, float Power)
+    {
+        Level.active.OnPlayerBlock(Enemy);
     }
 
     public override void Punch(Man Enemy)
