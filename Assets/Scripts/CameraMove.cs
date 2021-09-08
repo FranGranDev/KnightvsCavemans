@@ -46,8 +46,13 @@ public class CameraMove : MonoBehaviour
     }
     private void BossFollow()
     {
+        if(ManTarget == null)
+        {
+            TurnPlayerFollow();
+            return;
+        }
         Main = Level.active.MainPlayer;
-        if(Main.DistX(Target[0]) > 30)
+        if(Main.DistX(ManTarget.Body.transform) > 30)
         {
             float GunWeapon = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? 5 : 0;
             Vector3 GunDir = Main.weapon != null && Main.weapon.WeaponType == Weapon.Type.Gun ? Main.Arm.up * 5 : Vector3.zero;
@@ -56,9 +61,9 @@ public class CameraMove : MonoBehaviour
         }
         else
         {
-            Vector3 Position = (Main.transform.position + Target[0].position) / 2;
+            Vector3 Position = (Main.transform.position + ManTarget.Body.transform.position) / 2;
             transform.position = Vector3.Lerp(transform.position, Position + Offset, CurrantSpeed);
-            Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Dist(Target[0]) * 0.55f, CurrantSpeed);
+            Cam.orthographicSize = Mathf.Lerp(Cam.orthographicSize, Size + Main.Dist(ManTarget.Body.transform) * 0.55f, CurrantSpeed);
         }
     }
     private void AiFollow()
@@ -192,7 +197,7 @@ public class CameraMove : MonoBehaviour
         {
             PrevShowType = ShowTypes.Boss;
             ShowType = ShowTypes.Boss;
-            Target = new Transform[1] { man.transform };
+            ManTarget = man;
         }
         else
         {

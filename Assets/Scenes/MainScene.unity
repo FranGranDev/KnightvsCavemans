@@ -34712,7 +34712,7 @@ MonoBehaviour:
   - {fileID: 0}
   ManTarget: {fileID: 0}
   Offset: {x: 0, y: 3, z: -10}
-  Size: 12
+  Size: 11
   Speed: 0.1
   Cam: {fileID: 519420031}
 --- !u!224 &1981491506252346006

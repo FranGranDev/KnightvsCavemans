@@ -39,7 +39,7 @@ public class Vibration : MonoBehaviour
     {
         if (GameData.Vibration)
         {
-            float Power = 0f;
+            float Power = 0.1f;
             switch(type)
             {
                 case Man.HitType.Hit:

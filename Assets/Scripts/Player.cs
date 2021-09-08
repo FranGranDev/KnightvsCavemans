@@ -9,7 +9,6 @@ public class Player : Man
     private Coroutine TackleCoroutine;
     private Man PrevHit;
     private int HitinRow;
-    private bool Throwing;
 
     public override void OnStart()
     {
@@ -108,7 +107,7 @@ public class Player : Man
 
     public override void MoveArm(Vector2 Dir)
     {
-        if (Dead || Throwing)
+        if (Dead)
             return;
         if (Dir != Vector2.zero)
         {
@@ -235,19 +234,15 @@ public class Player : Man
         StartCoroutine(TakeDelay());
         PlaySound("Throw");
         Level.active.OnPlayerThrow();
-    } //No more use
+    }
     public override void ThrowForce(Vector2 Dir)
     {
         if (Dead)
             return;
-        if (!Throwing)
-        {
-            StartCoroutine(ThrowForceCour(Dir));
-        }
+        StartCoroutine(ThrowForceCour(Dir));
     }
     private IEnumerator ThrowForceCour(Vector2 Dir)
     {
-        Throwing = true;
         while(Vector2.Dot(Arm.transform.up, Dir) < 0.99f)
         {
             Arm.transform.up = Vector2.Lerp(Arm.transform.up, Dir, 0.35f / Mathf.Sqrt(Size * WeaponWeight()));
@@ -257,7 +252,6 @@ public class Player : Man
             PrevDir = Dir;
         }
         Throw();
-        Throwing = false;
         yield break;
     }
 
@@ -412,6 +406,11 @@ public class Player : Man
     {
         if (!weapon.InHand && !weapon.Fly && !weapon.InObject && !Dead)
         {
+            if(Arm.transform.childCount > 0)
+            {
+                Destroy(Arm.transform.GetChild(0).gameObject);
+            }
+
             StartCoroutine(TakeAnim(weapon));
             this.weapon = weapon;
             weapon.Take(this, Arm);

@@ -258,6 +258,16 @@ public class GameData : MonoBehaviour
     public string[] DamagePhase;
     [Header("Armor")]
     public ArmorInfo[] armor;
+    public ArmorInfo GetManArmor()
+    {
+        return new ArmorInfo(ManHead[Random.Range(0, ManHead.Length)], ManBody[Random.Range(0, ManBody.Length)], ManLLeg0, ManLLeg1, ManRLeg0, ManRLeg1);
+    }
+    public Sprite[] ManHead;
+    public Sprite[] ManBody;
+    public Sprite ManLLeg0;
+    public Sprite ManLLeg1;
+    public Sprite ManRLeg0;
+    public Sprite ManRLeg1;
     [Header("Weapon")]
     public WeaponIcon IconPrefab;
     public WeaponInfo[] weapon;
@@ -671,6 +681,37 @@ public struct ArmorInfo
     public float Size;
     public float Speed;
     public float Jump;
+
+    public ArmorInfo(Sprite Head, Sprite Body, Sprite LeftLeg0, Sprite LeftLeg1, Sprite RightLeg0, Sprite RightLeg1)
+    {
+        Index = -1;
+        Effect = EffectType.Null;
+        Rare = WeaponInfo.RareType.Common;
+        RequiredLevel = 0;
+        Cost = 0;
+        Opened = false;
+        Premium = false;
+
+        this.Name = "Custom";
+        this.Body = Body;
+        BodyLayer = 5;
+        this.Head = Head;
+        HeadLayer = 7;
+        this.LeftLeg0 = LeftLeg0;
+        LeftLeg0Layer = 2;
+        this.LeftLeg1 = LeftLeg1;
+        LeftLeg1Layer = 3;
+        this.RightLeg0 = RightLeg0;
+        RightLeg0Layer = 2;
+        this.RightLeg1 = RightLeg1;
+        RightLeg1Layer = 3;
+
+        Hp = 0;
+        Power = 0;
+        Size = 0;
+        Speed = 0;
+        Jump = 0;
+    }
 }
 [System.Serializable]
 public struct EffectInfo

@@ -416,6 +416,24 @@ MonoBehaviour:
     Size: 0.25
     Speed: 0.1
     Jump: 0.1
+  ManHead:
+  - {fileID: 8564135006589570886, guid: cac540d680d353f4ebdccfdab16f67e9, type: 3}
+  - {fileID: 8564135006589570886, guid: bc1e889987f494044a7a51690a48aedf, type: 3}
+  - {fileID: 8564135006589570886, guid: c6f54fe9c18fa4e45a9d0622fc32d453, type: 3}
+  - {fileID: 8564135006589570886, guid: 150c8b7d49d3b8642827a55aa840369e, type: 3}
+  ManBody:
+  - {fileID: -2526433180072650691, guid: cac540d680d353f4ebdccfdab16f67e9, type: 3}
+  - {fileID: -3285769357714021182, guid: bc1e889987f494044a7a51690a48aedf, type: 3}
+  - {fileID: -2526433180072650691, guid: c6f54fe9c18fa4e45a9d0622fc32d453, type: 3}
+  - {fileID: -2526433180072650691, guid: 150c8b7d49d3b8642827a55aa840369e, type: 3}
+  ManLLeg0: {fileID: -6268465262011475934, guid: cac540d680d353f4ebdccfdab16f67e9,
+    type: 3}
+  ManLLeg1: {fileID: 4359476018706873191, guid: cac540d680d353f4ebdccfdab16f67e9,
+    type: 3}
+  ManRLeg0: {fileID: -2055306720637963330, guid: cac540d680d353f4ebdccfdab16f67e9,
+    type: 3}
+  ManRLeg1: {fileID: -7342234524740755294, guid: cac540d680d353f4ebdccfdab16f67e9,
+    type: 3}
   IconPrefab: {fileID: 3807928924805129908, guid: 762e636c2e6b5ca43a0858981aa1a311,
     type: 3}
   weapon:

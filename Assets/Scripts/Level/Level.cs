@@ -514,6 +514,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Bets;
         man.Experience = 0;
         man.ForceFlip(index == 0);
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -530,6 +531,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Enemy;
         man.Experience = 1;
         man.Power = 1;
+        man.SetParams(GameData.active.GetManArmor());
         return man;
     }
     public Man CreateNoBrainEnemy(Vector2 Position)
@@ -538,6 +540,7 @@ public class Level : MonoBehaviour
         man.Static = true;
         man.Type = Man.ManType.Player;
         man.Power = 1;
+        man.SetParams(GameData.active.GetManArmor());
         return man;
     }
     public Man CreateSpecialEnemy(Vector2 Position, ManInfo info)
@@ -550,6 +553,7 @@ public class Level : MonoBehaviour
         man.Type = info.Type;
         man.Experience = info.Exp;
         man.Power = 1;
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = info.ViewLength;
         if(info.weapon != null)
@@ -568,7 +572,7 @@ public class Level : MonoBehaviour
         man.Power = Power;
         man.Type = Man.ManType.Enemy;
         man.Experience = 1;
-
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 15f * Power;
         Weapon weapon = Random.Range(0, 3) != 0 ? GameData.active.GetRandomWeapon() : null;
@@ -588,6 +592,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Duel;
         man.Experience = 3;
         man.Power = Power;
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -608,6 +613,7 @@ public class Level : MonoBehaviour
         man.Experience = 0;
         man.Money = 40;
         man.Power = Power * 0.75f;
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -628,6 +634,7 @@ public class Level : MonoBehaviour
         man.Experience = Mathf.RoundToInt(25 * Power);
         man.Power = Power;
         man.Money = Mathf.RoundToInt(Mathf.Sqrt(GameData.NowLevel + 1) * 50);
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 50f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -640,7 +647,6 @@ public class Level : MonoBehaviour
     public Man CreateFriend(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
-        man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
         man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
         man.name = "Knight Friend";
@@ -648,6 +654,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Player;
         man.Experience = 0;
         man.Power = MainPlayer.Power * Power;
+        man.SetParams(GameData.active.playerInfo, GameData.active.GetRandomArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -660,7 +667,7 @@ public class Level : MonoBehaviour
     public Man CreateSimilarFriend(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
-        man.SetParams(GameData.active.playerInfo, GameData.active.armorInfo);
+
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
         man.Size = MainPlayer.Size * Random.Range(0.9f, 1.1f);
         man.name = "Knight Friend";
@@ -668,6 +675,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Player;
         man.Experience = 0;
         man.Power = MainPlayer.Power * Power;
+        man.SetParams(GameData.active.playerInfo, GameData.active.armorInfo);
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -687,6 +695,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.Enemy;
         man.Experience = 3;
         man.Power = Random.Range(1, 2);
+        man.SetParams(GameData.active.GetManArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -699,7 +708,6 @@ public class Level : MonoBehaviour
     public Man CreateKnightEnemy(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Friend[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
-        man.SetParams(GameData.active.playerInfo, GameData.active.GetEnemyArmor());
         man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power);
         man.Size = MainPlayer.Size * Random.Range(0.9f, 1.25f);
         man.name = "Knight Enemy";
@@ -707,6 +715,7 @@ public class Level : MonoBehaviour
         man.Type = Man.ManType.KnightEnemy;
         man.Experience = 3;
         man.Power = MainPlayer.Power * Power;
+        man.SetParams(GameData.active.playerInfo, GameData.active.GetEnemyArmor());
         AiController controller = man.GetComponent<AiController>();
         controller.ViewLenght = 25f * Power;
         Weapon weapon = GameData.active.GetRandomWeapon();
@@ -775,6 +784,12 @@ public class Level : MonoBehaviour
         }
         CreateExperience(exp);
 
+        anim.Play("SaveLifeIdle");
+        if (LevelFailedCoroutine != null)
+        {
+            StopCoroutine(LevelFailedCoroutine);
+            LevelFailedCoroutine = null;
+        }
 
         GameData.active.DecreaseAttempt();
         cameraMove.TurnAiFollow(LastOfMan, true);
@@ -1861,8 +1876,9 @@ public class Level : MonoBehaviour
             MainPlayer.weapon = null;
         }
         Weapon thisWeapon = Instantiate(weapon);
-        thisWeapon.transform.up = new Vector2(Random.Range(-1f, 1f), Random.Range(0.1f, 1f)).normalized;
         MainPlayer.TakeWeapon(thisWeapon);
+        Vector2 Dir = new Vector2(Random.Range(-1f, 1f), Random.Range(0.1f, 1f)).normalized;
+        MainPlayer.MoveArmForce(Dir);
     }
 
     #endregion
@@ -2043,8 +2059,8 @@ public class Level : MonoBehaviour
     #region KnightBattle
     public void SetKnightsWavesUi()
     {
-        Ui_Knights_Now.text = "Now Stage: " + (GameData.NowWave + 1).ToString();
-        Ui_Knights_Max.text = "Max Stage: " + (GameData.MaxWave + 1).ToString();
+        Ui_Knights_Now.text = "Now Stage: " + (GameData.NowStage + 1).ToString();
+        Ui_Knights_Max.text = "Max Stage: " + (GameData.MaxStage + 1).ToString();
     }
     public void PlayKnightsWaves()
     {
@@ -2547,6 +2563,9 @@ public class Level : MonoBehaviour
         GameData.ExpRatio = 1;
 
         GameData.Save();
+
+        Vibration.WinVibrate(0);
+        PlaySound("Buy");
     }
     private IEnumerator OnBoughtCour()
     {

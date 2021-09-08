@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Type: 9
   level: {fileID: 0}
-  MaxBattleEnemy: 3
+  MaxBattleEnemy: 4

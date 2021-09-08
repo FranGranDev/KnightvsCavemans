@@ -99,22 +99,33 @@ public class ColdWeapon : Weapon
     }
     public override void ThrowAttack(Man man)
     {
-        if (man == null || NoAttack)
+        if (man == null || NoAttack || Owner == null)
             return;
-        //DelayAttack(0.25f);
-        man.GetHit(Mathf.RoundToInt(Damage * Weight + Owner.Power) + 1, Owner, Man.HitType.Throw, NowEffect);
-        Owner.OnAttack(man, 0.76f, Man.HitType.Throw);
-        Vector2 Dir = (Rig.velocity.normalized + Vector2.up * 0.5f).normalized;
-        man.Rig.velocity *= 0.25f;
-        man.GetImpulse(Rig.velocity.magnitude * Owner.Power * Dir * Weight * Owner.Size * 0.5f);
+        if (Vector2.Dot(Rig.velocity.normalized, man.WeaponDir()) < -0.75f)
+        {
+            NoAttack = true;
+            Vector2 ImpulseDir = (transform.position - man.Body.transform.position).normalized;
+            Rig.centerOfMass = new Vector2(0, 0);
+            Rig.angularVelocity = Random.Range(-720, 720) / Mathf.Sqrt(Weight);
+            Rig.velocity = new Vector2(Random.Range(-1, 1), 1) * Random.Range(0.5f, 1f) * 15f / Mathf.Sqrt(Weight);
 
-        NoAttack = true;
-        Vector2 ImpulseDir = (transform.position - man.Body.transform.position).normalized;
-        Rig.centerOfMass = new Vector2(0, 0);
-        Rig.angularVelocity = Random.Range(-720, 720) / Mathf.Sqrt(Weight);
-        Rig.velocity = Dir * Random.Range(0.5f, 1f) * 10f / Mathf.Sqrt(Weight);
+            CreateSparks(man);
+            Owner.PlaySound("Block");
+        }
+        else
+        {
+            DelayAttack(man, 0.5f);
+            man.GetHit(Mathf.RoundToInt(Damage * Weight + Owner.Power) + 1, Owner, Man.HitType.Throw, NowEffect);
+            Vector2 Dir = (Rig.velocity.normalized + Vector2.up).normalized;
+            man.GetImpulse(Dir * Rig.velocity.magnitude * Weight * Owner.Size * 0.5f);
 
-        CreateHitEffect(man);
+            NoAttack = true;
+            Rig.centerOfMass = new Vector2(0, 0);
+            Rig.angularVelocity = Random.Range(-720, 720) / Mathf.Sqrt(Weight);
+            Rig.velocity = new Vector2(Random.Range(-1, 1), -1) * Random.Range(0.5f, 1f) * 10f / Mathf.Sqrt(Weight);
+
+            Owner.OnAttack(man, 0.76f, Man.HitType.Throw);
+        }
     }
     public override void Throw(Vector2 Dir)
     {

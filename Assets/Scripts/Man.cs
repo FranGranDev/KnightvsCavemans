@@ -171,11 +171,13 @@ public abstract class Man : MonoBehaviour
 
         Dead = false;
         anim.SetBool("Dead", false);
+        gameObject.layer = 8;
         Hp = MaxHp;
-        Power = 1;
         transform.localScale = Vector3.one * Size;
         Rig.mass *= Size * Size;
         BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
+        PassedMan = new List<Collider2D>();
+        BodyY = 0;
 
         BodySprite.sprite = armorInfo.Body;
         BodySprite.sortingOrder = armorInfo.BodyLayer;
@@ -234,6 +236,79 @@ public abstract class Man : MonoBehaviour
         StartSize = Size;
         StartSpeed = Speed;
     }
+    public virtual void SetParams(ArmorInfo armorInfo)
+    {
+        OnStart();
+
+        Dead = false;
+        anim.SetBool("Dead", false);
+        gameObject.layer = 8;
+        Hp = MaxHp;
+        transform.localScale = Vector3.one * Size;
+        Rig.mass *= Size * Size;
+        BuffCoroutine = new Dictionary<Buff.Type, Coroutine>();
+        PassedMan = new List<Collider2D>();
+        BodyY = 0;
+
+        BodySprite.sprite = armorInfo.Body;
+        BodySprite.sortingOrder = armorInfo.BodyLayer;
+        HeadSprite.sprite = armorInfo.Head;
+        HeadSprite.sortingOrder = armorInfo.HeadLayer;
+        LLeg0Sprite.sprite = armorInfo.LeftLeg0;
+        LLeg0Sprite.sortingOrder = armorInfo.LeftLeg0Layer;
+        LLeg1Sprite.sprite = armorInfo.LeftLeg1;
+        LLeg1Sprite.sortingOrder = armorInfo.LeftLeg1Layer;
+        RLeg0Sprite.sprite = armorInfo.RightLeg0;
+        RLeg0Sprite.sortingOrder = armorInfo.RightLeg0Layer;
+        RLeg1Sprite.sprite = armorInfo.RightLeg1;
+        RLeg1Sprite.sortingOrder = armorInfo.RightLeg1Layer;
+
+        if (FakeSprite != null)
+        {
+            FakeSprites[0].sprite = armorInfo.Head;
+            FakeSprites[0].sortingOrder = armorInfo.HeadLayer;
+
+            FakeSprites[1].sprite = armorInfo.Body;
+            FakeSprites[1].sortingOrder = armorInfo.BodyLayer;
+
+            FakeSprites[2].sprite = armorInfo.LeftLeg0;
+            FakeSprites[2].sortingOrder = armorInfo.LeftLeg0Layer;
+
+            FakeSprites[3].sprite = armorInfo.LeftLeg1;
+            FakeSprites[3].sortingOrder = armorInfo.LeftLeg1Layer;
+
+            FakeSprites[4].sprite = armorInfo.RightLeg0;
+            FakeSprites[4].sortingOrder = armorInfo.RightLeg0Layer;
+
+            FakeSprites[5].sprite = armorInfo.RightLeg1;
+            FakeSprites[5].sortingOrder = armorInfo.RightLeg1Layer;
+        }
+
+        if (fireEffect != null)
+        {
+            switch (armorInfo.Effect)
+            {
+                case ArmorInfo.EffectType.Null:
+                    fireEffect.gameObject.SetActive(false);
+                    break;
+                case ArmorInfo.EffectType.Fire:
+                    fireEffect.gameObject.SetActive(true);
+                    break;
+
+            }
+        }
+        MaxHp = Mathf.RoundToInt(MaxHp * (armorInfo.Hp + 1));
+        Hp = MaxHp;
+        Power *= (armorInfo.Power + 1);
+        Speed *= (armorInfo.Speed + 1);
+        JumpForce *= (armorInfo.Jump + 1);
+        Size *= (armorInfo.Size + 1);
+
+        StartJump = JumpForce;
+        StartPower = Power;
+        StartSize = Size;
+        StartSpeed = Speed;
+    }
     public virtual void SetSize(float Size)
     {
         this.Size = Size;
@@ -262,6 +337,21 @@ public abstract class Man : MonoBehaviour
     public abstract void Movement(Vector2 Dir);
 
     public abstract void MoveArm(Vector2 Dir);
+    public void MoveArmForce(Vector2 Dir)
+    {
+        StartCoroutine(MoveArmForceCour(Dir));
+    }
+    private IEnumerator MoveArmForceCour(Vector2 Dir)
+    {
+        yield return new WaitForFixedUpdate();
+        while (Vector2.Dot(Arm.transform.up, Dir) < 0.9f)
+        {
+            Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.1f);
+            yield return new WaitForFixedUpdate();
+        }
+        yield break;
+    }
+
 
     public abstract void Jump();
     public virtual void JumpDir(Vector2 Dir)
