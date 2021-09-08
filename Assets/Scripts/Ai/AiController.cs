@@ -240,7 +240,7 @@ public class AiController : MonoBehaviour
         Vector2 NowDir = Vector2.zero;
         while (ThisPlayer.DotArm(BackDir) < 0.9f)
         {
-            NowDir = Vector2.Lerp(NowDir, BackDir, 0.05f);
+            NowDir = Vector2.Lerp(NowDir, BackDir, 0.125f);
             MoveArm(NowDir);
             Movement(Dir * 0.5f);
             yield return new WaitForFixedUpdate();

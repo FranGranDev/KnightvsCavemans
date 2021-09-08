@@ -21,7 +21,7 @@ public abstract class Weapon : MonoBehaviour
     }
     public bool CanAttack(Man man)
     {
-        return man != null && Owner != null && SideOwn.isEnemy(man, Owner) && PrevAttack != null && !PrevAttack.Exists(item => item == man) && !Owner.Punched && !man.OnTackle;
+        return man != null && Owner != null && SideOwn.isEnemy(man, Owner) && PrevAttack != null && !PrevAttack.Exists(item => item == man) && !man.OnTackle;
     }
     protected List<Man> PrevAttack;
 

@@ -360,7 +360,7 @@ public class Player : Man
     }
     public override void GetHit(int Damage, Man Enemy, HitType type, EffectType effect)
     {
-        if (Dead)
+        if (Dead || Damage == 0)
             return;
         Hp -= Damage;
         anim.SetTrigger("Hit");

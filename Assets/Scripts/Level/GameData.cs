@@ -54,6 +54,15 @@ public class GameData : MonoBehaviour
     {
         DeathNum++;
     }
+    public const int LoadInRowForAds = 3;
+    public static int LoadInRow;
+    public static bool ShowVideo()
+    {
+        if (LoadInRow > LoadInRowForAds)
+            LoadInRow = 0;
+        return ++LoadInRow == LoadInRowForAds;
+    }
+
 
     public static int Language;
 
@@ -223,7 +232,7 @@ public class GameData : MonoBehaviour
     public static int PlayerExperience;
     public static int NextLevelExperience()
     {
-        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.75f) * 25);
+        return Mathf.RoundToInt(Mathf.Pow(PlayerLevel + 1, 0.5f) * 30);
     }
     public static int PlayerLevel;
     public static int PrevPlayerLevel;

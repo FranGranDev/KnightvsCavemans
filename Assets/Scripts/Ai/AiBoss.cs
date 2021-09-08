@@ -71,7 +71,7 @@ public class AiBoss : Man
         {
             PrevDir = Dir;
         }
-        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.35f * Hard() / Mathf.Sqrt(WeaponWeight()));
+        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.4f * Hard() / Mathf.Sqrt(WeaponWeight()));
     }
 
     public override void Jump()
@@ -112,6 +112,7 @@ public class AiBoss : Man
             Vector2 Dir = (Enemy.transform.position - transform.position).normalized;
             if (Mathf.Abs(Dir.y) > Mathf.Abs(Dir.x))
             {
+                Enemy.GetHit(Mathf.CeilToInt(Size * 3), this, HitType.Punch, EffectType.Null);
                 Enemy.GetImpulse(new Vector2(Mathf.CeilToInt(Dir.x), Dir.y * 0.25f).normalized * Rig.velocity.magnitude);
                 Enemy.GetHit(Mathf.RoundToInt(Velocity), Enemy, HitType.Fall, EffectType.Null);
                 Enemy.GetPunched(this, Velocity * Size > 0.25f);
@@ -120,8 +121,9 @@ public class AiBoss : Man
             }
             else
             {
+                Enemy.GetHit(Mathf.CeilToInt(Velocity * 2), this, HitType.Punch, EffectType.Null);
                 Vector2 Up = Velocity > 0.25f ? Vector2.up : Vector2.zero;
-                Enemy.GetImpulse((Rig.velocity.normalized + Up).normalized * Rig.velocity.magnitude * Size * 2f);
+                Enemy.GetImpulse((Rig.velocity.normalized + Up).normalized * Rig.velocity.magnitude * Size * 3f);
                 Enemy.GetPunched(this, Velocity * Size > 0.25f);
                 Rig.velocity *= 0.5f * Size;
                 OnAttack(Enemy, Velocity, HitType.Punch);
@@ -173,8 +175,9 @@ public class AiBoss : Man
     }
     public override void GetHit(int Damage, Man Enemy, HitType type, EffectType effect)
     {
-        if (Dead)
+        if (Dead || Damage == 0)
             return;
+
         Hp -= Damage;
         anim.SetTrigger("Hit");
         if (Hp <= 0)

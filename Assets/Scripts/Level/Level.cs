@@ -761,8 +761,47 @@ public class Level : MonoBehaviour
     public void OnLevelStart()
     {
         Controller.active.enabled = InGame();
-
         anim.Play("MaskIdle");
+
+        switch(LevelType)
+        {
+            case LevelTypes.Levels:
+                if(GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+            case LevelTypes.Nude:
+                if (GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+            case LevelTypes.Boss:
+                if (GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+            case LevelTypes.Battle:
+                if (GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+            case LevelTypes.Duel:
+                if (GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+            case LevelTypes.Waves:
+                if (GameData.ShowVideo())
+                {
+                    PlayAds(AdMob.AdsTypes.Video);
+                }
+                break;
+        }
     }
     public void OnLevelDone(LevelTypes type)
     {
@@ -851,6 +890,17 @@ public class Level : MonoBehaviour
     public void TurnSaveLife()
     {
         anim.Play("SaveLife");
+    }
+    public void OnSaveLifeButtonClick()
+    {
+        if(GameData.PremiumOn)
+        {
+            SaveLife();
+        }
+        else
+        {
+            PlayAds(AdMob.AdsTypes.RewardedLife);
+        }
     }
     public void SaveLife()
     {
@@ -1427,6 +1477,7 @@ public class Level : MonoBehaviour
     }
     private void LateInit()
     {
+        AdMob.active.Init();
         LoadLanguage();
         SetPlayerWeapon();
         UpdatePlayerStatsUI();
@@ -2421,6 +2472,30 @@ public class Level : MonoBehaviour
         yield break;
     }
     #endregion
+    #region Ads
+    public void PlayAds(AdMob.AdsTypes type)
+    {
+        if (GameData.PremiumOn)
+            return;
+        switch(type)
+        {
+            case AdMob.AdsTypes.Banner:
+                AdMob.active.ShowBanner();
+                break;
+            case AdMob.AdsTypes.RewardedLife:
+                AdMob.active.SetCallback(type);
+                AdMob.active.ShowRewarded();
+                break;
+            case AdMob.AdsTypes.RewardedPresent:
+                AdMob.active.SetCallback(type);
+                AdMob.active.ShowRewarded();
+                break;
+            case AdMob.AdsTypes.Video:
+                AdMob.active.ShowVideo();
+                break;
+        }
+    }
+    #endregion
     #region Pause and Settings
     public void Pause()
     {
@@ -2600,10 +2675,17 @@ public class Level : MonoBehaviour
     {
         if (GameData.GetTimeToPresent() <= 0)
         {
-            StartCoroutine(OnPresentTakenCour());
+            if(GameData.PremiumOn)
+            {
+                OnPresentTaken();
+            }
+            else
+            {
+                PlayAds(AdMob.AdsTypes.RewardedPresent);
+            }
         }
     }
-    private IEnumerator OnPresentTakenCour()
+    public void OnPresentTaken()
     {
         GameData.SetPresentTime(2f);
         Ui_Menu_Present.SetActive(true);
@@ -2614,7 +2696,6 @@ public class Level : MonoBehaviour
         PlaySound("TakeCoin");
         anim.SetTrigger("Present");
         Ui_Menu_PresentMoneyText.text = Money.ToString();
-        yield break;
     }
     #endregion
     #region Learning
@@ -2683,6 +2764,8 @@ public class Level : MonoBehaviour
         PlayerScript = MainPlayer.GetComponent<Player>();
         SetState(MenuState);
         LateInit();
+
+        PlayAds(AdMob.AdsTypes.Banner);
     }
     public void FixedUpdate()
     {
