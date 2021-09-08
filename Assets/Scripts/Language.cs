@@ -40,7 +40,6 @@ public class Language : MonoBehaviour
     {
         Json = File.ReadAllText(Path);
         Lang = JsonUtility.FromJson<LanguageData>(Json);
-        Debug.Log("da");
     }
     private IEnumerator LoadDataAndroid(string Path)
     {

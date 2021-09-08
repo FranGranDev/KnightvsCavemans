@@ -122,6 +122,7 @@ public class Level : MonoBehaviour
 
     [Header("UI Menu")]
     public GameObject Ui_Menu;
+    public TextMeshProUGUI Ui_Menu_Name;
     public TextMeshProUGUI Ui_Menu_PlayText;
     public GameObject Ui_Menu_Present;
     public TextMeshProUGUI Ui_Menu_Timer;
@@ -1466,11 +1467,12 @@ public class Level : MonoBehaviour
     }
     public void LoadLanguage()
     {
-        //Language.active.LoadLanguage(GameData.Language);
+        Language.active.LoadLanguage(GameData.Language);
     }
     public void UpdateLanguage()
     {
-
+        Ui_Menu_Name.text = Language.Lang.menuText.Name;
+        
     }
     #endregion
     #region Anumition

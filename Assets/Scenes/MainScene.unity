@@ -37406,6 +37406,7 @@ MonoBehaviour:
   Ui_LevelUp_WeaponUnlockContent: {fileID: 538100214}
   Ui_LevelUp_WeaponUnlockText: {fileID: 1584100507}
   Ui_Menu: {fileID: 3869527166565958036}
+  Ui_Menu_Name: {fileID: 8705599929124779026}
   Ui_Menu_PlayText: {fileID: 1352721852980345642}
   Ui_Menu_Present: {fileID: 166259764}
   Ui_Menu_Timer: {fileID: 175797160}
@@ -38105,9 +38106,9 @@ MonoBehaviour:
   m_fontSize: 128
   m_fontSizeBase: 128
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 128
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -38138,7 +38139,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18.223375, y: 12.079735, z: 20.438791, w: 10.066423}
+  m_margin: {x: 21.095728, y: 17.826239, z: 23.31093, w: 18.686745}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
