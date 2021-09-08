@@ -146,9 +146,8 @@ public class AdMob : MonoBehaviour
 
     public void CreateBanner()
     {
-        AdSize Size = AdSize.Banner;
-        AdPosition Position = AdPosition.Bottom;
-        banner = new BannerView(BannerId, Size, Position);
+        AdSize Size = AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
+        banner = new BannerView(BannerId, Size, 0, -400);
         AdRequest request = new AdRequest.Builder().Build();
         banner.LoadAd(request);
         banner.OnAdLoaded += ShowBanner;
