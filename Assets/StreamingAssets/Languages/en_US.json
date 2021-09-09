@@ -26,11 +26,29 @@
     "NowWave": "Волна"
   },
   "settingsText": {
-    "Resume": "",
-    "ResumeGame": "",
-    "Restart": "",
-    "Volume": ""
+    "Resume": "Продолжить",
+    "ResumeGame": "Продолжить",
+    "Restart": "Заново",
+    "Volume": "Эффекты",
+    "Music": "Музыка" 
+  },
+  "ammunitionText": {
+    "Back": "Назад",
+    "StartWeapon": "Начальное оружие",
+    "Buy": "Купить",
+    "NoLevel": "Недостаточный уровень",
+    "NoMoney": "Мало денег"
+  },
+  "gameText": {
+    "Combo": "Комбо",
+    "MegaCombo": "Мего Комбо",
+    "BossHp": "Босс:"
+  },
+  "levelUpText": {
+    "Close": "Закрыть",
+    "Unlocked": "Открыто"
+  },
+  "presentText": {
+    "Hours": "Часов"
   }
-  
-
 }   

@@ -174,7 +174,7 @@ public class AdMob : MonoBehaviour
     {
         if (banner != null)
         {
-            Debug.Log("da");
+            Debug.Log("Hide");
             banner.Hide();
         }
     }

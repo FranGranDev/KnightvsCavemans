@@ -48,11 +48,6 @@ public class Language : MonoBehaviour
         Lang = JsonUtility.FromJson<LanguageData>(www.text);
         yield break;
     }
-
-
-
-
-
 }
 [System.Serializable]
 public struct LanguageData
@@ -64,7 +59,7 @@ public struct LanguageData
     public UiSettings settingsText;
     public UiAmunition ammunitionText;
     public UiGame gameText;
-    public UiLevelUp levelText;
+    public UiLevelUp levelUpText;
     public UiPresent presentText;
     public WeaponText[] Weapon;
     public ArmorText[] Armor;
@@ -122,12 +117,14 @@ public struct UiAmunition
     public string StartWeapon;
     public string Buy;
     public string NoLevel;
+    public string NoMoney;
 }
 [System.Serializable]
 public struct UiGame
 {
     public string Combo;
     public string MegaCombo;
+    public string BossHp;
 }
 [System.Serializable]
 public struct UiLevelUp
@@ -139,7 +136,9 @@ public struct UiLevelUp
 public struct UiPresent
 {
     public string Hours;
+    public string Hour;
     public string Minutes;
+    public string Minute;
     public string Seconds;
 }
 [System.Serializable]
@@ -151,4 +150,12 @@ public struct WeaponText
 public struct ArmorText
 {
     public string Name;
+}
+[System.Serializable]
+public struct GameTypeText
+{
+    public string WinText;
+    public string LoseText;
+    public string[] AttackPhase;
+    public string[] DamagePhase;
 }
