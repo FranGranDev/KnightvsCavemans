@@ -765,37 +765,55 @@ public class Level : MonoBehaviour
 
         switch(LevelType)
         {
+            case LevelTypes.Idle:
+                ShowBanner();
+                break;
+            case LevelTypes.Menu:
+                ShowBanner();
+                break;
+            case LevelTypes.Learn:
+                HideBanner();
+                break;
+            case LevelTypes.KnightBattle:
+                HideBanner();
+                break;
             case LevelTypes.Levels:
-                if(GameData.ShowVideo())
+                HideBanner();
+                if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
                 break;
             case LevelTypes.Nude:
+                HideBanner();
                 if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
                 break;
             case LevelTypes.Boss:
+                HideBanner();
                 if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
                 break;
             case LevelTypes.Battle:
+                HideBanner();
                 if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
                 break;
             case LevelTypes.Duel:
+                HideBanner();
                 if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
                 break;
             case LevelTypes.Waves:
+                HideBanner();
                 if (GameData.ShowVideo())
                 {
                     PlayAds(AdMob.AdsTypes.Video);
@@ -1478,6 +1496,7 @@ public class Level : MonoBehaviour
     private void LateInit()
     {
         AdMob.active.Init();
+        PlayAds(AdMob.AdsTypes.Banner);
         LoadLanguage();
         SetPlayerWeapon();
         UpdatePlayerStatsUI();
@@ -1947,6 +1966,7 @@ public class Level : MonoBehaviour
 
         PlaySound("Play");
         Vibration.Vibrate(0.25f);
+        HideBanner();
     }
     public void SetBetMoney()
     {
@@ -2495,6 +2515,17 @@ public class Level : MonoBehaviour
                 break;
         }
     }
+    public void HideBanner()
+    {
+        AdMob.active.HideBanner();
+    }
+    public void ShowBanner()
+    {
+        if (GameData.PremiumOn)
+            return;
+        Debug.Log("Show");
+        AdMob.active.ShowBanner();
+    }
     #endregion
     #region Pause and Settings
     public void Pause()
@@ -2764,8 +2795,6 @@ public class Level : MonoBehaviour
         PlayerScript = MainPlayer.GetComponent<Player>();
         SetState(MenuState);
         LateInit();
-
-        PlayAds(AdMob.AdsTypes.Banner);
     }
     public void FixedUpdate()
     {
