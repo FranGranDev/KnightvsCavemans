@@ -128,6 +128,8 @@ public class Level : MonoBehaviour
     public GameObject Ui_Menu;
     public TextMeshProUGUI Ui_Menu_Name;
     public TextMeshProUGUI Ui_Menu_PlayText;
+    public TextMeshProUGUI Ui_Menu_Amunition;
+    public TextMeshProUGUI Ui_Menu_Settings;
     public GameObject Ui_Menu_Present;
     public TextMeshProUGUI Ui_Menu_Timer;
     public GameObject Ui_Menu_PresentTake;
@@ -137,12 +139,20 @@ public class Level : MonoBehaviour
     [Header("UI Bets")]
     public GameObject Ui_Bets;
     public Slider Ui_Bets_Slider;
+    public TextMeshProUGUI Ui_Bets_Name;
     public TextMeshProUGUI Ui_Bets_MoneySlider;
     public TextMeshProUGUI Ui_Bets_MoneyGetText;
+    public TextMeshProUGUI Ui_Bets_Left;
+    public TextMeshProUGUI Ui_Bets_Right;
     public GameObject Ui_BetsWin;
+    public TextMeshProUGUI Ui_BetsWin_Text;
     public TextMeshProUGUI Ui_BetsWin_Money;
+    public TextMeshProUGUI Ui_BetsWin_Close;
     public GameObject Ui_BetsLose;
+    public TextMeshProUGUI Ui_BetsLose_Text;
     public TextMeshProUGUI Ui_BetsLose_Money;
+    public TextMeshProUGUI Ui_BetsLose_Close;
+    
 
     [Header("UI Pause")]
     public GameObject Ui_Pause;
@@ -162,12 +172,16 @@ public class Level : MonoBehaviour
 
     [Header("UI Waves")]
     public GameObject Ui_Waves;
+    public TextMeshProUGUI Ui_Waves_Name;
+    public TextMeshProUGUI Ui_Waves_Play;
     public TextMeshProUGUI Ui_Waves_Max;
     public TextMeshProUGUI Ui_Waves_Now;
 
     [Header("UI Knights")]
     public GameObject Ui_Knights;
     public TextMeshProUGUI Ui_Knights_Max;
+    public TextMeshProUGUI Ui_Knights_Play;
+    public TextMeshProUGUI Ui_Knights_Name;
     public TextMeshProUGUI Ui_Knights_Now;
 
     [Header("UI Amunition")]
@@ -1554,8 +1568,25 @@ public class Level : MonoBehaviour
     }
     private void UpdateLanguage()
     {
+        //Menu
+        Ui_Menu_PlayText.text = Language.Lang.menuText.Play;
         Ui_Menu_Name.text = Language.Lang.menuText.Name;
-        
+        Ui_Menu_Amunition.text = Language.Lang.menuText.Amunition;
+        Ui_Menu_Settings.text = Language.Lang.menuText.Settings;
+        //Bets
+        Ui_Bets_Name.text = Language.Lang.betsText.Name;
+        Ui_Bets_Left.text = Language.Lang.betsText.BetLeft;
+        Ui_Bets_Right.text = Language.Lang.betsText.BetRight;
+        Ui_BetsWin_Text.text = Language.Lang.betsText.IfWin;
+        Ui_BetsLose_Text.text = Language.Lang.betsText.IfLose;
+        Ui_BetsLose_Close.text = Language.Lang.betsText.Close;
+        Ui_BetsWin_Close.text = Language.Lang.betsText.Close;
+        //Waves
+        Ui_Waves_Name.text = Language.Lang.wavesText.Name;
+        Ui_Waves_Play.text = Language.Lang.wavesText.Play;
+        //Knights
+        Ui_Knights_Name.text = Language.Lang.knightsText.Name;
+        Ui_Knights_Play.text = Language.Lang.knightsText.Play;
     }
     public void OnLanguageLoaded()
     {
@@ -1995,15 +2026,15 @@ public class Level : MonoBehaviour
             Ui_Bets_Slider.value = (float)GameData.Money / 1000;
         }
 
-        Ui_Bets_MoneySlider.text = BetMoney + " conis";
-        Ui_Bets_MoneyGetText.text = "If you win the bid you will get " + BetMoney * 2 + " coins";
+        Ui_Bets_MoneySlider.text = BetMoney + " " + Language.Lang.basicText.Coins;
+        Ui_Bets_MoneyGetText.text = Language.Lang.betsText.RewardText + " " + BetMoney * 2 + " " + Language.Lang.basicText.Coins;
     }
     private void SetBetMoneyNull()
     {
         Ui_Bets_Slider.value = 0;
 
-        Ui_Bets_MoneySlider.text = 0 + " conis";
-        Ui_Bets_MoneyGetText.text = "If you win the bid you will get " + 0 + " coins";
+        Ui_Bets_MoneySlider.text = 0 + " " + Language.Lang.basicText.Coins;
+        Ui_Bets_MoneyGetText.text = Language.Lang.betsText.RewardText + " " + 0 + " " + Language.Lang.basicText.Coins;
     }
 
     public void TurnBetUi(bool on)
@@ -2059,8 +2090,8 @@ public class Level : MonoBehaviour
     #region Waves
     public void SetWavesUi()
     {
-        Ui_Waves_Now.text = "Now wave: " + (GameData.NowWave + 1).ToString();
-        Ui_Waves_Max.text = "Max wave: " + (GameData.MaxWave + 1).ToString();
+        Ui_Waves_Max.text = Language.Lang.wavesText.MaxWave + ": " + (GameData.NowWave + 1).ToString();
+        Ui_Waves_Now.text = Language.Lang.wavesText.NowWave + ": " + (GameData.MaxWave + 1).ToString();
     }
     public void SetGameWaves()
     {
@@ -2151,8 +2182,8 @@ public class Level : MonoBehaviour
     #region KnightBattle
     public void SetKnightsWavesUi()
     {
-        Ui_Knights_Now.text = "Now Stage: " + (GameData.NowStage + 1).ToString();
-        Ui_Knights_Max.text = "Max Stage: " + (GameData.MaxStage + 1).ToString();
+        Ui_Knights_Max.text = Language.Lang.knightsText.MaxWave + ": " + (GameData.NowStage + 1).ToString();
+        Ui_Knights_Now.text = Language.Lang.knightsText.NowWave + ": " + (GameData.MaxStage + 1).ToString();
     }
     public void PlayKnightsWaves()
     {

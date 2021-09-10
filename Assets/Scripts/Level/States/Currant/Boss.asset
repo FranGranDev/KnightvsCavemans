@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c8cda784fbd2934989d92a2fbf5a474, type: 3}
   m_Name: Boss
   m_EditorClassIdentifier: 
-  Type: 3
+  Type: 5
   level: {fileID: 0}
   BossDefeated: 0

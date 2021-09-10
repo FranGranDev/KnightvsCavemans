@@ -14874,7 +14874,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -14907,7 +14907,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 21.497759, y: 0, z: 17.589088, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -21188,7 +21188,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -21200,9 +21200,9 @@ MonoBehaviour:
   m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 514
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -26852,7 +26852,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -26864,9 +26864,9 @@ MonoBehaviour:
   m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 514
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -27300,9 +27300,9 @@ MonoBehaviour:
   m_fontSize: 128
   m_fontSizeBase: 128
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 128
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -27333,7 +27333,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18.223375, y: 12.079735, z: 20.438791, w: 10.066423}
+  m_margin: {x: 18.223375, y: 15.882908, z: 20.438791, w: 10.066423}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -28921,7 +28921,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -28933,9 +28933,9 @@ MonoBehaviour:
   m_fontSizeMin: 10
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 514
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -29610,9 +29610,9 @@ MonoBehaviour:
   m_fontSize: 128
   m_fontSizeBase: 128
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 128
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -29643,7 +29643,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 16.058668, y: 9.177737, z: 16.058863, w: 11.472138}
+  m_margin: {x: 16.058668, y: 20.707113, z: 16.058863, w: 11.472138}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -30513,9 +30513,9 @@ MonoBehaviour:
   m_fontSize: 128
   m_fontSizeBase: 128
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 128
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -30546,7 +30546,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 18.223375, y: 12.079735, z: 20.438791, w: 10.066423}
+  m_margin: {x: 18.223375, y: 7.675077, z: 20.438791, w: 10.066423}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -34432,7 +34432,7 @@ MonoBehaviour:
   m_fontSize: 72
   m_fontSizeBase: 72
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -34465,7 +34465,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 17.735523, y: 0, z: 19.7062, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -35186,7 +35186,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &3884954395650870834
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -37421,6 +37421,8 @@ MonoBehaviour:
   Ui_Menu: {fileID: 3869527166565958036}
   Ui_Menu_Name: {fileID: 8705599929124779026}
   Ui_Menu_PlayText: {fileID: 1352721852980345642}
+  Ui_Menu_Amunition: {fileID: 5200621930279316}
+  Ui_Menu_Settings: {fileID: 1591696087}
   Ui_Menu_Present: {fileID: 166259764}
   Ui_Menu_Timer: {fileID: 175797160}
   Ui_Menu_PresentTake: {fileID: 628956487}
@@ -37428,12 +37430,19 @@ MonoBehaviour:
   Ui_Menu_PresentMoneyText: {fileID: 1420023488}
   Ui_Bets: {fileID: 423704095}
   Ui_Bets_Slider: {fileID: 462491286}
+  Ui_Bets_Name: {fileID: 1834999082}
   Ui_Bets_MoneySlider: {fileID: 1881583036}
   Ui_Bets_MoneyGetText: {fileID: 234743505}
+  Ui_Bets_Left: {fileID: 1117952303}
+  Ui_Bets_Right: {fileID: 1086494468}
   Ui_BetsWin: {fileID: 902879759}
+  Ui_BetsWin_Text: {fileID: 1251258684}
   Ui_BetsWin_Money: {fileID: 1813301945}
+  Ui_BetsWin_Close: {fileID: 1682440886}
   Ui_BetsLose: {fileID: 1225804156}
+  Ui_BetsLose_Text: {fileID: 27718125}
   Ui_BetsLose_Money: {fileID: 983497316}
+  Ui_BetsLose_Close: {fileID: 1257989921}
   Ui_Pause: {fileID: 1173584237}
   Ui_Pause_Volume: {fileID: 168304030}
   Ui_Pause_Music: {fileID: 1617531146}
@@ -37445,10 +37454,14 @@ MonoBehaviour:
   Ui_Store_Weapon: {fileID: 768342747}
   Ui_Store_Thanks: {fileID: 1806919522}
   Ui_Waves: {fileID: 847699896}
+  Ui_Waves_Name: {fileID: 1882370267}
+  Ui_Waves_Play: {fileID: 914978868}
   Ui_Waves_Max: {fileID: 1220988670}
   Ui_Waves_Now: {fileID: 1965129450}
   Ui_Knights: {fileID: 60044290}
   Ui_Knights_Max: {fileID: 1967708989}
+  Ui_Knights_Play: {fileID: 1453539605}
+  Ui_Knights_Name: {fileID: 1703315433}
   Ui_Knights_Now: {fileID: 934225362}
   Ui_Amunition: {fileID: 4994999068188665451}
   Ui_Anum_ScrollWeapon: {fileID: 4698662957363826366}
@@ -38152,7 +38165,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 1
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 21.095728, y: 17.826239, z: 23.31093, w: 18.686745}
+  m_margin: {x: 21.095728, y: 21.272505, z: 23.31093, w: 18.686745}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

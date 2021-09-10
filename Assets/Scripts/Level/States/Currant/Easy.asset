@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c43dd3e79a1d36743a5830d8635d58aa, type: 3}
   m_Name: Easy
   m_EditorClassIdentifier: 
-  Type: 4
+  Type: 6
   level: {fileID: 0}
   MaxBattleEnemy: 4

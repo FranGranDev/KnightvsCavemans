@@ -50,6 +50,7 @@ public struct LanguageData
     public UiMenu menuText;
     public UiMenuBets betsText;
     public UiMenuWaves wavesText;
+    public UiMenuWaves knightsText;
     public UiSettings settingsText;
     public UiAmunition ammunitionText;
     public UiGame gameText;
@@ -73,7 +74,7 @@ public struct UiMenu
 {
     public string Name;
     public string Play;
-    public string Amunittion;
+    public string Amunition;
     public string Settings;
 }
 [System.Serializable]
@@ -85,9 +86,18 @@ public struct UiMenuBets
     public string IfWin;
     public string IfLose;
     public string RewardText;
+    public string Close;
 }
 [System.Serializable]
 public struct UiMenuWaves
+{
+    public string Name;
+    public string Play;
+    public string MaxWave;
+    public string NowWave;
+}
+[System.Serializable]
+public struct UiMenuKnights
 {
     public string Name;
     public string Play;
