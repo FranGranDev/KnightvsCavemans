@@ -78,7 +78,7 @@ MonoBehaviour:
     HpNum: 0
     Speed: 10
     SpeedNum: 0
-    JumpForce: 16
+    JumpForce: 15
     JumpNum: 0
     Power: 1
     PowerNum: 0
@@ -152,11 +152,11 @@ MonoBehaviour:
     PowerAdd: 0.066
     StandartPower: 1
     MaxSpeed: 16
-    SpeedAdd: 0.33
+    SpeedAdd: 0.3
     StandartSpeed: 10
     MaxJump: 20
     JumpAdd: 0.25
-    StandartJump: 16
+    StandartJump: 15
   MonetForPresent: 500
   Enemy:
   - Name: Cave Man

@@ -32,6 +32,10 @@ public class Level : MonoBehaviour
     {
         return Pos.y > 300 && !Ui_Game.activeSelf && !Ui_Amunition.activeSelf && !Ui_Settings.activeSelf && !Ui_Store.activeSelf && !Ui_LevelUp.activeSelf;
     }
+    public bool NoInternet()
+    {
+        return Application.internetReachability == NetworkReachability.NotReachable;
+    }
 
     [Header("Enemys")]
     public List<Man> AllEnemy;
@@ -339,6 +343,7 @@ public class Level : MonoBehaviour
         anim.SetTrigger("PrintEnd");
         yield return new WaitForSeconds(0.25f);
         GameText.text = "";
+        PrintTextCoroutine = null;
         yield break;
     }
 
@@ -871,6 +876,22 @@ public class Level : MonoBehaviour
     private IEnumerator OnLevelFailedCour(LevelTypes type)
     {
         string text = "Ребята не бейте, бабло под тахтой((";
+        PrintText(text, 3f);
+        cameraMove.TurnFailedShow();
+        if (!SaveLifeUsed)
+        {
+            yield return new WaitForSeconds(1f);
+            TurnSaveLife();
+        }
+        yield return new WaitForSeconds(3);
+
+        LevelFailed(type);
+
+        LevelFailedCoroutine = null;
+        yield break;
+    }
+    private void LevelFailed(LevelTypes type)
+    {
         switch (type)
         {
             case LevelTypes.Boss:
@@ -881,23 +902,13 @@ public class Level : MonoBehaviour
                 break;
             case LevelTypes.Nude:
                 break;
+            case LevelTypes.Waves:
+                GameData.NowWave = 0;
+                break;
+            case LevelTypes.KnightBattle:
+                GameData.NowStage = 0;
+                break;
         }
-        PrintText(text, 3f);
-        cameraMove.TurnFailedShow();
-        if (!SaveLifeUsed)
-        {
-            yield return new WaitForSeconds(1f);
-            TurnSaveLife();
-        }
-        yield return new WaitForSeconds(3);
-
-        LevelFailed();
-
-        LevelFailedCoroutine = null;
-        yield break;
-    }
-    private void LevelFailed()
-    {
         PlaySound("LevelFailed", 0f);
         Vibration.LoseVibrate(0f);
         GameData.active.IncreaseAttempt();
@@ -907,6 +918,8 @@ public class Level : MonoBehaviour
 
     public void TurnSaveLife()
     {
+        if (NoInternet())
+            return;
         anim.Play("SaveLife");
     }
     public void OnSaveLifeButtonClick()
@@ -953,7 +966,7 @@ public class Level : MonoBehaviour
             LevelFailedCoroutine = null;
         }
 
-        LevelFailed();
+        LevelFailed(LevelType);
     }
 
     public void OnEnemyDie(Man man, Man Enemy, Man.HitType type)
@@ -1142,6 +1155,7 @@ public class Level : MonoBehaviour
                 Power = 0.5f;
                 break;
         }
+        PrintDamageText();
         Vibration.Vibrate(Power);
     }
 
@@ -1496,18 +1510,17 @@ public class Level : MonoBehaviour
     private void LateInit()
     {
         AdMob.active.Init();
-        PlayAds(AdMob.AdsTypes.Banner);
-        LoadLanguage();
         SetPlayerWeapon();
         UpdatePlayerStatsUI();
-        anim.Play("StartFade");
+        LoadLanguage();
         NowArmor = GameData.NowArmor;
         SwipeManager.OnSwipeEvent += OnSwipe;
         PlayMusic();
         StartCoroutine(MusicCheckCour());
         StartCoroutine(PresentTimeCour());
-        UpdateLanguage();
         Loaded = true;
+
+        anim.Play("StartFade");
     }
     private IEnumerator PresentTimeCour()
     {
@@ -1539,10 +1552,14 @@ public class Level : MonoBehaviour
     {
         Language.active.LoadLanguage(GameData.Language);
     }
-    public void UpdateLanguage()
+    private void UpdateLanguage()
     {
         Ui_Menu_Name.text = Language.Lang.menuText.Name;
         
+    }
+    public void OnLanguageLoaded()
+    {
+        UpdateLanguage();
     }
     #endregion
     #region Anumition
@@ -1558,6 +1575,7 @@ public class Level : MonoBehaviour
 
 
         OnButtonClick();
+        HideBanner();
     }
     private IEnumerator GoAmunitionCour()
     {
@@ -1665,6 +1683,7 @@ public class Level : MonoBehaviour
         GameData.Save();
 
         OnButtonClick();
+        ShowBanner();
     }
     private IEnumerator BackAmunitionCour()
     {
@@ -2540,10 +2559,21 @@ public class Level : MonoBehaviour
     }
     public void Resume()
     {
-        OnPause = true;
+        OnPause = false;
         Time.timeScale = 1;
         Ui_Pause.SetActive(false);
         OnButtonClick();
+    }
+    public void SpecialResume()
+    {
+        OnPause = false;
+        Time.timeScale = 1;
+        Ui_Pause.SetActive(false);
+    }
+    public void SpecialPause()
+    {
+        OnPause = true;
+        Time.timeScale = 1;
     }
     public void Restart()
     {
@@ -2615,6 +2645,7 @@ public class Level : MonoBehaviour
             WeaponIcon icon = Instantiate(GameData.active.IconPrefab, Ui_Store_Weapon);
             icon.SetIconLevelUp(info[i]);
         }
+        HideBanner();
     }
     public void StoreOn(float delay)
     {
@@ -2629,6 +2660,7 @@ public class Level : MonoBehaviour
     public void StoreOff()
     {
         Ui_Store.SetActive(false);
+        ShowBanner();
     }
 
     public void Buy()
@@ -2658,8 +2690,9 @@ public class Level : MonoBehaviour
         }
         UpdateMoney(info.Money);
         GameData.PremiumOn = true;
+        GameData.Save();
 
-        if(GameData.active.weapon[TempWeapon].Premium)
+        if (GameData.active.weapon[TempWeapon].Premium)
         {
             SelectWeapon(TempWeapon, GameData.NowWeaponPlace);
         }
@@ -2670,7 +2703,7 @@ public class Level : MonoBehaviour
         }
         GameData.ExpRatio = 1;
 
-        GameData.Save();
+        AdMob.active.DestroyBanner();
 
         Vibration.WinVibrate(0);
         PlaySound("Buy");
@@ -2706,7 +2739,7 @@ public class Level : MonoBehaviour
     {
         if (GameData.GetTimeToPresent() <= 0)
         {
-            if(GameData.PremiumOn)
+            if(GameData.PremiumOn || NoInternet())
             {
                 OnPresentTaken();
             }
@@ -2718,6 +2751,7 @@ public class Level : MonoBehaviour
     }
     public void OnPresentTaken()
     {
+        Debug.Log("da");
         GameData.SetPresentTime(2f);
         Ui_Menu_Present.SetActive(true);
         int Money = Random.Range(GameData.active.MonetForPresent - 100, GameData.active.MonetForPresent + 100);
@@ -2775,7 +2809,7 @@ public class Level : MonoBehaviour
 
     private void OnApplicationPause(bool pause)
     {
-        if(pause && Loaded)
+        if(pause && Loaded && !AdMob.ShowingAds)
         {
             Pause();
         }

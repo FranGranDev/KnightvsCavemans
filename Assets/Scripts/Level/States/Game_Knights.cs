@@ -186,7 +186,6 @@ public class Game_Knights : GameState
 
     private void LevelFailed()
     {
-        GameData.NowStage = 0;
         level.OnLevelFailed(Level.LevelTypes.KnightBattle);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)

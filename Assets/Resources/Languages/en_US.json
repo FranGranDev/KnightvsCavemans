@@ -30,7 +30,7 @@
     "ResumeGame": "Продолжить",
     "Restart": "Заново",
     "Volume": "Эффекты",
-    "Music": "Музыка" 
+    "Music": "Музыка"
   },
   "ammunitionText": {
     "Back": "Назад",
@@ -49,6 +49,41 @@
     "Unlocked": "Открыто"
   },
   "presentText": {
-    "Hours": "Часов"
+    "Hours": "Часов",
+    "Hour": "Час",
+    "Minutes": "Минут",
+    "Minute": "Минута",
+    "Seconds": "Секунд",
+    "Second": "Секунда"
+  },
+  "Weapon": {
+    "Name": [
+      "Da",
+      "4",
+      "4"
+    ]
+  },
+  "Armor": {
+    "Name": [
+      "Da",
+      "4",
+      "4"
+    ]
+  },
+  "gameTypeText": {
+    "WinText": "Красава, победил",
+    "LoseText": "Проиграл, ха-ха",
+    "ArrackPhase": [
+      "Получи",
+      "На",
+      "Выкуси",
+      "Аболтус ха-ха"
+    ],
+    "DamagePhase": [
+      "Ай",
+      "Ой",
+      "Больно блин(",
+      "За што?("
+    ]
   }
 }   

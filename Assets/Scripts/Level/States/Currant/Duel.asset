@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6fc1716ba5b27246b02b74d081ba18f, type: 3}
   m_Name: Duel
   m_EditorClassIdentifier: 
-  Type: 1
+  Type: 3
   level: {fileID: 0}
   MaxBattleEnemy: 5

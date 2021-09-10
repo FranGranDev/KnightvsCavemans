@@ -406,6 +406,11 @@ public abstract class Man : MonoBehaviour
 
     }
 
+    public virtual void TryThrowOutWeapon()
+    {
+        if (Random.Range(0, 3) == 0)
+            ThrowOutWeapon();
+    }
     public virtual void ThrowOutWeapon()
     {
         if (weapon == null || NoThrowOut)

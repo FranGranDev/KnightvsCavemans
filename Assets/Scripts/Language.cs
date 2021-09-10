@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using UnityEngine.Networking;
 
 public class Language : MonoBehaviour
 {
@@ -28,25 +29,18 @@ public class Language : MonoBehaviour
             GameData.Language = Num;
             NowLanguage = LanguagesArray[Num];
         }
-        string path = Application.streamingAssetsPath + "/Languages/" + NowLanguage + ".json";
-        #if UNITY_ANDROID && !UNITY_EDITOR
-            StartCoroutine(LoadDataAndroid(path));
-        #endif
-        #if UNITY_EDITOR
-            LoadDataPC(path);
-        #endif
+
+        string path = "Languages/" + NowLanguage;
+        LoadData(path);
     }
-    private void LoadDataPC(string Path)
+    private void LoadData(string Path)
     {
-        Json = File.ReadAllText(Path);
+        TextAsset file = Resources.Load<TextAsset>(Path);
+
+        Json = file.text;
         Lang = JsonUtility.FromJson<LanguageData>(Json);
-    }
-    private IEnumerator LoadDataAndroid(string Path)
-    {
-        WWW www = new WWW(Path);
-        yield return www;
-        Lang = JsonUtility.FromJson<LanguageData>(www.text);
-        yield break;
+
+        Level.active.OnLanguageLoaded();
     }
 }
 [System.Serializable]
@@ -63,6 +57,7 @@ public struct LanguageData
     public UiPresent presentText;
     public WeaponText[] Weapon;
     public ArmorText[] Armor;
+    public GameTypeText[] gameTypeText;
 }
 
 [System.Serializable]
@@ -140,6 +135,7 @@ public struct UiPresent
     public string Minutes;
     public string Minute;
     public string Seconds;
+    public string Second;
 }
 [System.Serializable]
 public struct WeaponText

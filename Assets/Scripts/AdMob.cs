@@ -8,11 +8,11 @@ public class AdMob : MonoBehaviour
     public static AdMob active;
     public enum AdsTypes {Banner, RewardedLife, RewardedPresent, Video} 
 
-    public string AppId = "ca-app-pub-8698419787299114~9025445104";
-    public string VideoId = "ca-app-pub-8698419787299114/4405850266";
-    public string RewardedId = "ca-app-pub-8698419787299114/7389793178";
-    public string BannerId = "ca-app-pub-8698419787299114/2290822811";
+    const string VideoId = "ca-app-pub-3940256099942544/1033173712";
+    const string RewardedId = "ca-app-pub-3940256099942544/5224354917";
+    const string BannerId = "ca-app-pub-3940256099942544/6300978111";
 
+    public static bool ShowingAds;
     public static bool GotReward;
     public static BannerView banner;
     public static InterstitialAd Video;
@@ -28,6 +28,7 @@ public class AdMob : MonoBehaviour
     public void Init()
     {
         MobileAds.Initialize(initStatus => { });
+        LoadAds();
     }
 
     public void SetCallback(AdsTypes type)
@@ -60,6 +61,7 @@ public class AdMob : MonoBehaviour
         {
             yield return new WaitForFixedUpdate();
         }
+        ShowingAds = true;
         Video.Show();
         yield break;
     }
@@ -78,6 +80,7 @@ public class AdMob : MonoBehaviour
         {
             yield return new WaitForFixedUpdate();
         }
+        ShowingAds = true;
         Rewarded.Show();
         yield break;
     }
@@ -105,6 +108,7 @@ public class AdMob : MonoBehaviour
         Rewarded = new RewardedAd(RewardedId);
         Rewarded.OnAdOpening += Pause;
         Rewarded.OnUserEarnedReward += Reward;
+        Rewarded.OnAdClosed += Resume;
         Rewarded.OnAdClosed += ChecForReward;
         Rewarded.OnAdClosed += PreLoadRewarded;
         Rewarded.LoadAd(request);
@@ -113,19 +117,17 @@ public class AdMob : MonoBehaviour
 
     public void Pause(object sender, EventArgs args)
     {
-
+        ShowingAds = true;
     }
     public void Resume(object sender, EventArgs args)
     {
-
+        ShowingAds = false;
+        Level.active.SpecialResume();
     }
+
     public void ChecForReward(object sender, EventArgs args)
     {
-        GotReward = true;
-    }
-    public void Reward(object sender, EventArgs args)
-    {
-        if(GotReward)
+        if (GotReward)
         {
             Watched?.Invoke();
         }
@@ -133,6 +135,11 @@ public class AdMob : MonoBehaviour
         {
             Skiped?.Invoke();
         }
+    }
+    public void Reward(object sender, EventArgs args)
+    {
+        GotReward = true;
+
     }
 
     public void PreLoadInterstitial(object sender, EventArgs args)
@@ -150,7 +157,7 @@ public class AdMob : MonoBehaviour
             return;
 
         AdSize Size = AdSize.GetPortraitAnchoredAdaptiveBannerAdSizeWithWidth(AdSize.FullWidth);
-        banner = new BannerView(BannerId, Size, 0, -400);
+        banner = new BannerView(BannerId, Size, AdPosition.Bottom);
         AdRequest request = new AdRequest.Builder().Build();
         banner.LoadAd(request);
         banner.OnAdLoaded += ShowBanner;
@@ -163,6 +170,7 @@ public class AdMob : MonoBehaviour
     {
         if (banner != null)
         {
+            Debug.Log("Show");
             banner.Show();
         }
         else

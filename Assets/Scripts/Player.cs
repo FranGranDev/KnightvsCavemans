@@ -140,8 +140,8 @@ public class Player : Man
             return;
         if (OnGround && !Jumped)
         {
-            float TackleRatio = OnTackle ? 1.5f : 1;
-            Dir.y *= 1 + Mathf.Abs(Dir.x) * 0.25f;
+            float TackleRatio = OnTackle ? 1.25f : 1;
+            Dir.y *= 1 + Mathf.Abs(Dir.x) * 0.1f;
             Rig.velocity = Dir * JumpForce * TackleRatio;
             StartCoroutine(JumpDelay());
             if (Dir != Vector2.zero)
@@ -283,9 +283,9 @@ public class Player : Man
             Enemy.GetHit(Mathf.CeilToInt(Velocity), this, HitType.Punch, EffectType.Null);
             OnAttack(Enemy, Velocity, HitType.Tackle);
             Rig.velocity *= 1.025f;
-            if (Velocity > 0.75f && Random.Range(0, 3) == 0)
+            if (Velocity > 0.75f)
             {
-                Enemy.ThrowOutWeapon();
+                Enemy.TryThrowOutWeapon();
             }
             PlaySound("Punch");
         }
@@ -371,7 +371,6 @@ public class Player : Man
         GetEffect(Enemy, effect);
         PlaySound("Hit");
 
-        Level.active.PrintDamageText();
         Level.active.OnPlayerGetDamage(Enemy, type, effect);
     }
 

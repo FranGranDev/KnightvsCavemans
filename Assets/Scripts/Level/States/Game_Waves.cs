@@ -130,7 +130,6 @@ public class Game_Waves : GameState
 
     private void LevelFailed()
     {
-        GameData.NowWave = 0;
         level.OnLevelFailed(Level.LevelTypes.Waves);
 
         for (int i = 0; i < level.AliveEnemy.Count; i++)

@@ -164,11 +164,15 @@ public class AiBoss : Man
         yield break;
     }
 
-
+    public override void TryThrowOutWeapon()
+    {
+        if (Random.Range(0, 10) == 0)
+            ThrowOutWeapon();
+    }
     public override void OnLandOof(Man Enemy, float velocity)
     {
         GetHit(Mathf.RoundToInt(Mathf.Sqrt(Velocity) * 5), Enemy, HitType.Punch, EffectType.Null);
-        if (Punched && Random.Range(0, 5) == 0)
+        if (Punched && Random.Range(0, 10) == 0)
         {
             ThrowOutWeapon();
         }
