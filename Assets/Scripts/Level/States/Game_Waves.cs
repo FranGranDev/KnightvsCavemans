@@ -106,11 +106,11 @@ public class Game_Waves : GameState
         level.SetPlayerLikeNew();
         if (GameData.NowWave == 0)
         {
-            level.PrintText("Бесконечная арена жызни: Волна " + (GameData.NowWave + 1).ToString(), 3f);
+            level.PrintText(Language.Lang.gameTypeText.Name[(int)Type] + ": " + Language.Lang.wavesText.NowWave + " " + (GameData.NowWave + 1), 3f);
         }
         else
         {
-            level.PrintText("Волна " + (GameData.NowWave + 1).ToString(), 3f);
+            level.PrintText(Language.Lang.wavesText.NowWave + " " + (GameData.NowWave + 1), 3f);
         }
         CreateEnemys();
         level.DelayGame(1f);
@@ -120,7 +120,7 @@ public class Game_Waves : GameState
         if (level.MainPlayer.Dead)
             return;
         GameData.active.DecreaseAttempt();
-        level.PrintText("Волна " + (GameData.NowWave + 1).ToString() + " Пройдена", 2f);
+        level.PrintText(Language.Lang.wavesText.NowWave + " " + (GameData.NowWave + 1).ToString() + " " + Language.Lang.wavesText.WaveDone, 2f);
         GameData.NowWave++;
         GameData.IncreaseMaxWave();
 

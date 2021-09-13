@@ -385,6 +385,7 @@ public class Player : Man
         Level.active.OnPlayerThrow();
     }
 
+
     public override void Die(Man Enemy, HitType type)
     {
         Hp = 0;

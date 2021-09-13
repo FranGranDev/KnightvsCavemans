@@ -6,6 +6,8 @@ using UnityEngine;
 public class AttackBossState : State
 {
     private Vector2 ArmDir;
+    private bool HelpDone;
+    private bool MeteorDone;
 
     public override void Run()
     {
@@ -24,9 +26,23 @@ public class AttackBossState : State
             aiController.Movement(Me.Direction(Enemy.transform));
             aiController.MoveArm(ArmDir);
         }
+        else if(Me.HpProcent() < 0.66f && !HelpDone)
+        {
+            HelpDone = true;
+            Level.active.CreateBossHelpEnemy(3);
+        }
+        else if(Me.HpProcent() < 0.33f && !MeteorDone)
+        {
+            MeteorDone = true;
+            Level.active.Meteor(3, 0f);
+        }
         else if(Me.NoAttack)
         {
             aiController.RamRun();
+        }
+        else if (aiController.SuperAction)
+        {
+            aiController.Movement(Me.Direction(Enemy.transform) * 1f);
         }
         else if (!aiController.HaveWeapon())
         {
@@ -45,10 +61,6 @@ public class AttackBossState : State
             {
                 aiController.MoveArm(ArmDir);
             }
-        }
-        else if(aiController.SuperAction)
-        {
-            aiController.Movement(Me.Direction(Enemy.transform) * 0.25f);
         }
         else if(Me.DistX(Enemy) < Me.weapon.Lenght() * 0.5f)
         {

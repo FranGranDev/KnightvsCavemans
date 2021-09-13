@@ -50,7 +50,8 @@ MonoBehaviour:
     ArmorOpen: 07000000
     GameTypeOpen: 03000000
     NoAdd: 1
-    Money: 10000
+    Money: 5000
+    Cost: 1.99
   GameType:
   - Name: Levels
     Opened: 1
@@ -58,12 +59,12 @@ MonoBehaviour:
     type: 0
     Index: 0
   - Name: Bets
-    Opened: 1
+    Opened: 0
     Premium: 0
     type: 1
     Index: 1
   - Name: Waves
-    Opened: 1
+    Opened: 0
     Premium: 0
     type: 2
     Index: 2
@@ -1020,6 +1021,10 @@ MonoBehaviour:
   - Name: ManFired
     Index: 7
     Effect: {fileID: 7853244259724044833, guid: 75b86caa16c87db4b9c473412717dfc1,
+      type: 3}
+  - Name: MeteorDestroy
+    Index: 8
+    Effect: {fileID: 5955568346942758194, guid: d7b9b108afa2d9b458674990075e49d2,
       type: 3}
   Ground:
   - Name: Ground

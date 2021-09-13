@@ -10,10 +10,10 @@ public class ColdWeapon : Weapon
             return;
         if (Mathf.Abs(Rotation) >= 1f)
         {
-            if (Vector2.Dot(man.BodyDirection(Owner), man.WeaponDir()) > 0.75f && Power == 1)
+            if (Vector2.Dot(man.BodyDirection(Owner), man.WeaponDir()) > 0.75f && Random.Range(0, 5) != 0)
             {
                 //Block
-                Owner.OnAttack(man, Speed, Man.HitType.Hit);
+                Owner.OnBlock(man, 1);
                 Vector2 Dir = RightDir();
                 man.GetImpulse(Owner.Rig.velocity.magnitude * Mathf.Abs(SqrtRotation()) * Owner.Size * Dir);
                 Owner.GetImpulse(-Owner.Rig.velocity.magnitude * Impusle / Owner.Size * Dir * (Owner.OnGround ? 1 : 0.5f));
@@ -46,10 +46,10 @@ public class ColdWeapon : Weapon
             return;
         if (Speed * Owner.Size > 0.5f && Mathf.Abs(Rotation) < 0.4f)
         {
-            if (Vector2.Dot(man.WeaponDir(), transform.up) < -0.75f && Power == 1)
+            if (Vector2.Dot(man.WeaponDir(), transform.up) < -0.75f && Random.Range(0, 5) != 0)
             {
                 //Block
-                Owner.OnAttack(man, Speed, Man.HitType.Hit);
+                Owner.OnBlock(man, 1);
                 Vector2 Dir = ((Vector2)transform.up + Vector2.up * 0.5f).normalized;
                 man.GetImpulse(Owner.Rig.velocity.magnitude * Speed * Dir * Owner.Size * Owner.Power
                 * Mathf.Abs(Vector2.Dot(transform.up, Owner.Direction(man.transform)) * 0.5f));

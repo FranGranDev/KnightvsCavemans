@@ -19,11 +19,11 @@ public class Game_Battle : GameState
         level.SetPlayerBattle();
         level.BoxSpawn();
         level.BuffSpawn();
+        level.MeteorSpawn();
         CreateBattle();
 
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
-        level.PrintText("Battle: Level " + GameData.NowLevel, 3f);
 
         level.OnLevelStart();
     }

@@ -24,6 +24,8 @@ public class Game_Learn : GameState
         StartState();
         level.OnLevelStart();
         level.SetPlayerLearn();
+        level.AliveEnemy = new List<Man>();
+        level.AllEnemy = new List<Man>();
     }
 
     public override void Run()
@@ -45,26 +47,27 @@ public class Game_Learn : GameState
                 break;
             case LearnStateTypes.End:
                 GameData.LearningEnded = true;
+                
                 GameData.Save();
                 break;
             case LearnStateTypes.Kill:
                 Vector2 EnemyPos1 = level.MainPlayer.transform.position + new Vector3(10, 5, 0);
-                Man enemy1 = level.CreateLevelEnemy(EnemyPos1, 0.5f);
-                if(enemy1.weapon != null)
+                level.AllEnemy.Add(level.CreateLevelEnemy(EnemyPos1, 0.5f));
+                if(level.AllEnemy[0].weapon != null)
                 {
-                    Destroy(enemy1.weapon.gameObject);
-                    enemy1.weapon = null;
+                    Destroy(level.AllEnemy[0].weapon.gameObject);
+                    level.AllEnemy[0].weapon = null;
                 }
-                enemy1.Static = true;
+                level.AllEnemy[0].Static = true;
 
                 Vector2 EnemyPos2 = level.MainPlayer.transform.position + new Vector3(-10, 5, 0);
-                Man enemy2 = level.CreateLevelEnemy(EnemyPos2, 0.5f);
-                if (enemy2.weapon != null)
+                level.AllEnemy.Add(level.CreateLevelEnemy(EnemyPos2, 0.5f));
+                if (level.AllEnemy[1].weapon != null)
                 {
-                    Destroy(enemy2.weapon.gameObject);
-                    enemy2.weapon = null;
+                    Destroy(level.AllEnemy[1].weapon.gameObject);
+                    level.AllEnemy[1].weapon = null;
                 }
-                enemy2.Static = true;
+                level.AllEnemy[1].Static = true;
                 break;
             case LearnStateTypes.TakeWeapon:
                 Vector2 Pos1 = level.MainPlayer.transform.position + new Vector3(7, 5, 0);
@@ -98,7 +101,7 @@ public class Game_Learn : GameState
             if (Mathf.Abs(Dir.x) < 0.75f)
                 return;
             StopAnimation();
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }
@@ -107,7 +110,7 @@ public class Game_Learn : GameState
         if (nowState.Type == LearnStateTypes.Jump)
         {
             StopAnimation();
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }
@@ -116,7 +119,7 @@ public class Game_Learn : GameState
         if (nowState.Type == LearnStateTypes.Throw)
         {
             StopAnimation();
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }
@@ -125,7 +128,7 @@ public class Game_Learn : GameState
         if (nowState.Type == LearnStateTypes.Tacke)
         {
             StopAnimation();
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }
@@ -142,7 +145,7 @@ public class Game_Learn : GameState
     {
         if (nowState.Type == LearnStateTypes.Kill)
         {
-            level.PrintText(Language.Lang.learningText[StateNum].StartText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }

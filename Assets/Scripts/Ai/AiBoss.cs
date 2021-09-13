@@ -71,7 +71,7 @@ public class AiBoss : Man
         {
             PrevDir = Dir;
         }
-        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.4f * Hard() / Mathf.Sqrt(WeaponWeight()));
+        Arm.transform.up = Vector2.Lerp(Arm.transform.up, PrevDir, 0.35f * Hard() / Mathf.Sqrt(WeaponWeight()));
     }
 
     public override void Jump()

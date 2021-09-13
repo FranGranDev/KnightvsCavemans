@@ -28,6 +28,7 @@ public class SceneMaker : MonoBehaviour
     public Transform Ground;
     public Transform Lava;
     public GameObject[] Loot;
+    public GameObject[] Meteor;
     public List<GameObject> FarBackGround;
     public List<GameObject> BackGround;
     public List<GameObject> SceneObjects;
@@ -136,6 +137,19 @@ public class SceneMaker : MonoBehaviour
         GameObject Obj = Instantiate(nowGround.SceneObject[Random.Range(0, nowGround.SceneObject.Length)], Pos, Quaternion.identity, null);
         SceneObject Script = Obj.GetComponent<SceneObject>();
         Script.Fly = true;
+        Script.Rig.velocity += Impulse;
+        Script.Rig.angularVelocity += Random.Range(-360, 360);
+        SceneObjects.Add(Obj);
+    }
+
+    public void SpawnMeteorAtPlayer()
+    {
+        Vector2 Pos = Player.active.transform.position + Vector3.right * Random.Range(-2, 2) + Vector3.up * 25f;
+        Vector2 Impulse = Vector2.down * 10 + Player.active.Rig.velocity * 0.5f;
+        GameObject Obj = Instantiate(Meteor[Random.Range(0, Meteor.Length)], Pos, Quaternion.identity, null);
+        SceneObject Script = Obj.GetComponent<SceneObject>();
+        Script.Fly = true;
+        Script.HitOnGround = true;
         Script.Rig.velocity += Impulse;
         Script.Rig.angularVelocity += Random.Range(-360, 360);
         SceneObjects.Add(Obj);

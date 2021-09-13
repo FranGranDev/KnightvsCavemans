@@ -73,6 +73,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -158,6 +159,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -312,6 +314,8 @@ MonoBehaviour:
   Loot:
   - {fileID: 7091708214584239025, guid: 67552730cee586c4691ac306bae48300, type: 3}
   - {fileID: 3464287637985954800, guid: e1a0ca44caba5384298c3f4f4ced5e44, type: 3}
+  Meteor:
+  - {fileID: 6603977596371813658, guid: 8b00ba067460aac43b365fbabe410ac3, type: 3}
   FarBackGround: []
   BackGround: []
   SceneObjects: []

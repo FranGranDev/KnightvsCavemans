@@ -19,6 +19,7 @@ public class Game_Level : GameState
         level.sceneMaker.MakeRandomScene(100);
         level.BoxSpawn();
         level.BuffSpawn();
+        level.MeteorSpawn();
         CreateEnemys();
 
         level.cameraMove.UpToDown();

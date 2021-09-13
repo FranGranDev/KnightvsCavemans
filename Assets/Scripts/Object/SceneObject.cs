@@ -7,10 +7,12 @@ public abstract class SceneObject : MonoBehaviour
     [Header("Params")]
     public int Hp;
     public bool Destroyed;
+    public Man.EffectType EffectHit;
     [Range(1, 3)]
     public float Weight;
     private Man PrevMan;
     public bool Fly;
+    public bool HitOnGround;
 
     [Header("Componenst")]
     public Rigidbody2D Rig;
@@ -40,6 +42,10 @@ public abstract class SceneObject : MonoBehaviour
     {
         GetHit(Mathf.RoundToInt(Rig.velocity.magnitude / 5), PrevMan);
         Fly = false;
+        if(HitOnGround)
+        {
+            DestroyObj();
+        }
     }
     private void Punch(Man man)
     {
@@ -47,7 +53,7 @@ public abstract class SceneObject : MonoBehaviour
             return;
         man.GetPunched(PrevMan, true);
         man.GetImpulse(Rig.velocity.normalized * Mathf.Sqrt(Weight * Rig.velocity.magnitude) * 2);
-        man.GetHit(3, man, Man.HitType.Object, Man.EffectType.Null);
+        man.GetHit(2 * Hp, man, Man.HitType.Object, EffectHit);
         if(Random.Range(0, 2) == 0)
         {
             man.ThrowOutWeapon();
@@ -56,6 +62,10 @@ public abstract class SceneObject : MonoBehaviour
         Rig.velocity *= 0.5f;
         PrevMan = null;
         Fly = false;
+        if (HitOnGround)
+        {
+            DestroyObj();
+        }
     }
 
     protected void Hit()

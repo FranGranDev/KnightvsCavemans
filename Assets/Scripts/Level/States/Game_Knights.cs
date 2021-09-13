@@ -119,7 +119,8 @@ public class Game_Knights : GameState
         Started = true;
         level.BoxSpawn();
         level.BuffSpawn();
-        
+        level.MeteorSpawn();
+
         for (int i = 0; i < level.AliveFriends.Count; i++)
         {
             level.AliveFriends[i].GetEnemy(level.AliveEnemy[Random.Range(0, level.AliveEnemy.Count)]);
@@ -128,8 +129,7 @@ public class Game_Knights : GameState
         {
             level.AliveEnemy[i].GetEnemy(level.MainPlayer);
         }
-
-        level.PrintText("Рыцарская арена славы: " + (GameData.NowStage + 1).ToString() + " | " + GameData.active.GetEnemyArmor().Name, 3f);
+        level.PrintText(Language.Lang.gameTypeText.Name[(int)Type] + ": " + (GameData.NowStage + 1).ToString() + " " + GameData.active.GetEnemyArmor().Name, 3f);
     }
     private void CreateStartTeam()
     {
@@ -164,7 +164,7 @@ public class Game_Knights : GameState
         }
         level.DelayGame(1f);
 
-        level.PrintText("Волна " + (GameData.NowStage + 1).ToString() + " | " + GameData.active.GetEnemyArmor().Name, 3f);
+        level.PrintText(Language.Lang.gameTypeText.Name[(int)Type] + ": " + (GameData.NowStage + 1).ToString() + " " + GameData.active.GetEnemyArmor().Name, 3f);
     }
     private void OnWaveDone()
     {
@@ -181,7 +181,7 @@ public class Game_Knights : GameState
             level.AliveFriends[i].MakeFun();
         }
 
-        level.PrintText("Волна " + (GameData.NowStage + 1).ToString() + " Пройдена", 2f);
+        level.PrintText(Language.Lang.knightsText.NowWave + " " + (GameData.NowStage + 1).ToString() + " " + Language.Lang.knightsText.WaveDone, 2f);
     }
 
     private void LevelFailed()

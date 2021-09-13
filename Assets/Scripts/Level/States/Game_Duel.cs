@@ -24,7 +24,6 @@ public class Game_Duel : GameState
         Waves = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.5f) * 0.75f) + Random.Range(0, 2);
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
-        level.PrintText("Дуэльки: Уровень " + GameData.NowLevel, 3f);
         level.OnLevelStart();
     }
 
@@ -104,7 +103,7 @@ public class Game_Duel : GameState
             level.DefeatedEnemy.Add(man);
             level.LastOfMan = man;
             NowWave++;
-            level.PrintText("Осталось " + (Waves - NowWave) + " аболтусов", 2);
+            level.PrintText(Language.Lang.wavesText.Remaining + " " + (Waves - NowWave) + " " + Language.Lang.basicText.Cavemans, 2);
         }
     }
     public override void OnPlayerDie(Man man, Man Enemy, Man.HitType type)

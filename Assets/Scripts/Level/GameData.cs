@@ -770,6 +770,7 @@ public struct PremiusInfo
     public int[] GameTypeOpen;
     public bool NoAdd;
     public int Money;
+    public float Cost;
 }
 [System.Serializable]
 public struct SoundInfo

@@ -307,6 +307,7 @@ public class AiController : MonoBehaviour
         yield break;
     }
 
+
     public void RamFast()
     {
         StopSwing();

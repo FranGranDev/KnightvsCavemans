@@ -23,7 +23,6 @@ public class Game_Boss : GameState
 
         level.cameraMove.UpToDown();
         level.DelayGame(1f);
-        level.PrintText("Босс: Уровень  " + GameData.NowLevel, 3f);
         level.OnLevelStart();
     }
 
@@ -36,6 +35,64 @@ public class Game_Boss : GameState
     private void SetBattleMan()
     {
         level.BossEnemy.GetEnemy(level.MainPlayer);
+
+        for (int i = 0; i < level.AliveEnemy.Count - 1; i++)
+        {
+            for (int a = i + 1; a < level.AliveEnemy.Count; a++)
+            {
+                if (level.AliveEnemy[a].DistX(level.MainPlayer) <
+                   level.AliveEnemy[i].DistX(level.MainPlayer))
+                {
+                    Man temp = level.AliveEnemy[i];
+                    level.AliveEnemy[i] = level.AliveEnemy[a];
+                    level.AliveEnemy[a] = temp;
+                }
+            }
+        }
+
+        for (int i = 0; i < level.AliveEnemy.Count; i++)
+        {
+            if (i < 3)
+            {
+                if (!level.BattleEnemy.Exists(item => item == level.AliveEnemy[i]))
+                {
+                    level.BattleEnemy.Add(level.AliveEnemy[i]);
+                }
+                level.AliveEnemy[i].SetStatic(false);
+            }
+            else
+            {
+                if (level.BattleEnemy.Exists(item => item == level.AliveEnemy[i]))
+                {
+                    level.BattleEnemy.Remove(level.AliveEnemy[i]);
+                }
+                level.AliveEnemy[i].SetStatic(true);
+            }
+        }
+        for (int i = 0; i < level.AllEnemy.Count; i++)
+        {
+            if (i < 3)
+            {
+                level.AllEnemy[i].SetStatic(false);
+            }
+            else
+            {
+                level.AllEnemy[i].SetStatic(true);
+            }
+        }
+        for (int i = 0; i < level.DefeatedEnemy.Count; i++)
+        {
+            level.DefeatedEnemy[i].SetStatic(level.DefeatedEnemy[i].DistX(level.MainPlayer) > 15f);
+        }
+        for (int i = 0; i < level.BattleEnemy.Count; i++)
+        {
+            level.BattleEnemy[i].GetEnemy(level.MainPlayer);
+        }
+
+        if (level.LastOfMan != null)
+        {
+            level.LastOfMan.SetStatic(false);
+        }
     }
     private void CheckForEnd()
     {
@@ -47,6 +104,10 @@ public class Game_Boss : GameState
     }
     private void CreateBoss()
     {
+        level.AllEnemy = new List<Man>();
+        level.AliveEnemy = new List<Man>();
+        level.DefeatedEnemy = new List<Man>();
+        level.BattleEnemy = new List<Man>();
         level.BossEnemy = level.CreateManBossEnemy(level.sceneMaker.GetEnemyPos(), Random.Range(0.9f, 1.25f));
 
         CameraMove.active.TurnBossFollow(level.BossEnemy, true);
@@ -78,7 +139,11 @@ public class Game_Boss : GameState
             BossDefeated = true;
             level.LastOfMan = level.BossEnemy;
         }
-        
+        if (level.AliveEnemy.Exists(item => item == man))
+        {
+            level.AliveEnemy.Remove(man);
+            level.DefeatedEnemy.Add(man);
+        }
     }
     public override void OnPlayerDie(Man man, Man Enemy, Man.HitType type)
     {

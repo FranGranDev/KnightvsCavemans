@@ -10,6 +10,7 @@ public class WeaponIcon : MonoBehaviour
     public Image background;
     public Image icon;
     public TextMeshProUGUI Name;
+    public TextMeshProUGUI BuyText;
     public TextMeshProUGUI Cost;
     public Image TryToBoughtUI;
     public Image BuyButtonUI;
@@ -33,6 +34,7 @@ public class WeaponIcon : MonoBehaviour
         {
             button.onClick.AddListener(delegate { Level.active.SelectWeapon(info.Index, Place); });
         }
+        BuyText.text = Language.Lang.basicText.Buy;
         icon.sprite = info.Icon;
         rare = info.Rare;
         this.Place = Place;

@@ -87,6 +87,7 @@ public class Level : MonoBehaviour
     private Coroutine DelayGameCoroutine;
     private Coroutine BoxSpawnCoroutine;
     private Coroutine BuffSpawnCoroutine;
+    private Coroutine MeteorSpawnCoroutine;
     private Coroutine PrintTextCoroutine;
     private Coroutine NextLearnStateCoroutine;
     private Coroutine GoAmunitionCoroutine;
@@ -106,6 +107,10 @@ public class Level : MonoBehaviour
     public Bar GameHp;
     public RectTransform Ui_Game_HitRow;
     public TextMeshProUGUI Ui_Game_HitRowText;
+    public TextMeshProUGUI Ui_Game_Skip;
+    public TextMeshProUGUI Ui_Game_Combo;
+    public TextMeshProUGUI Ui_Game_SaveLifeNo;
+    public TextMeshProUGUI Ui_Game_BossHp;
 
     [Header("UI Stats")]
     public Bar Ui_Game_LevelBar;
@@ -116,6 +121,7 @@ public class Level : MonoBehaviour
     public GameObject Ui_LevelUp;
     public GameObject Ui_LevelUp_Close;
     public TextMeshProUGUI Ui_LevelUp_Text;
+    public TextMeshProUGUI Ui_LevelUp_CloseText;
     public TextMeshProUGUI Ui_LevelUp_From;
     public TextMeshProUGUI Ui_LevelUp_To;
     public TextMeshProUGUI Ui_LevelUp_Money;
@@ -134,6 +140,7 @@ public class Level : MonoBehaviour
     public TextMeshProUGUI Ui_Menu_Timer;
     public GameObject Ui_Menu_PresentTake;
     public TextMeshProUGUI Ui_Menu_PresentText;
+    public TextMeshProUGUI Ui_Menu_PresentGotText;
     public TextMeshProUGUI Ui_Menu_PresentMoneyText;
 
     [Header("UI Bets")]
@@ -158,17 +165,51 @@ public class Level : MonoBehaviour
     public GameObject Ui_Pause;
     public Slider Ui_Pause_Volume;
     public Slider Ui_Pause_Music;
+    public TextMeshProUGUI Ui_Pause_ResumeText;
+    public TextMeshProUGUI Ui_Pause_RestartText;
+    public TextMeshProUGUI Ui_Pause_VolumeText;
+    public TextMeshProUGUI Ui_Pause_MusicText;
+    public TextMeshProUGUI Ui_Pause_MainMenuText;
 
     [Header("UI Settings")]
     public GameObject Ui_Settings;
     public Slider Ui_Settings_Volume;
     public Slider Ui_Settings_Music;
     public Toggle Ui_Setting_Vibration;
+    public TextMeshProUGUI Ui_Settings_ResumeText;
+    public TextMeshProUGUI Ui_Settings_VolumeText;
+    public TextMeshProUGUI Ui_Settings_MusicText;
+    public TextMeshProUGUI Ui_Settings_Vibration;
 
-    [Header("UI Store")]
+
+    [Header("UI Premium Store")]
     public GameObject Ui_Store;
     public Transform Ui_Store_Weapon;
     public GameObject Ui_Store_Thanks;
+    public TextMeshProUGUI Ui_Store_Name;
+    public TextMeshProUGUI Ui_Store_WhatGet;
+    public TextMeshProUGUI Ui_Store_NoAds;
+    public TextMeshProUGUI Ui_Store_CoolWeapon;
+    public TextMeshProUGUI Ui_Store_Skin;
+    public TextMeshProUGUI Ui_Store_GameMode;
+    public TextMeshProUGUI Ui_Store_x2Exp;
+    public TextMeshProUGUI Ui_Store_Coins;
+    public TextMeshProUGUI Ui_Store_Buy;
+    public TextMeshProUGUI Ui_Store_NoThanks;
+    public TextMeshProUGUI Ui_Store_Restore;
+    public TextMeshProUGUI Ui_Store_ThanksFor;
+
+    public GameObject Ui_StoreOnButton;
+    public GameObject Ui_StoreOffButton;
+    public GameObject Ui_StoreAlready;
+    public TextMeshProUGUI Ui_StoreAlready_Name;
+    public TextMeshProUGUI Ui_StoreAlready_WhatGot;
+    public TextMeshProUGUI Ui_StoreAlready_NoAds;
+    public TextMeshProUGUI Ui_StoreAlready_Weapon;
+    public TextMeshProUGUI Ui_StoreAlready_Skin;
+    public TextMeshProUGUI Ui_StoreAlready_GameMode;
+    public TextMeshProUGUI Ui_StoreAlready_x2Exp;
+    public TextMeshProUGUI Ui_StoreAlready_Coins;
 
     [Header("UI Waves")]
     public GameObject Ui_Waves;
@@ -208,6 +249,9 @@ public class Level : MonoBehaviour
     public GameObject Ui_Anum_ArmorCosts;
     public TextMeshProUGUI Ui_Anum_ArmorExpText;
     public TextMeshProUGUI Ui_Anum_ArmorCostText;
+
+    public TextMeshProUGUI Ui_Anum_BackText;
+    public TextMeshProUGUI Ui_Anum_StartWeaponText;
 
     [Header("UI Learn")]
     public GameObject Ui_SkipLearn;
@@ -394,7 +438,7 @@ public class Level : MonoBehaviour
             Ui_Game_HitRow.gameObject.SetActive(true);
             int Right = Random.Range(0, 2) == 0 ? 1 : -1;
             Ui_Game_HitRow.anchoredPosition = new Vector3(Right * Random.Range(400, 350), Random.Range(300, 400), 0);
-            Ui_Game_HitRowText.text = "Mega Combo: x" + num.ToString();
+            Ui_Game_HitRowText.text = Language.Lang.gameText.MegaCombo + "x " + num.ToString();
         }
         else
         {
@@ -402,7 +446,7 @@ public class Level : MonoBehaviour
             Ui_Game_HitRow.gameObject.SetActive(true);
             int Right = Random.Range(0, 2) == 0 ? 1 : -1;
             Ui_Game_HitRow.anchoredPosition = new Vector3(Right * Random.Range(400, 350), Random.Range(300, 400), 0);
-            Ui_Game_HitRowText.text = "Combo: x " + num.ToString();
+            Ui_Game_HitRowText.text = Language.Lang.gameText.Combo + "x " + num.ToString();
         }
     }
 
@@ -523,6 +567,19 @@ public class Level : MonoBehaviour
         }
         return Enemys;
     }
+    public void CreateBossHelpEnemy(int count)
+    {
+        if (BossEnemy == null)
+            return;
+        for (int i = 0; i < count; i++)
+        {
+            Vector2 Position = BossEnemy.transform.position + new Vector3(Random.Range(-5f, 5f), 25, 0);
+            Man man = CreateLevelEnemy(Position, Random.Range(0.75f, 1f));
+            man.Type = Man.ManType.Enemy;
+            AllEnemy.Add(man);
+            AliveEnemy.Add(man);
+        }
+    }
     public Man CreateBetsEnemy(Vector2 Position, float Power, int index)
     {
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
@@ -605,7 +662,7 @@ public class Level : MonoBehaviour
     public Man CreateDuelEnemy(Vector2 Position, float Power)
     {
         Man man = Instantiate(GameData.active.Enemy[0].Enemy, Position, Quaternion.identity, null).GetComponent<Man>();
-        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 0.75f);
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 0.5f);
         man.Size = MainPlayer.Size * Power;
         man.name = "Cave Man";
         man.Speed = MainPlayer.Speed * Power;
@@ -646,7 +703,7 @@ public class Level : MonoBehaviour
     public Man CreateManBossEnemy(Vector2[] Pos, float Power)
     {
         Man man = Instantiate(GameData.active.Enemy[1].Enemy, Pos[0], Quaternion.identity, null).GetComponent<Man>();
-        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 3f);
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 2f);
         man.Size = MainPlayer.Size * Power * 2;
         man.name = "Boss";
         man.Speed = MainPlayer.Speed * Power * 0.75f;
@@ -781,7 +838,7 @@ public class Level : MonoBehaviour
     {
         Controller.active.enabled = InGame();
         anim.Play("MaskIdle");
-
+        bool printText = false;
         switch(LevelType)
         {
             case LevelTypes.Idle:
@@ -802,6 +859,7 @@ public class Level : MonoBehaviour
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
+                printText = true;
                 break;
             case LevelTypes.Nude:
                 HideBanner();
@@ -809,6 +867,7 @@ public class Level : MonoBehaviour
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
+                printText = true;
                 break;
             case LevelTypes.Boss:
                 HideBanner();
@@ -816,6 +875,7 @@ public class Level : MonoBehaviour
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
+                printText = true;
                 break;
             case LevelTypes.Battle:
                 HideBanner();
@@ -823,6 +883,7 @@ public class Level : MonoBehaviour
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
+                printText = true;
                 break;
             case LevelTypes.Duel:
                 HideBanner();
@@ -830,6 +891,7 @@ public class Level : MonoBehaviour
                 {
                     PlayAds(AdMob.AdsTypes.Video);
                 }
+                printText = true;
                 break;
             case LevelTypes.Waves:
                 HideBanner();
@@ -839,11 +901,15 @@ public class Level : MonoBehaviour
                 }
                 break;
         }
+        if (printText)
+        {
+            PrintText(Language.Lang.gameTypeText.Name[(int)LevelType] + " " + Language.Lang.basicText.Level + ": " + GameData.NowLevel, 3f);
+        }
     }
     public void OnLevelDone(LevelTypes type)
     {
         int exp = 0;
-        string text = "Красава, всех раскидал";
+        string text = Language.Lang.gameTypeText.WinText[Random.Range(0, Language.Lang.gameTypeText.WinText.Length)];
         switch (type)
         {
             case LevelTypes.Boss:
@@ -889,7 +955,7 @@ public class Level : MonoBehaviour
     }
     private IEnumerator OnLevelFailedCour(LevelTypes type)
     {
-        string text = "Ребята не бейте, бабло под тахтой((";
+        string text = Language.Lang.gameTypeText.LoseText[Random.Range(0, Language.Lang.gameTypeText.LoseText.Length)];
         PrintText(text, 3f);
         cameraMove.TurnFailedShow();
         if (!SaveLifeUsed)
@@ -958,6 +1024,10 @@ public class Level : MonoBehaviour
         for(int i = 0; i < AliveEnemy.Count; i++)
         {
             AliveEnemy[i].StopFun();
+        }
+        if(BossEnemy != null)
+        {
+            BossEnemy.StopFun();
         }
         cameraMove.TurnPlayerFollow();
         MainPlayer.SetParams();
@@ -1138,7 +1208,7 @@ public class Level : MonoBehaviour
     {
         if (Enemy != null)
         {
-            Vibration.Vibrate(0.35f);
+            Vibration.Vibrate(0.5f);
         }
     }
     public void OnPlayerGetDamage(Man Enemy, Man.HitType type, Man.EffectType effect)
@@ -1383,6 +1453,48 @@ public class Level : MonoBehaviour
         yield break;
     }
 
+    public void Meteor(int Count, float Delay)
+    {
+        StartCoroutine(MeteorCour(Count, Delay));
+    }
+    private IEnumerator MeteorCour(int count, float Delay)
+    {
+        yield return new WaitForSeconds(Delay);
+        for (int i = 0; i < count; i++)
+        {
+            sceneMaker.SpawnMeteorAtPlayer();
+            yield return new WaitForSeconds(1f);
+        }
+        yield break;
+    }
+
+    public void MeteorSpawn()
+    {
+        if(MeteorSpawnCoroutine == null)
+        {
+            MeteorSpawnCoroutine = StartCoroutine(MeteorSpawnCour());
+        }
+    }
+    public void StopMeteorSpawn()
+    {
+        if(MeteorSpawnCoroutine != null)
+        {
+            StopCoroutine(MeteorSpawnCoroutine);
+            MeteorSpawnCoroutine = null;
+        }
+    }
+    private IEnumerator MeteorSpawnCour()
+    {
+        while (!CurrantState.isEnd)
+        {
+            yield return new WaitForSeconds(10);
+            sceneMaker.SpawnMeteorAtPlayer();
+        }
+        MeteorSpawnCoroutine = null;
+        yield break;
+    }
+
+
     public void BuffSpawn()
     {
         if (BuffSpawnCoroutine == null)
@@ -1532,6 +1644,7 @@ public class Level : MonoBehaviour
         PlayMusic();
         StartCoroutine(MusicCheckCour());
         StartCoroutine(PresentTimeCour());
+        SwitchPremiumButton();
         Loaded = true;
 
         anim.Play("StartFade");
@@ -1544,15 +1657,15 @@ public class Level : MonoBehaviour
             float time = GameData.GetTimeToPresent();
             if(time > 3600)
             {
-                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 3600).ToString() + " Hours";
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 3600).ToString() + " " + Language.Lang.presentText.Hours;
             }
             else if(time > 60)
             {
-                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 60).ToString() + " Minutes";
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time / 60).ToString() + " " + Language.Lang.presentText.Minutes;
             }
             else if(time > 0)
             {
-                Ui_Menu_Timer.text = Mathf.CeilToInt(time).ToString() + " Seconds";
+                Ui_Menu_Timer.text = Mathf.CeilToInt(time).ToString() + " " + Language.Lang.presentText.Seconds;
             }
             else if(Ui_Menu_Present.activeSelf)
             {
@@ -1568,11 +1681,32 @@ public class Level : MonoBehaviour
     }
     private void UpdateLanguage()
     {
+        //Game
+        Ui_Game_SaveLifeNo.text = Language.Lang.premiumText.NoThanks;
+        Ui_Game_Skip.text = Language.Lang.gameText.Skip;
+        //LevelUp
+        Ui_LevelUp_Text.text = Language.Lang.levelUpText.LevelUp;
+        Ui_LevelUp_WeaponUnlockText.text = Language.Lang.levelUpText.Unlocked;
+        //Weapon
+        for (int i = 0; i < Language.Lang.Weapon.Name.Length; i++)
+        {
+            GameData.active.weapon[i].Name = Language.Lang.Weapon.Name[i];
+        }
+        //Armor
+        for (int i = 0; i < Language.Lang.Armor.Name.Length; i++)
+        {
+            GameData.active.armor[i].Name = Language.Lang.Armor.Name[i];
+        }
+        //Phase
+        GameData.active.DamagePhase = Language.Lang.gameTypeText.DamagePhase;
+        GameData.active.AttackPhase = Language.Lang.gameTypeText.AttackPhase;
         //Menu
         Ui_Menu_PlayText.text = Language.Lang.menuText.Play;
         Ui_Menu_Name.text = Language.Lang.menuText.Name;
         Ui_Menu_Amunition.text = Language.Lang.menuText.Amunition;
         Ui_Menu_Settings.text = Language.Lang.menuText.Settings;
+        //Present
+        Ui_Menu_PresentGotText.text = Language.Lang.presentText.Get;
         //Bets
         Ui_Bets_Name.text = Language.Lang.betsText.Name;
         Ui_Bets_Left.text = Language.Lang.betsText.BetLeft;
@@ -1587,6 +1721,42 @@ public class Level : MonoBehaviour
         //Knights
         Ui_Knights_Name.text = Language.Lang.knightsText.Name;
         Ui_Knights_Play.text = Language.Lang.knightsText.Play;
+        //Premiun
+        Ui_Store_Name.text = Language.Lang.premiumText.Name;
+        Ui_Store_WhatGet.text = Language.Lang.premiumText.WhatGet;
+        Ui_Store_NoAds.text = Language.Lang.premiumText.NoAds;
+        Ui_Store_CoolWeapon.text = Language.Lang.premiumText.CoolWeapon;
+        Ui_Store_Skin.text = Language.Lang.premiumText.Skin;
+        Ui_Store_GameMode.text = Language.Lang.premiumText.NewMode;
+        Ui_Store_x2Exp.text = Language.Lang.premiumText.x2Exp;
+        Ui_Store_Coins.text = GameData.active.premiumInfo.Money + " " + Language.Lang.basicText.Coins;
+        Ui_Store_Buy.text = Language.Lang.premiumText.Buy + " " + GameData.active.premiumInfo.Cost + "$";
+        Ui_Store_NoThanks.text = Language.Lang.premiumText.NoThanks;
+        Ui_Store_Restore.text = Language.Lang.premiumText.Restore;
+        Ui_Store_ThanksFor.text = Language.Lang.premiumText.Thanks;
+        //Amunition
+        
+        //Already Bought
+        Ui_StoreAlready_Name.text = Language.Lang.premiumText.YouCool;
+        Ui_StoreAlready_WhatGot.text = Language.Lang.premiumText.WhatGot;
+        Ui_StoreAlready_NoAds.text = Language.Lang.premiumText.NoAds;
+        Ui_StoreAlready_Weapon.text = Language.Lang.premiumText.CoolWeapon;
+        Ui_StoreAlready_Skin.text = Language.Lang.premiumText.Skin;
+        Ui_StoreAlready_GameMode.text = Language.Lang.premiumText.NewMode;
+        Ui_StoreAlready_x2Exp.text = Language.Lang.premiumText.x2Exp;
+        Ui_StoreAlready_Coins.text = GameData.active.premiumInfo.Money + " " + Language.Lang.basicText.Coins;
+        //Pause
+        Ui_Pause_ResumeText.text = Language.Lang.settingsText.ResumeGame;
+        Ui_Pause_RestartText.text = Language.Lang.settingsText.Restart;
+        Ui_Pause_MainMenuText.text = Language.Lang.settingsText.MainMenu;
+        Ui_Pause_VolumeText.text = Language.Lang.settingsText.Volume;
+        Ui_Pause_MusicText.text = Language.Lang.settingsText.Music;
+        //Settings
+        Ui_Settings_ResumeText.text = Language.Lang.settingsText.Resume;
+        Ui_Settings_VolumeText.text = Language.Lang.settingsText.Volume;
+        Ui_Settings_MusicText.text = Language.Lang.settingsText.Music;
+        Ui_Settings_Vibration.text = Language.Lang.settingsText.Vibration;
+
     }
     public void OnLanguageLoaded()
     {
@@ -1660,10 +1830,14 @@ public class Level : MonoBehaviour
         NowArmor = GameData.NowArmor;
         SetArmor();
 
-        Ui_Anum_HpLevel.text = "Level " + GameData.active.playerInfo.HpNum.ToString();
-        Ui_Anum_SpeedLevel.text = "Level " + GameData.active.playerInfo.SpeedNum.ToString();
-        Ui_Anum_SizeLevel.text = "Level " + GameData.active.playerInfo.SizeNum.ToString();
-        Ui_Anum_PowerLevel.text = "Level " + GameData.active.playerInfo.PowerNum.ToString();
+        Ui_Anum_BackText.text = Language.Lang.ammunitionText.Back;
+        Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.Buy + " " + GameData.active.tempArmorInfo.Name;
+        Ui_Anum_StartWeaponText.text = Language.Lang.ammunitionText.StartWeapon;
+
+        Ui_Anum_HpLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.HpNum.ToString();
+        Ui_Anum_SpeedLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.SpeedNum.ToString();
+        Ui_Anum_SizeLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.SizeNum.ToString();
+        Ui_Anum_PowerLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.PowerNum.ToString();
 
         Ui_Anum_SizeBar.FillArea(GameData.active.SizeProcent(), GameData.active.SizeSecondProcent());
         Ui_Anum_HpBar.FillArea(GameData.active.HpProcent(), GameData.active.HpSecondProcent());
@@ -1672,33 +1846,33 @@ public class Level : MonoBehaviour
 
         if (GameData.active.upInfo.MaxHp > GameData.active.playerInfo.MaxHp)
         {
-            Ui_Anum_HpLevel.text = "Level " + GameData.active.playerInfo.HpNum.ToString();
+            Ui_Anum_HpLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.HpNum.ToString();
             Ui_Anum_HpCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.HpNum).ToString();
         }
         else
         {
-            Ui_Anum_HpLevel.text = "Max Level";
-            Ui_Anum_HpCost.text = "Nice";
+            Ui_Anum_HpLevel.text = Language.Lang.basicText.MaxLevel;
+            Ui_Anum_HpCost.text = Language.Lang.basicText.Nice;
         }
         if (GameData.active.upInfo.MaxSpeed > GameData.active.playerInfo.Speed)
         {
-            Ui_Anum_SpeedLevel.text = "Level " + GameData.active.playerInfo.SpeedNum.ToString();
+            Ui_Anum_SpeedLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.SpeedNum.ToString();
             Ui_Anum_SpeedCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.SpeedNum).ToString();
         }
         else
         {
-            Ui_Anum_SpeedLevel.text = "Max Level";
-            Ui_Anum_SpeedCost.text = "Nice";
+            Ui_Anum_SpeedLevel.text = Language.Lang.basicText.MaxLevel;
+            Ui_Anum_SpeedCost.text = Language.Lang.basicText.Nice;
         }
         if (GameData.active.upInfo.MaxPower > GameData.active.playerInfo.Power)
         {
-            Ui_Anum_PowerLevel.text = "Level " + GameData.active.playerInfo.PowerNum.ToString();
+            Ui_Anum_PowerLevel.text = Language.Lang.basicText.Level + " " + GameData.active.playerInfo.PowerNum.ToString();
             Ui_Anum_PowerCost.text = GameData.active.UpdateCost(GameData.active.playerInfo.PowerNum).ToString();
         }
         else
         {
-            Ui_Anum_PowerLevel.text = "Max Level";
-            Ui_Anum_PowerCost.text = "Nice";
+            Ui_Anum_PowerLevel.text = Language.Lang.basicText.MaxLevel;
+            Ui_Anum_PowerCost.text = Language.Lang.basicText.Nice;
 
         }
         Ui_Amunition.SetActive(false);
@@ -1889,7 +2063,7 @@ public class Level : MonoBehaviour
             Ui_Anum_ArmorButton.enabled = true;
             Color color = GameData.active.IconWeaponColor[(int)GameData.active.tempArmorInfo.Rare];
             Ui_Anum_ArmorButtonColor.color = new Color(color.r, color.g, color.b, 0.35f);
-            Ui_Anum_ArmorName.text = "Buy " + GameData.active.tempArmorInfo.Name;
+            Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.Buy + " " + GameData.active.tempArmorInfo.Name;
         }
 
         Ui_Anum_HpBar.FillArea(GameData.active.HpProcent(), GameData.active.HpSecondProcent());
@@ -2069,14 +2243,14 @@ public class Level : MonoBehaviour
     {
         UpdateMoney(BetMoney * 2);
         Ui_BetsWin.SetActive(true);
-        Ui_BetsWin_Money.text = "+ " + (BetMoney * 2).ToString() + " coint";
+        Ui_BetsWin_Money.text = "+ " + (BetMoney * 2).ToString() + " " + Language.Lang.basicText.Coins;
         PlaySound("OnBetWin");
         Vibration.WinVibrate(0);
     }
     public void OnBetLose()
     {
         Ui_BetsLose.SetActive(true);
-        Ui_BetsLose_Money.text = "- " + (BetMoney).ToString() + " coint";
+        Ui_BetsLose_Money.text = "- " + (BetMoney).ToString() + " " + Language.Lang.basicText.Coins;
         PlaySound("OnBetLose");
         Vibration.LoseVibrate(0);
     }
@@ -2099,6 +2273,7 @@ public class Level : MonoBehaviour
         Ui_Waves.SetActive(false);
         StopBoxSpawn();
         StopBuffSpawn();
+        StopMeteorSpawn();
         CloseLevelUp();
     }
     public void PlayWaves()
@@ -2276,7 +2451,7 @@ public class Level : MonoBehaviour
         Ui_LevelUp_WeaponUnlock.SetActive(false);
         Ui_LevelUp_From.text = GameData.PrevPlayerLevel.ToString();
         Ui_LevelUp_To.text = GameData.PlayerLevel.ToString();
-        Ui_LevelUp_Text.text = "Level Up!";
+        Ui_LevelUp_Text.text = Language.Lang.levelUpText.LevelUp;
         int Money = 0;
         for (int i = GameData.PrevPlayerLevel; i < GameData.PlayerLevel; i++)
         {
@@ -2302,7 +2477,7 @@ public class Level : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         Ui_LevelUp_Close.SetActive(true);
-        Ui_LevelUp_Text.text = "Close";
+        Ui_LevelUp_Text.text = Language.Lang.levelUpText.Close;
         yield break;
     }
     public void CloseLevelUp()
@@ -2445,6 +2620,7 @@ public class Level : MonoBehaviour
 
         StopBoxSpawn();
         StopBuffSpawn();
+        StopMeteorSpawn();
     }
 
     public void ChangeGameType(bool Right)
@@ -2665,19 +2841,26 @@ public class Level : MonoBehaviour
     #region PremiumStoreAndPresent
     public void StoreOn()
     {
-        Ui_Store.SetActive(true);
+        if(GameData.PremiumOn)
+        {
+            AlreadyBought();
+        }
+        else
+        {
+            Ui_Store.SetActive(true);
 
-        for (int i = 0; i < Ui_Store_Weapon.childCount; i++)
-        {
-            Destroy(Ui_Store_Weapon.GetChild(i).gameObject);
+            for (int i = 0; i < Ui_Store_Weapon.childCount; i++)
+            {
+                Destroy(Ui_Store_Weapon.GetChild(i).gameObject);
+            }
+            List<WeaponInfo> info = GameData.active.GetPremiumWeapon();
+            for (int i = 0; i < info.Count; i++)
+            {
+                WeaponIcon icon = Instantiate(GameData.active.IconPrefab, Ui_Store_Weapon);
+                icon.SetIconLevelUp(info[i]);
+            }
+            HideBanner();
         }
-        List<WeaponInfo> info = GameData.active.GetPremiumWeapon();
-        for (int i = 0; i < info.Count; i++)
-        {
-            WeaponIcon icon = Instantiate(GameData.active.IconPrefab, Ui_Store_Weapon);
-            icon.SetIconLevelUp(info[i]);
-        }
-        HideBanner();
     }
     public void StoreOn(float delay)
     {
@@ -2693,6 +2876,12 @@ public class Level : MonoBehaviour
     {
         Ui_Store.SetActive(false);
         ShowBanner();
+    }
+
+    private void SwitchPremiumButton()
+    {
+        Ui_StoreOffButton.SetActive(!GameData.PremiumOn);
+        Ui_StoreOnButton.SetActive(GameData.PremiumOn);
     }
 
     public void Buy()
@@ -2736,7 +2925,7 @@ public class Level : MonoBehaviour
         GameData.ExpRatio = 1;
 
         AdMob.active.DestroyBanner();
-
+        SwitchPremiumButton();
         Vibration.WinVibrate(0);
         PlaySound("Buy");
     }
@@ -2746,6 +2935,18 @@ public class Level : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Ui_Store_Thanks.SetActive(false);
         StoreOff();
+        yield break;
+    }
+
+    private void AlreadyBought()
+    {
+        StartCoroutine(AlreadyBoughtCour());
+    }
+    private IEnumerator AlreadyBoughtCour()
+    {
+        Ui_StoreAlready.SetActive(true);
+        yield return new WaitForSeconds(4f);
+        Ui_StoreAlready.SetActive(false);
         yield break;
     }
 
@@ -2903,6 +3104,9 @@ public static class SideOwn
             return false;
         if (man1.Type == Man.ManType.Menu || man2.Type == Man.ManType.Menu)
             return true;
+        if ((man1.Type == Man.ManType.Boss && man2.Type == Man.ManType.Enemy) ||
+           (man2.Type == Man.ManType.Boss && man1.Type == Man.ManType.Enemy))
+            return false;
         else
             return man1.Type != man2.Type;
     }
@@ -2912,6 +3116,9 @@ public static class SideOwn
             return false;
         if (man1.Type == Man.ManType.Menu || man2.Type == Man.ManType.Menu)
             return false;
+        if ((man1.Type == Man.ManType.Boss && man2.Type == Man.ManType.Enemy) ||
+            (man2.Type == Man.ManType.Boss && man1.Type == Man.ManType.Enemy))
+            return true;
         else
             return man1.Type == man2.Type;
     }

@@ -18,7 +18,7 @@ MonoBehaviour:
   - Name: About
     Type: 0
     AnimPlay: 
-    Delay: 4
+    Delay: 5
     StartText: Welcome to Knight vs Cavemans, defeat enemies and do not be defeated
     DoneText: 
   - Name: Movement is life - Move
@@ -47,19 +47,19 @@ MonoBehaviour:
     Delay: 2
     StartText: Without a weapon you have little chance of winning - take Weapon
     DoneText: Nice!
-  - Name: "Throw weapon - that cool!(\u0421\u0432\u0430\u0439\u043F\u043D\u0438 \u0432
-      \u0432\u0435\u0440\u0445\u043D\u0435\u0439 \u0447\u0430\u0441\u0442\u0438 \u044D\u043A\u0440\u0430\u043D\u0430))"
-    Type: 4
-    AnimPlay: Learn_Throw
-    Delay: 2
-    StartText: Throw weapon - that cool!
-    DoneText: Nice throw bro
   - Name: Little practice, defeat the enemy
     Type: 7
     AnimPlay: 
     Delay: 2
-    StartText: Little practice, defeat the enemy
-    DoneText: Punch face go brrrrr
+    StartText: 
+    DoneText: 
+  - Name: "Throw weapon - that cool!(\u0421\u0432\u0430\u0439\u043F\u043D\u0438 \u0432
+      \u0432\u0435\u0440\u0445\u043D\u0435\u0439 \u0447\u0430\u0441\u0442\u0438 \u044D\u043A\u0440\u0430\u043D\u0430))"
+    Type: 4
+    AnimPlay: Learn_Throw
+    Delay: 3
+    StartText: 
+    DoneText: 
   - Name: Done
     Type: 8
     AnimPlay: 
