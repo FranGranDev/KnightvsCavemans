@@ -9,6 +9,11 @@ public class SceneMaker : MonoBehaviour
     [Header("Params")]
     public int SizeX;
     private Vector2[] EnemyPos;
+    public Vector2 GetRandomEnemyPos()
+    {
+        float OffsetX = (Random.Range(0, 2) == 0 ? 1 : -1) * (CameraMove.active.Cam.orthographicSize / 2 + Random.Range(5, 10));
+        return new Vector2(Player.active.transform.position.x + OffsetX, 0);
+    }
     public Vector2[] GetEnemyPos()
     {
         return EnemyPos;

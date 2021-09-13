@@ -491,11 +491,11 @@ public class Level : MonoBehaviour
                     Enemys.Add(CreateLevelEnemy(Position, 0.75f));
                     break;
                 case EnemyCreateType.Duel:
-                    Position = Pos[Random.Range(0, 2)] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Position = sceneMaker.GetRandomEnemyPos();
                     Enemys.Add(CreateDuelEnemy(Position, Random.Range(0.9f, 1.35f)));
                     break;
                 case EnemyCreateType.Waves:
-                    Position = Pos[Random.Range(0, 2)] + new Vector2(Random.Range(-5f, 5f), -0.5f);
+                    Position = sceneMaker.GetRandomEnemyPos();
                     Enemys.Add(CreateWavesEnemy(Position, Random.Range(0.75f, 1.25f)));
                     break;
                 case EnemyCreateType.Bets:
@@ -646,7 +646,7 @@ public class Level : MonoBehaviour
     public Man CreateManBossEnemy(Vector2[] Pos, float Power)
     {
         Man man = Instantiate(GameData.active.Enemy[1].Enemy, Pos[0], Quaternion.identity, null).GetComponent<Man>();
-        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 2f);
+        man.MaxHp = Mathf.RoundToInt(MainPlayer.MaxHp * Power * 3f);
         man.Size = MainPlayer.Size * Power * 2;
         man.name = "Boss";
         man.Speed = MainPlayer.Speed * Power * 0.75f;
@@ -2545,7 +2545,7 @@ public class Level : MonoBehaviour
     #region Ads
     public void PlayAds(AdMob.AdsTypes type)
     {
-        if (GameData.PremiumOn)
+        if (GameData.PremiumOn || AdMob.ShowingAds)
             return;
         switch(type)
         {
@@ -2600,6 +2600,7 @@ public class Level : MonoBehaviour
         OnPause = false;
         Time.timeScale = 1;
         Ui_Pause.SetActive(false);
+        Ui_Settings.SetActive(false);
     }
     public void SpecialPause()
     {
@@ -2838,11 +2839,33 @@ public class Level : MonoBehaviour
     }
     #endregion
 
+    private void CheckButtonClick()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            if(InGame())
+            {
+                Pause();
+            }
+            else if(Ui_Amunition.activeSelf)
+            {
+                BackAmunition();
+            }
+            else if(Ui_Settings.activeSelf)
+            {
+                SettingsOff();
+            }
+        }
+    }
     private void OnApplicationPause(bool pause)
     {
         if(pause && Loaded && !AdMob.ShowingAds)
         {
             Pause();
+        }
+        if(!pause && !InGame())
+        {
+            Resume();
         }
     }
     private void OnApplicationQuit()
@@ -2865,6 +2888,10 @@ public class Level : MonoBehaviour
     {
         GameStuff();
         SelectingState();
+    }
+    public void Update()
+    {
+        CheckButtonClick();
     }
 }
 

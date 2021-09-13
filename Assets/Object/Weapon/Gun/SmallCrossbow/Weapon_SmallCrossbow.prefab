@@ -284,8 +284,8 @@ MonoBehaviour:
   Miss: 0.25
   MaxAmmo: 13
   NowAmmo: 0
-  AttackRange: 15
-  ReloadTime: 1
+  AttackRange: 25
+  ReloadTime: 0.8
   Reloaded: 1
   anim: {fileID: 1965012778405150654}
   BulletPos: {fileID: 5694185256730792653}

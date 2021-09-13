@@ -35,7 +35,7 @@ public class Game_Easy : GameState
 
     private void CreateEnemys()
     {
-        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.75f)) + Random.Range(0, 3);
+        int EnemyCount = Mathf.RoundToInt(Mathf.Pow(GameData.NowLevel, 0.75f)) + Random.Range(1, 4);
         level.AllEnemy = level.CreateEnemy(Level.EnemyCreateType.Nude, EnemyCount, level.sceneMaker.GetEnemyPos(), 50);
         level.AliveEnemy = level.AllEnemy;
         level.DefeatedEnemy = new List<Man>();

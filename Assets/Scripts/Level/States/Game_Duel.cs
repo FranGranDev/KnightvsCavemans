@@ -30,8 +30,8 @@ public class Game_Duel : GameState
 
     public override void Run()
     {
-        SetEnemy();
         CheckForEnd();
+        SetEnemy();
     }
 
     private void CreateEnemys()
@@ -47,7 +47,7 @@ public class Game_Duel : GameState
             return;
         if(level.AliveEnemy.Count == 0)
         {
-            Vector2 Pos = level.sceneMaker.GetLongEnemyPos()[Random.Range(0, 2)];
+            Vector2 Pos = level.sceneMaker.GetRandomEnemyPos();
             float Power = (0.75f + Mathf.Sqrt(GameData.NowLevel) * 0.1f) + Random.Range(0f, 0.25f);
             level.AliveEnemy.Add(level.CreateDuelEnemy(Pos, Power));
         }
