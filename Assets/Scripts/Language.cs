@@ -58,7 +58,8 @@ public struct LanguageData
     public UiPresent presentText;
     public WeaponText[] Weapon;
     public ArmorText[] Armor;
-    public GameTypeText[] gameTypeText;
+    public GameTypeText gameTypeText;
+    public LearningStageText[] learningText;
 }
 
 [System.Serializable]
@@ -160,8 +161,15 @@ public struct ArmorText
 [System.Serializable]
 public struct GameTypeText
 {
-    public string WinText;
-    public string LoseText;
+    public string[] WinText;
+    public string[] LoseText;
     public string[] AttackPhase;
     public string[] DamagePhase;
+}
+
+[System.Serializable]
+public struct LearningStageText
+{
+    public string StartText;
+    public string DoneText;
 }

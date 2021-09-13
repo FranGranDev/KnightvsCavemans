@@ -37,7 +37,7 @@ public class Game_Learn : GameState
     private void StartState()
     {
         nowState = learnStates[StateNum];
-        level.PrintText(nowState.StartText);
+        level.PrintText(Language.Lang.learningText[StateNum].StartText);
         switch(nowState.Type)
         {
             case LearnStateTypes.Text:
@@ -133,7 +133,7 @@ public class Game_Learn : GameState
     {
         if (nowState.Type == LearnStateTypes.TakeWeapon)
         {
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].DoneText);
             level.NextLearnState(nowState.Delay);
         }
     }
@@ -142,13 +142,13 @@ public class Game_Learn : GameState
     {
         if (nowState.Type == LearnStateTypes.Kill)
         {
-            level.PrintText(nowState.DoneText);
+            level.PrintText(Language.Lang.learningText[StateNum].StartText);
             level.NextLearnState(nowState.Delay);
         }
     }
     public override void OnPlayerDie(Man man, Man Enemy, Man.HitType type)
     {
-        
+        level.Restart();
     }
 }
 [System.Serializable]
