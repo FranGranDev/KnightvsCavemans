@@ -349,6 +349,28 @@ public class GameData : MonoBehaviour
         }
         return info;
     }
+
+    public Weapon GetRandomPresentWeapon()
+    {
+        List<WeaponInfo> info = GetOpenedByLevelUp(0, PlayerLevel, 3);
+        List<WeaponInfo> currant = new List<WeaponInfo>();
+        for(int i = 0; i < info.Count; i++)
+        {
+            if (!info[i].Opened && !info[i].Premium)
+            {
+                currant.Add(info[i]);
+            }
+        }
+        if(currant.Count == 0)
+        {
+            return null;
+        }
+        else
+        {
+            return currant[Random.Range(0, currant.Count)].weapon;
+        }
+    }
+
     public bool GetAvalibleWeapon(int Index)
     {
         return weapon[Index].RequiredLevel <= PlayerLevel;

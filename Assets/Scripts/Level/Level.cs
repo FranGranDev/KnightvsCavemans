@@ -142,6 +142,9 @@ public class Level : MonoBehaviour
     public TextMeshProUGUI Ui_Menu_PresentText;
     public TextMeshProUGUI Ui_Menu_PresentGotText;
     public TextMeshProUGUI Ui_Menu_PresentMoneyText;
+    public GameObject Ui_Menu_PresentWeapon;
+    public GameObject Ui_Menu_PresentWeaponContent;
+    public TextMeshProUGUI Ui_Menu_PresentWeaponText;
 
     [Header("UI Bets")]
     public GameObject Ui_Bets;
@@ -1475,6 +1478,13 @@ public class Level : MonoBehaviour
             MeteorSpawnCoroutine = StartCoroutine(MeteorSpawnCour());
         }
     }
+    public void HellMeteorSpawn()
+    {
+        if (MeteorSpawnCoroutine == null)
+        {
+            MeteorSpawnCoroutine = StartCoroutine(HellMeteorSpawnCour());
+        }
+    }
     public void StopMeteorSpawn()
     {
         if(MeteorSpawnCoroutine != null)
@@ -1487,8 +1497,18 @@ public class Level : MonoBehaviour
     {
         while (!CurrantState.isEnd)
         {
-            yield return new WaitForSeconds(10);
+            yield return new WaitForSeconds(Random.Range(3, 7));
             sceneMaker.SpawnMeteorAtPlayer();
+        }
+        MeteorSpawnCoroutine = null;
+        yield break;
+    }
+    private IEnumerator HellMeteorSpawnCour()
+    {
+        while (!CurrantState.isEnd)
+        {
+            yield return new WaitForSeconds(Random.Range(2, 3));
+            sceneMaker.SpawnMeteorAtBattle(AllEnemy);
         }
         MeteorSpawnCoroutine = null;
         yield break;
@@ -1707,6 +1727,7 @@ public class Level : MonoBehaviour
         Ui_Menu_Settings.text = Language.Lang.menuText.Settings;
         //Present
         Ui_Menu_PresentGotText.text = Language.Lang.presentText.Get;
+        Ui_Menu_PresentWeaponText.text = Language.Lang.levelUpText.Unlocked;
         //Bets
         Ui_Bets_Name.text = Language.Lang.betsText.Name;
         Ui_Bets_Left.text = Language.Lang.betsText.BetLeft;
@@ -2105,19 +2126,19 @@ public class Level : MonoBehaviour
     }
     private IEnumerator NoLevelForArmor()
     {
-        Ui_Anum_ArmorName.text = "Not enough level";
+        Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.NoLevel;
         PlaySound("CantBuy");
         yield return new WaitForSeconds(1f);
-        Ui_Anum_ArmorName.text = "Buy " + GameData.active.armor[NowArmor].Name;
+        Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.Buy + " " + GameData.active.tempArmorInfo.Name;
         NoLevelCoroutine = null;
         yield break;
     }
     private IEnumerator NoMoneyForArmor()
     {
-        Ui_Anum_ArmorName.text = "No enough money";
+        Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.NoMoney;
         PlaySound("CantBuy");
         yield return new WaitForSeconds(1f);
-        Ui_Anum_ArmorName.text = "Buy " + GameData.active.armor[NowArmor].Name;
+        Ui_Anum_ArmorName.text = Language.Lang.ammunitionText.Buy + " " + GameData.active.tempArmorInfo.Name;
         NoMoneyCoroutine = null;
         yield break;
     }
@@ -2264,8 +2285,8 @@ public class Level : MonoBehaviour
     #region Waves
     public void SetWavesUi()
     {
-        Ui_Waves_Max.text = Language.Lang.wavesText.MaxWave + ": " + (GameData.NowWave + 1).ToString();
-        Ui_Waves_Now.text = Language.Lang.wavesText.NowWave + ": " + (GameData.MaxWave + 1).ToString();
+        Ui_Waves_Max.text = Language.Lang.wavesText.MaxWave + ": " + (GameData.MaxWave + 1).ToString();
+        Ui_Waves_Now.text = Language.Lang.wavesText.NowWave + ": " + (GameData.NowWave + 1).ToString();
     }
     public void SetGameWaves()
     {
@@ -2357,8 +2378,8 @@ public class Level : MonoBehaviour
     #region KnightBattle
     public void SetKnightsWavesUi()
     {
-        Ui_Knights_Max.text = Language.Lang.knightsText.MaxWave + ": " + (GameData.NowStage + 1).ToString();
-        Ui_Knights_Now.text = Language.Lang.knightsText.NowWave + ": " + (GameData.MaxStage + 1).ToString();
+        Ui_Knights_Max.text = Language.Lang.knightsText.MaxWave + ": " + (GameData.MaxStage + 1).ToString();
+        Ui_Knights_Now.text = Language.Lang.knightsText.NowWave + ": " + (GameData.NowStage + 1).ToString();
     }
     public void PlayKnightsWaves()
     {
@@ -2984,12 +3005,28 @@ public class Level : MonoBehaviour
     }
     public void OnPresentTaken()
     {
-        Debug.Log("da");
         GameData.SetPresentTime(2f);
         Ui_Menu_Present.SetActive(true);
         int Money = Random.Range(GameData.active.MonetForPresent - 100, GameData.active.MonetForPresent + 100);
         UpdateMoney(Money);
         Ui_Menu_Timer.text = Money.ToString();
+        Ui_Menu_PresentWeapon.SetActive(false);
+        if (Random.Range(0, 5) == 0)
+        {
+            Weapon weapon = GameData.active.GetRandomPresentWeapon();
+            if (weapon != null)
+            {
+                Ui_Menu_PresentWeapon.SetActive(true);
+                if(Ui_Menu_PresentWeaponContent.transform.childCount > 0)
+                {
+                    Destroy(Ui_Menu_PresentWeaponContent.transform.GetChild(0).gameObject);
+                }
+                WeaponIcon icon = Instantiate(GameData.active.IconPrefab, Ui_Menu_PresentWeaponContent.transform);
+                icon.SetIconLevelUp(GameData.active.weapon[weapon.Index]);
+                GameData.active.weapon[weapon.Index].Opened = true;
+                GameData.Save();
+            }
+        }
 
         PlaySound("TakeCoin");
         anim.SetTrigger("Present");

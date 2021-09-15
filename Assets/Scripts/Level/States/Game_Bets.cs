@@ -16,7 +16,9 @@ public class Game_Bets : GameState
         level.BattleEnemy = new List<Man>();
         level.DefeatedEnemy = new List<Man>();
         level.sceneMaker.MakeScene(50, SceneMaker.SceneType.Cave);
-
+        level.StopBoxSpawn();
+        level.StopBuffSpawn();
+        level.StopMeteorSpawn();
         CreateDuel();
         level.OnLevelStart();
     }
@@ -44,6 +46,7 @@ public class Game_Bets : GameState
         }
         level.AllEnemy[0].GetEnemy(level.AllEnemy[1]);
         level.AllEnemy[1].GetEnemy(level.AllEnemy[0]);
+        level.HellMeteorSpawn();
     }
     private void CheckForEnd()
     {

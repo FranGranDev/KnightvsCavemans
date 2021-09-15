@@ -154,7 +154,23 @@ public class SceneMaker : MonoBehaviour
         Script.Rig.angularVelocity += Random.Range(-360, 360);
         SceneObjects.Add(Obj);
     }
-    
+    public void SpawnMeteorAtBattle(List<Man> Enemy)
+    {
+        Vector3 Pos = Vector3.zero;
+        for (int i = 0; i < Enemy.Count; i++)
+        {
+            Pos += Enemy[i].transform.position;
+        }
+        Pos += new Vector3(0, 25, 0);
+        Vector2 Impulse = Vector2.down * 10 + new Vector2(Random.Range(-3, 3), 0);
+        GameObject Obj = Instantiate(Meteor[Random.Range(0, Meteor.Length)], Pos, Quaternion.identity, null);
+        SceneObject Script = Obj.GetComponent<SceneObject>();
+        Script.Fly = true;
+        Script.HitOnGround = true;
+        Script.Rig.velocity += Impulse;
+        Script.Rig.angularVelocity += Random.Range(-360, 360);
+        SceneObjects.Add(Obj);
+    }
 }
 public struct SceneData
 {
